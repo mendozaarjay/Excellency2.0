@@ -18,10 +18,22 @@ namespace Excellency.Services
         {
             _dbContext = dbContext;
         }
+
+        public Account GetAccountById(int id)
+        {
+            return _dbContext.Accounts.FirstOrDefault(a => a.Id == id);
+        }
+
         public string GetUserId(Account account)
         {
             var item = _dbContext.Accounts.FirstOrDefault(a => a.Username == account.Username && a.Password == account.Password).Id.ToString();
             return item;
+        }
+
+        public string GetUserNameById(int id)
+        {
+            var item = _dbContext.Accounts.FirstOrDefault(a => a.Id == id);
+            return item.FirstName + " " + item.LastName;
         }
 
         public bool IsAccountLocked(Account account)

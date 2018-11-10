@@ -1,5 +1,4 @@
-﻿@using Microsoft.AspNetCore.Http
-@inject IHttpContextAccessor HttpContextAccessor
+﻿@model Excellency.ViewModels.CurrentUserViewModel
 <nav class="navbar navbar-default navbar-fixed-top">
     <div class="brand">
         <a href="index.html"><img src="~/img/logo-dark.png" alt="Klorofil Logo" class="img-responsive logo"></a>
@@ -18,7 +17,7 @@
         <div id="navbar-menu">
             <ul class="nav navbar-nav navbar-right">
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span>@HttpContextAccessor.HttpContext.Session.GetString("CurrentUser")</span> <i class="icon-submenu lnr lnr-chevron-down"></i></a>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span>@Model.Name</span> <i class="icon-submenu lnr lnr-chevron-down"></i></a>
                     <ul class="dropdown-menu">
                         <li><a href="#"><i class="lnr lnr-user"></i> <span>Account</span></a></li>
                         <li><a asp-controller="Account" asp-action="Logout"><i class="lnr lnr-exit"></i> <span>Logout</span></a></li>

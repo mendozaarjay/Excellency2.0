@@ -16,6 +16,8 @@ namespace Excellency.Interfaces
         bool IsAdministrator(int UserId);
         bool IsApprover(int UserId);
         bool IsRater(int UserId);
+        Account GetAccountById(int id);
 
+        string GetUserNameById(int id);
     }
 }

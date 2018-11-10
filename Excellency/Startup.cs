@@ -44,6 +44,7 @@ namespace Excellency
             services.AddScoped<IApproverAssignment, ApproverAssignmentService>();
             services.AddScoped<IEvaluationApproval, EvaluationApprovalService>();
             services.AddScoped<IAccountRole, AccountRoleService>();
+            services.AddScoped<IHome, HomeService>();
 
             services.AddDbContext<EASDbContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("ExcellencyConnection")));
@@ -74,7 +75,7 @@ namespace Excellency
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Account}/{action=Login}/{id?}");
+                    template: "{controller=Home}/{action=Login}/{id?}");
             });
         }
         
