@@ -1,0 +1,124 @@
+﻿@model Excellency.ViewModels.EmployeeEvaluationViewModel
+@{
+    ViewData["Title"] = "Employee Evaluation";
+}
+
+<div class="panel panel-headline">
+    <div class="panel-heading">
+        <h3 class="panel-title">Employee Evaluation - @Model.Name</h3>
+    </div>
+    <div class="panel-body">
+        <h4 class="toast-title">Behavioral Factors</h4>
+        @foreach (var item in Model.BehavioralCategories)
+        {
+            <p><strong>Title : </strong>@item.Title</p>
+            <p><strong>Description : </strong>@item.Description</p>
+            <p><strong>Weight : </strong>@item.Weight</p>
+            @if (item.IsExist)
+            {
+                if (item.IsSaved)
+                {
+                    <a role="button" class="btn btn-success" asp-controller="Evaluation" asp-action="EditBehavioral" a asp-route-empid="@Model.EmployeeId" asp-route-id="@item.Id">Edit Evaluation </a>
+                    <a role="button" class="btn btn-primary" data-toggle="modal" data-target="#postbehavioral" data-id="@item.Id" data-empid="@Model.EmployeeId">Post Evaluation</a>
+                }
+            }
+            else
+            {
+                <a role="button" class="btn btn-success" asp-controller="Evaluation" asp-action="EvaluateBehavioral" asp-route-id="@Model.EmployeeId" asp-route-factor="@item.Id">Evaluate </a>
+
+            }
+        }
+        <hr />
+        <h4 class="toast-title">Key Result Area</h4>
+        @foreach (var item in Model.KRACategories)
+        {
+            <p><strong>Title : </strong>@item.Title</p>
+            <p><strong>Description : </strong>@item.Description</p>
+            <p><strong>Weight : </strong>@item.Weight</p>
+            @if (item.IsExist)
+            {
+                if (item.IsSaved)
+                {
+                    <a role="button" class="btn btn-success" asp-controller="Evaluation" asp-action="EditKeyResult" a asp-route-empid="@Model.EmployeeId" asp-route-id="@item.Id">Edit Evaluation </a>
+                    <a role="button" class="btn btn-primary" data-toggle="modal" data-target="#postkeyresult" data-id="@item.Id" data-empid="@Model.EmployeeId">Post Evaluation</a>
+                }
+            }
+            else
+            {
+                <a role="button" class="btn btn-success" asp-controller="Evaluation" asp-action="EvaluateKeyResultArea" asp-route-id="@Model.EmployeeId" asp-route-kraid="@item.Id">Evaluate </a>
+            }
+        }
+        <hr />
+    </div>
+</div>
+
+
+
+<div class="modal fade" id="postbehavioral" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        @using (Html.BeginForm("PostBehavioralItem", "Evaluation"))
+        {
+            @Html.AntiForgeryToken()
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Confirmation</h4>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="empid" id="empid" />
+                    <input type="hidden" name="id" id="id" />
+                    <p>Are you sure you want to post the current record?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Post</button>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<div class="modal fade" id="postkeyresult" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        @using (Html.BeginForm("PostKeyResultItem", "Evaluation"))
+        {
+            @Html.AntiForgeryToken()
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Confirmation</h4>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="empid" id="empid" />
+                    <input type="hidden" name="id" id="id" />
+                    <p>Are you sure you want to post the current record?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Post</button>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+@section Scripts{
+
+    <script type="text/javascript">
+        $('#postbehavioral').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget)
+            var empid = button.data('empid')
+            var id = button.data('id')
+            $(".modal-body #empid").val(empid)
+            $(".modal-body #id").val(id)
+        })
+    </script>
+    <script type="text/javascript">
+        $('#postkeyresult').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget)
+            var empid = button.data('empid')
+            var id = button.data('id')
+            $(".modal-body #empid").val(empid)
+            $(".modal-body #id").val(id)
+        })
+    </script>
+}

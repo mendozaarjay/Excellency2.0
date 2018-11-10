@@ -1,0 +1,100 @@
+﻿@model Excellency.ViewModels.EmployeeRegisterViewModel
+@{
+    ViewData["Title"] = "Add Employee";
+}
+
+<div class="panel panel-headline">
+    <div class="panel-heading">
+        <h3>Add New Employee</h3>
+    </div>
+    <div class="panel-body">
+
+        @using (Html.BeginForm("AddEmployee", "Employee"))
+        {
+            @if (Html.ViewData.ModelState.ErrorCount > 0)
+            {
+                <div class="alert alert-danger alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+                </div>
+            }
+                <div class="row">
+                    <div class="form-group " hidden="hidden">
+                        <label for="id">ID</label>
+                        <input type="text" class="form-control" id="id" name="Id">
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="firstname">Employee No</label>
+                            <input type="text" class="form-control" id="firstname" placeholder="Employee No" name="EmployeeNo">
+                        </div>
+                        <div class="form-group">
+                            <label for="firstname">First Name</label>
+                            <input type="text" class="form-control" id="firstname" placeholder="First Name" name="Firstname">
+                        </div>
+                        <div class="form-group">
+                            <label for="lastname">Middle Name</label>
+                            <input type="text" class="form-control" id="lastname" placeholder="Middle Name" name="Middlename">
+                        </div>
+                        <div class="form-group">
+                            <label for="lastname">Last Name</label>
+                            <input type="text" class="form-control" id="lastname" placeholder="Last Name" name="Lastname">
+                        </div>
+                        <div class="form-group">
+                            <label for="position">Category</label>
+                            <select id="position" class="form-control" name="Category">
+                                @foreach (var item in Model.EmployeeCategories)
+                                {
+                                    <option value="@item.Value">@item.Text</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="company">Company</label>
+                            <select id="company" class="form-control" name="Company">
+                                @foreach (var item in Model.Companies)
+                                {
+                                    <option value="@item.Value">@item.Text</option>
+                                }
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="branch">Branch</label>
+                            <select id="branch" class="form-control" name="Branch">
+                                @foreach (var item in Model.Branches)
+                                {
+                                    <option value="@item.Value">@item.Text</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="department">Department</label>
+                            <select id="department" class="form-control" name="Department">
+                                @foreach (var item in Model.Departments)
+                                {
+                                    <option value="@item.Value">@item.Text</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="position">Position</label>
+                            <select id="position" class="form-control" name="Position">
+                                @foreach (var item in Model.Positions)
+                                {
+                                    <option value="@item.Value">@item.Text</option>
+                                }
+                            </select>
+                        </div>
+
+                    </div>
+                </div>
+            <div class="form-group">
+                <button type="button" class="btn btn-default">Cancel</button>
+                <button type="submit" class="btn btn-primary">Save</button>
+            </div>
+        }
+    </div>
+</div>

@@ -1,0 +1,41 @@
+﻿@model Excellency.ViewModels.EvaluationApprovalIndexViewModel
+@{
+    ViewData["Title"] = "Rating Approval";
+}
+
+<div class="panel panel-headline">
+    <div class="panel-heading">
+        <h3 class="panel-title">
+            List of Evaluations
+        </h3>
+    </div>
+    <div class="panel-body">
+        <div class="table-responsive">
+            <table class="table table-condensed">
+                <thead>
+                    <tr>
+                        <th>Employee</th>
+                        <th>Rater</th>
+                        <th>Rating Date</th>
+                        <th>Status</th>
+                        <th>Type</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach(var item in Model.Evaluations)
+                    {
+                        <tr>
+                            <td>@item.EmployeeName</td>
+                            <td>@item.RaterName</td>
+                            <td>@item.CreationDate</td>
+                            <td>@item.Status</td>
+                            <td>@item.TypeDescription</td>
+                            <td><a class="fa fa-check text-primary" asp-controller="EvaluationApproval" asp-action="ViewEvaluation" asp-route-id="@item.Id" asp-route-type="@item.Type"></a></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

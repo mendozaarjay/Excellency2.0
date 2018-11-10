@@ -1,0 +1,173 @@
+﻿@model Excellency.ViewModels.CategoryIndexViewModel
+@{
+    ViewData["Title"] = "Rating Table";
+}
+
+<div class="panel panel-headline">
+    <div class="panel-heading">
+        <h3 class="panel-title">@Model.KSIDescription</h3>
+    </div>
+    <div class="panel-body">
+        <div class="panel">
+            <div class="panel-heading">
+                <h3 class="panel-title">Rating Table</h3>
+                <div class="right">
+                    <button type="button" data-toggle="modal" data-target="#addnew" data-ksiid="@Model.KSIId"><i class="fa fa-plus"></i></button>
+                </div>
+            </div>
+            <div class="panel-body">
+                <div class="table-responsive">
+                    <table class="table table-condensed">
+                        <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>Description</th>
+                                <th>Weight</th>
+                                <th scope="col" class="col-md-1"></th>
+                                <th scope="col" class="col-md-1"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Categories)
+                            {
+                                <tr>
+                                    <td>@item.Id</td>
+                                    <td>@item.Description</td>
+                                    <td>@item.Weight</td>
+                                    <td class="text-center"><a data-toggle="modal" data-target="#edit" data-id="@item.Id" data-description="@item.Description" data-weight="@item.Weight" data-ksiid="@Model.KSIId"><i class="fa fa-pencil text-success"></i></a></td>
+                                    <td class="text-center"><a data-toggle="modal" data-target="#delete" data-id="@item.Id" data-ksiid="@Model.KSIId"><i class="fa fa-trash text-danger"></i></a></td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add New -->
+<div class="modal fade" id="addnew" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    @using (Html.BeginForm("SaveCategory", "KeyResultArea"))
+    {
+        @Html.AntiForgeryToken()
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Add New Category</h4>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="ksiid" id="ksiid" />
+                    <div class="form-group">
+                        <label for="description">Description</label>
+                        <input class="form-control" name="description" id="description" placeholder="Description" />
+                    </div>
+                    <div class="form-group">
+                        <label for="weight">Weight</label>
+                        <input type="number" class="form-control" name="weight" id="weight" placeholder="Weight" />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+<!--End of Save-->
+<!-- Edit -->
+<div class="modal fade" id="edit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    @using (Html.BeginForm("SaveCategory", "KeyResultArea"))
+    {
+        @Html.AntiForgeryToken()
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Edit Key Success Indicator</h4>
+
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="ksiid" id="ksiid" />
+                    <input type="hidden" name="id" id="id" />
+                    <div class="form-group">
+                        <label for="description">Description</label>
+                        <input class="form-control" name="description" id="description" placeholder="Description" />
+                    </div>
+                    <div class="form-group">
+                        <label for="weight">Weight</label>
+                        <input type="number" class="form-control" name="weight" id="weight" placeholder="Weight" />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+<!--End Of Edit-->
+<!--Delete-->
+<div class="modal fade" id="delete" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        @using (Html.BeginForm("RemoveCategoryById", "KeyResultArea"))
+        {
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Confirmation</h4>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="ksiid" id="ksiid" />
+                    <input type="hidden" name="id" id="id" />
+                    <p>Are you sure you want to delete the current record?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+<!--End of Delete-->
+@section Scripts{
+    <script type="text/javascript">
+        $('#addnew').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget)
+            var ksiid = button.data('ksiid')
+            var modal = $(this)
+            $(".modal-body #ksiid").val(ksiid)
+
+        })
+    </script>
+    <script type="text/javascript">
+        $('#edit').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget)
+            var ksiid = button.data('ksiid')
+            var id = button.data('id')
+            var description = button.data('description')
+            var weight = button.data('weight')
+            var modal = $(this)
+            $(".modal-body #ksiid").val(ksiid)
+            $(".modal-body #id").val(id)
+            $(".modal-body #description").val(description)
+            $(".modal-body #weight").val(weight)
+
+        })
+    </script>
+
+    <script type="text/javascript">
+        $('#delete').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget)
+            var ksiid = button.data('ksiid')
+            var id = button.data('id')
+            var modal = $(this)
+            $(".modal-body #ksiid").val(ksiid)
+            $(".modal-body #id").val(id)
+        })
+    </script>
+}

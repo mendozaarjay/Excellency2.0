@@ -1,0 +1,52 @@
+﻿@model Excellency.ViewModels.EmployeeIndexViewModel
+@{
+    ViewData["Title"] = "Employees";
+}
+
+<div class="panel panel-headline">
+    <div class="panel-heading">
+        <h3 class="panel-title">Employees</h3>
+        <div class="right">
+            <a asp-controller="Employee" asp-action="AddEmployee"><i class="fa fa-plus"></i></a>
+        </div>
+    </div>
+    <div class="panel-body">
+        <div class="table-responsive">
+            <table class="table table-condensed">
+                <thead>
+                    <tr>
+                        <th hidden="hidden">Id</th>
+                        <th>Employee No</th>
+                        <th>Name</th>
+                        <th>Position</th>
+                        <th>Company</th>
+                        <th>Branch</th>
+                        <th>Department</th>
+                        <th scope="col" class="col-md-1"></th>
+                        <th scope="col" class="col-md-1"></th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @foreach (var item in Model.Employees)
+                    {
+                    <tr>
+                        <td hidden="hidden">@item.Id</td>
+                        <td>@item.EmployeeNo</td>
+                        <td>@item.Name</td>
+                        <td>@item.Position</td>
+                        <td>@item.Company</td>
+                        <td>@item.Branch</td>
+                        <td>@item.Department</td>
+                        <td class="text-center"><a asp-controller="Employee" asp-action="Edit" asp-route-id="@item.Id"><i class="fa fa-pencil text-success"></i></a></td>
+                        <td class="text-center"><a data-toggle="modal" data-target="#delete" data-id="@item.Id"><i class="fa fa-trash text-danger"></i></a></td>
+                    </tr>
+
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+

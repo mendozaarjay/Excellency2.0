@@ -1,0 +1,33 @@
+﻿@model Excellency.ViewModels.AccountRoleIndexViewModel
+@{
+    ViewData["Title"] = "Roles";
+}
+
+<div class="panel panel-headline">
+    <div class="panel-heading">
+        <h3 class="panel-title">User Roles</h3>
+    </div>
+    <div class="panel-body">
+        <div class="table-responsive">
+            <table class="table table-condensed">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Role</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach(var item in Model.Roles)
+                    {
+                        <tr>
+                            <td>@item.Id</td>
+                            <td>@item.Description</td>
+                            <td><a class="fa fa-clone text-primary" asp-controller="AccountRole" asp-action="ViewRoleAssignment" asp-route-id="@item.Id"></a></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

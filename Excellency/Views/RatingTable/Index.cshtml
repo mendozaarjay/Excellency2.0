@@ -1,0 +1,141 @@
+﻿@model Excellency.ViewModels.RatingTableIndexViewModel
+@{
+    ViewData["Title"] = "Rating Tables";
+}
+<div class="panel panel-headline">
+    <div class="panel-heading">
+        <h3 class="panel-title">Rating Tables</h3>
+        <div class="right">
+            <button type="button" data-toggle="modal" data-target="#addnew"><i class="fa fa-plus"></i></button>
+        </div>
+    </div>
+    <div class="panel-body">
+        <div class="table-responsive">
+            <table class="table table-condensed table-hover">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Description</th>
+                        <th scope="col" class="col-md-1"></th>
+                        <th scope="col" class="col-md-1"></th>
+                        <th scope="col" class="col-md-1"></th>
+                    </tr>
+                </thead>
+                @foreach (var item in Model.RatingTables)
+                {
+                <tr>
+                    <td>@item.Id</td>
+                    <td>@item.Description</td>
+                    <td class="text-center"><a data-toggle="modal" data-target="#edit" data-id="@item.Id" data-description="@item.Description"><i class="fa fa-pencil text-success"></i></a></td>
+                    <td class="text-center"><a data-toggle="modal" data-target="#delete" data-id="@item.Id"><i class="fa fa-trash text-danger"></i></a></td>
+                    <td class="text-center"><a asp-controller="RatingTable" asp-action="RatingTableItems" asp-route-id="@item.Id"><i class="fa fa-clone text-primary"></i></a></td>
+                </tr>
+                }
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<!-- Add New -->
+<div class="modal fade" id="addnew" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    @using (Html.BeginForm("CreateRatingTable", "RatingTable"))
+    {
+        @Html.AntiForgeryToken()
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Add New Rating Table</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="description">Description</label>
+                        <input class="form-control" name="ratingtable.description" id="description" placeholder="Description" />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+<!--End of Save-->
+<!-- Edit -->
+<div class="modal fade" id="edit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    @using (Html.BeginForm("CreateRatingTable", "RatingTable"))
+    {
+        @Html.AntiForgeryToken()
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Edit Rating Table</h4>
+
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="ratingtable.id" id="id" />
+                    <div class="form-group">
+                        <label for="description">Description</label>
+                        <input class="form-control" name="ratingtable.description" id="description" placeholder="Description" />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+<!--End Of Edit-->
+<!--Delete-->
+<div class="modal fade" id="delete" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        @using (Html.BeginForm("RemoveRatingTable", "RatingTable"))
+        {
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Confirmation</h4>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="ratingtable.id" id="id" />
+                    <p>Are you sure you want to delete the current record?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+<!--End of Delete-->
+
+
+@section Scripts{
+    <script type="text/javascript">
+        $('#edit').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget)
+            var id = button.data('id')
+            var description = button.data('description')
+            var modal = $(this)
+            $(".modal-body #id").val(id)
+            $(".modal-body #description").val(description)
+
+        })
+    </script>
+
+    <script type="text/javascript">
+        $('#delete').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget)
+            var id = button.data('id')
+            var modal = $(this)
+            $(".modal-body #id").val(id)
+        })
+    </script>
+}
+

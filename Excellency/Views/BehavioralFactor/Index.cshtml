@@ -1,0 +1,170 @@
+﻿@model Excellency.ViewModels.BehavioralFactorIndexViewModel
+@{
+    ViewData["Title"] = "Behavioral Factor";
+}
+<div class="panel panel-headline">
+    <div class="panel-heading">
+        <h3 class="panel-title">Behavioral Factors</h3>
+        <div class="right">
+            <button data-toggle="modal" data-target="#addnew"><i class="fa fa-plus"></i></button>
+        </div>
+    </div>
+    <div class="panel-body">
+        <div class="table-responsive">
+            <table class="table table-condensed">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Title</th>
+                        <th>Description</th>
+                        <th>Weight</th>
+                        <th scope="col" class="col-md-1"></th>
+                        <th scope="col" class="col-md-1"></th>
+                        <th scope="col" class="col-md-1"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.BehavioralFactors)
+                    {
+                        <tr>
+                            <td>@item.Id</td>
+                            <td>@item.Title</td>
+                            <td>@item.Description</td>
+                            <td>@item.Weight</td>
+                            <td class="text-center"><a data-toggle="modal" data-target="#edit" data-id="@item.Id" data-title="@item.Title" data-description="@item.Description" data-weight="@item.Weight" data-category="@item.Category"><i class="fa fa-pencil text-success"></i></a></td>
+                            <td class="text-center"><a data-toggle="modal" data-target="#delete" data-id="@item.Id"><i class="fa fa-trash text-danger"></i></a></td>
+                            <td class="text-center"><a asp-controller="BehavioralFactor" asp-action="BehavioralFactorItems" asp-route-id="@item.Id"><i class="fa fa-clone text-primary"></i></a></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="addnew" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    @using (Html.BeginForm("SaveBehavioralFactor", "BehavioralFactor"))
+    {
+        @Html.AntiForgeryToken()
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Add New Behavioral Factor</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="title">Title</label>
+                        <input type="text" class="form-control" id="title" name="behavioralfactor.title" placeholder="Title" />
+                    </div>
+                    <div class="form-group">
+                        <label for="description">Description</label>
+                        <input type="text" class="form-control" id="description" name="behavioralfactor.description" placeholder="Description" />
+                    </div>
+                    <div class="form-group">
+                        <label for="behavioralfactor.category">Category</label>
+                        @Html.DropDownListFor(m => m.BehavioralFactor.Category, Model.EmployeeCategories, "- Select Category -", new { @class = "form-control" })
+                    </div>
+                    <div class="form-group">
+                        <label for="weight">Weight</label>
+                        <input type="number" class="form-control" name="behavioralfactor.weight" id="weight" placeholder="Weight" />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<!-- Edit -->
+<div class="modal fade" id="edit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    @using (Html.BeginForm("SaveBehavioralFactor", "BehavioralFactor"))
+    {
+        @Html.AntiForgeryToken()
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Edit Behavioral Factor</h4>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="behavioralfactor.id" id="id" />
+                    <div class="form-group">
+                        <label for="title">Title</label>
+                        <input type="text" class="form-control" id="title" name="behavioralfactor.title" placeholder="Title" />
+                    </div>
+                    <div class="form-group">
+                        <label for="description">Description</label>
+                        <input type="text" class="form-control" id="description" name="behavioralfactor.description" placeholder="Description" />
+                    </div>
+                    <div class="form-group">
+                        <label for="behavioralfactor.category">Category</label>
+                        @Html.DropDownListFor(m => m.BehavioralFactor.Category, Model.EmployeeCategories, "- Select Category -", new { @class = "form-control" })
+                    </div>
+                    <div class="form-group">
+                        <label for="weight">Weight</label>
+                        <input type="number" class="form-control" name="behavioralfactor.weight" id="weight" placeholder="Weight" />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+<!--End Of Edit-->
+<!--Delete-->
+<div class="modal fade" id="delete" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        @using (Html.BeginForm("RemoveFactor", "BehavioralFactor"))
+        {
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Confirmation</h4>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="id" name="id" />
+                    <p>Are you sure you want to delete the current record?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+<!--End of Delete-->
+@section Scripts{
+    <script type="text/javascript">
+        $('#edit').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget)
+            var modal = $(this)
+            var id = button.data('id')
+            var title = button.data('title')
+            var description = button.data('description')
+            var category = button.data('category')
+            var weight = button.data('weight')
+            $(".modal-body #id").val(id)
+            $(".modal-body #title").val(title)
+            $(".modal-body #description").val(description)
+            $(".modal-body #weight").val(weight)
+            modal.find('.modal-body select').val(category)
+        })
+    </script>
+
+    <script type="text/javascript">
+        $('#delete').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget)
+            var id = button.data('id')
+            $(".modal-body #id").val(id)
+        })
+    </script>
+}

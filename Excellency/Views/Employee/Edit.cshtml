@@ -1,0 +1,137 @@
+﻿@model Excellency.ViewModels.EmployeeRegisterViewModel
+@{
+    ViewData["Title"] = "Edit Employee";
+}
+
+
+
+<div class="panel panel-headline">
+    <div class="panel-heading">
+        <h3>Edit Employee</h3>
+    </div>
+    <div class="panel-body">
+
+        @using (Html.BeginForm("Edit", "Employee"))
+        {
+            @if (Html.ViewData.ModelState.ErrorCount > 0)
+            {
+                <div class="alert alert-danger alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+                </div>
+            }
+            @Html.AntiForgeryToken()
+            <div class="row">
+                <div class="form-group " hidden="hidden">
+                    <label for="id">ID</label>
+                    <input type="text" class="form-control" name="Id" value="@Model.Id">
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="firstname">Employee No</label>
+                        <input type="text" class="form-control" id="EmployeeNo" placeholder="Employee No" name="EmployeeNo" value="@Model.EmployeeNo">
+                    </div>
+                    <div class="form-group">
+                        <label for="firstname">First Name</label>
+                        <input type="text" class="form-control" id="Firstname" placeholder="First Name" name="Firstname" value="@Model.FirstName">
+                    </div>
+                    <div class="form-group">
+                        <label for="lastname">Middle Name</label>
+                        <input type="text" class="form-control" id="Middlename" placeholder="Middle Name" name="Middlename" value="@Model.MiddleName">
+                    </div>
+                    <div class="form-group">
+                        <label for="lastname">Last Name</label>
+                        <input type="text" class="form-control" id="Lastname" placeholder="Last Name" name="Lastname" value="@Model.LastName">
+                    </div>
+                    <div class="form-group">
+                        <label for="position">Category</label>
+                        <select id="position" class="form-control" name="Category" value="@Model.Category">
+                            @foreach (var item in Model.EmployeeCategories)
+                            {
+                                if (item.Value == Model.Category)
+                                {
+                                    <option selected="selected" value="@item.Value">@item.Text</option>
+                                }
+                                else
+                                {
+                                    <option value="@item.Value">@item.Text</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="company">Company</label>
+                        <select id="company" class="form-control" name="Company">
+                            @foreach (var item in Model.Companies)
+                            {
+                                if (item.Value == Model.Company)
+                                {
+                                    <option selected="selected" value="@item.Value">@item.Text</option>
+                                }
+                                else
+                                {
+                                    <option value="@item.Value">@item.Text</option>
+                                }
+                            }
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="branch">Branch</label>
+                        <select id="branch" class="form-control" name="Branch">
+                            @foreach (var item in Model.Branches)
+                            {
+                                if (item.Value == Model.Branch)
+                                {
+                                    <option selected="selected" value="@item.Value">@item.Text</option>
+                                }
+                                else
+                                {
+                                    <option value="@item.Value">@item.Text</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="department">Department</label>
+                        <select id="department" class="form-control" name="Department">
+                            @foreach (var item in Model.Departments)
+                            {
+                                if (item.Value == Model.Department)
+                                {
+                                    <option selected="selected" value="@item.Value">@item.Text</option>
+                                }
+                                else
+                                {
+                                    <option value="@item.Value">@item.Text</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="position">Position</label>
+                        <select id="position" class="form-control" name="Position">
+                            @foreach (var item in Model.Positions)
+                            {
+                                if (item.Value == Model.Position)
+                                {
+                                    <option selected="selected" value="@item.Value">@item.Text</option>
+                                }
+                                else
+                                {
+                                    <option value="@item.Value">@item.Text</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <button type="button" class="btn btn-default">Cancel</button>
+                <button type="submit" class="btn btn-primary">Save</button>
+            </div>
+        }
+    </div>
+</div>

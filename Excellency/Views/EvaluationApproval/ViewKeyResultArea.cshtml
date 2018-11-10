@@ -1,0 +1,51 @@
+﻿@model Excellency.ViewModels.ApprovalKeyResultAreaViewModel
+@{
+    ViewData["Title"] = "Key Result Area Evaluation";
+}
+
+<div class="panel panel-headline">
+    <div class="panel-heading">
+        <h3 class="panel-title">@Model.KeyResultArea</h3>
+        <p class="panel-subtitle">Weight : @Model.Weight</p>
+    </div>
+    <div class="panel-body">
+        <div>
+            <p>Rater : @Model.RaterName</p>
+            <p>Employee : @Model.EmployeeName</p>
+            <p>Total Score : @Model.TotalScore</p>
+        </div>
+        <hr />
+
+        <div>
+            @foreach (var item in Model.Items)
+            {
+                <div class="panel">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">@item.SuccessIndicator</h3>
+                        <p class="panel-subtitle">Weight : @item.Weight</p>
+                    </div>
+                    <div class="panel-body">
+                        <p><strong>Score :</strong> @item.Score</p>
+                        <p><strong>Comment :</strong> @item.Comment</p>
+                    </div>
+                </div>
+                <hr />
+            }
+        </div>
+        @using (Html.BeginForm("PostKeyResultArea", "EvaluationApproval"))
+        {
+            @Html.AntiForgeryToken()
+            <div class="form-group">
+                <input type="hidden" name="id" value="@Model.Id" />
+                <label for="remarks">Approver Remarks</label>
+                <textarea id="remarks" name="remarks" class="form-control"></textarea>
+            </div>
+            <div class="form-group">
+                <button type="submit" name="action" value="Approve" class="form-control btn-success">Approve</button>
+                <button type="submit" name="action" value="Disapprove" class="form-control btn-danger">Disapprove</button>
+            </div>
+        }
+
+    </div>
+</div>
+

@@ -1,0 +1,42 @@
+﻿@model  Excellency.ViewModels.ApproverAssignmentIndexViewModel
+@{
+    ViewData["Title"] = "Index";
+}
+
+<div class="panel panel-headline">
+    <div class="panel-heading">
+        <h3 class="panel-title">List of Accounts</h3>
+    </div>
+    <div class="panel-body">
+        <div class="table-responsive">
+            <table class="table table-condensed">
+                <thead>
+                    <tr>
+                        <th hidden="hidden">Id</th>
+                        <th>Name</th>
+                        <th>Company</th>
+                        <th>Branch</th>
+                        <th>Department</th>
+                        <th>Position</th>
+                        <th class="text-center">Assign</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach(var item in Model.Approvers)
+                    {
+                        <tr>
+                            <td hidden="hidden">@item.Id</td>
+                            <td>@item.LastName , @item.FirstName</td>
+                            <td>@item.Company</td>
+                            <td>@item.Branch</td>
+                            <td>@item.Department</td>
+                            <td>@item.Position</td>
+                            <td class="text-center"><a asp-controller="ApproverAssignment" asp-action="Assignment" asp-route-id="@item.Id" class="fa fa-clone"></a></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+

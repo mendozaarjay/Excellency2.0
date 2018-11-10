@@ -1,0 +1,60 @@
+﻿<div class="sidebar-scroll">
+    <nav>
+        <ul class="nav">
+            <li><a asp-controller="Home" asp-action="Index" class="active"><i class="lnr lnr-home"></i> <span>Dashboard</span></a></li>
+            <li>
+                <a href="#systemsettings" data-toggle="collapse" class="collapsed"><i class="lnr lnr-list"></i> <span>Maintenance</span> <i class="icon-submenu lnr lnr-chevron-left"></i></a>
+                <div id="systemsettings" class="collapse ">
+                    <ul class="nav">
+                        <li><a asp-controller="Company" asp-action="Index" class="">Company</a></li>
+                        <li><a asp-controller="Branch" asp-action="Index" class="">Branch</a></li>
+                        <li><a asp-controller="Department" asp-action="Index" class="">Department</a></li>
+                        <li><a asp-controller="Position" asp-action="Index" class="">Position</a></li>
+                        <li><a asp-controller="EmployeeCategory" asp-action="Index" class="">Employee Category</a></li>
+                    </ul>
+                </div>
+            </li>
+            <li>
+                <a href="#settings" data-toggle="collapse" class="collapsed"><i class="lnr lnr-cog"></i> <span>Settings</span> <i class="icon-submenu lnr lnr-chevron-left"></i></a>
+                <div id="settings" class="collapse ">
+                    <ul class="nav">
+                        <li><a asp-controller="Rating" asp-action="Index" class="">Ratings</a></li>
+                        <li><a asp-controller="RatingTable" asp-action="Index" class="">Rating Table</a></li>
+                        <li><a asp-controller="KeyResultArea" asp-action="Index" class="">Key Results Area</a></li>
+                        <li><a asp-controller="BehavioralFactor" asp-action="Index" class="">Behavioral KRA</a></li>
+                        <li><a asp-controller="EmployeeAssignment" asp-action="Index" class="">Employee KRA Assignment</a></li>
+                    </ul>
+                </div>
+            </li>
+            <li>
+                <a href="#user" data-toggle="collapse" class="collapsed"><i class="lnr lnr-user"></i> <span>Accounts</span> <i class="icon-submenu lnr lnr-chevron-left"></i></a>
+                <div id="user" class="collapse ">
+                    <ul class="nav">
+                        <li><a asp-controller="Account" asp-action="Index" class="">Users</a></li>
+                        <li><a asp-controller="AccountRole" asp-action="Index" class="">User Roles</a></li>
+                        <li><a asp-controller="ApproverAssignment" asp-action="Index" class="">Approver Assignment</a></li>
+                    </ul>
+                </div>
+            </li>
+            <li>
+                <a href="#employees" data-toggle="collapse" class="collapsed"><i class="lnr lnr-users"></i> <span>Employees</span> <i class="icon-submenu lnr lnr-chevron-left"></i></a>
+                <div id="employees" class="collapse ">
+                    <ul class="nav">
+                        <li><a asp-controller="Employee" asp-action="Index" class="">Employee</a></li>
+                        <li><a asp-controller="RaterAssignment" asp-action="RaterList" class="">Rater Assignment</a></li>
+                    </ul>
+                </div>
+            </li>
+            <li>
+                <a href="#rating" data-toggle="collapse" class="collapsed"><i class="lnr lnr-star"></i> <span>Evaluation</span> <i class="icon-submenu lnr lnr-chevron-left"></i></a>
+                <div id="rating" class="collapse ">
+                    <ul class="nav">
+                        <li><a asp-controller="Evaluation" asp-action="Index" class="">Create New</a></li>
+                        <li><a asp-controller="EvaluationList" asp-action="List" class="">Evaluation List</a></li>
+                        <li><a asp-controller="EvaluationApproval" asp-action="Index" class="">Approval</a></li>
+                    </ul>
+                </div>
+            </li>
+        </ul>
+    </nav>
+</div>

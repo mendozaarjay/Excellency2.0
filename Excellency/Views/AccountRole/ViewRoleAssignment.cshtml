@@ -1,0 +1,96 @@
+﻿@model Excellency.ViewModels.AccountRoleAssignmentViewModel
+@{
+    ViewData["Title"] = "Role Assignment";
+}
+
+<div class="panel panel-headline">
+    <div class="panel-heading">
+        <h3 class="panel-title">@Model.Description</h3>
+    </div>
+    <div class="panel-body">
+        <div>
+            @using (Html.BeginForm("AddRoleAssignment", "AccountRole"))
+            {
+                <input type="hidden" id="RoleId" name="RoleId" value="@Model.RoleId" />
+                <div class="form-group">
+                    <label for="searchaccount">Select account to add</label>
+                    <select multiple class="chosen-select form-control" data-placeholder="Select Employee" name="SelectedItems">
+                        @foreach (var item in Model.Accounts)
+                        {
+                            <option value="@item.Id">@item.Name</option>
+                        }
+                    </select>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">Add To List</button>
+                </div>
+            }
+        </div>
+        <div class="table-responsive">
+            <table class="table table-condensed">
+                <thead>
+                    <tr>
+                        <th hidden="hidden">Id</th>
+                        <th>Name</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach(var item in Model.AssignedAccounts)
+                    {
+                        <tr>
+                            <td hidden="hidden">@item.RecordId</td>
+                            <td>@item.Name</td>
+                            <td><a class="fa fa-trash" data-toggle="modal" data-target="#delete" data-id="@item.RecordId" data-roleid="@Model.RoleId"></a></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="delete" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        @using (Html.BeginForm("RemoveAccountItem", "AccountRole"))
+        {
+            @Html.AntiForgeryToken()
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Confirmation</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to delete the current record?</p>
+                    <input type="text" name="roleid" hidden="hidden" />
+                    <input type="text" name="id" hidden="hidden" />
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+@section Scripts{
+    <script type="text/javascript">
+        $(function () {
+            $(".chosen-select").chosen(
+                { width: "100%" }
+            );
+        });
+    </script>
+    <script type="text/javascript">
+        $('#delete').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget)
+            var id = button.data('id')
+            var roleid = button.data('roleid')
+            var modal = $(this)
+            modal.find('.modal-body input').val(id)
+            $(".modal-body #roleid").val(roleid)
+        })
+    </script>
+}
+

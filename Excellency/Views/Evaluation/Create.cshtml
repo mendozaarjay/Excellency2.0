@@ -1,0 +1,38 @@
+﻿@model Excellency.ViewModels.EvaluationIndexViewModel
+@{
+    ViewData["Title"] = "Create";
+}
+
+<div class="panel">
+    <div class="panel-heading">
+        <h3 class="panel-title">Create A New Evaluation</h3>
+    </div>
+    <div class="panel-body">
+        @using (Html.BeginForm("Evaluate", "Evaluation", FormMethod.Get))
+        {
+            <div class="form-group">
+                <p>Select the Employee you want to evaluate to continue.</p>
+                <select id="employee" class="form-control" name="id">
+                    @foreach (var item in Model.Employees)
+                    {
+                        <option value="@item.Id">@item.Name</option>
+                    }
+                </select>
+            </div>
+            <div class="form-group">
+                <p>Select the Key Result Area.</p>
+                <select id="kra" class="form-control" name="kra">
+                    @foreach (var item in Model.KeyResultAreas)
+                    {
+                        <option value="@item.Id">@item.Title</option>
+                    }
+                </select>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-success">Evaluate Now</button>
+            </div>
+        }
+    </div>
+</div>
+
+

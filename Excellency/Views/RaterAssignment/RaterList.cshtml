@@ -1,0 +1,41 @@
+﻿@model Excellency.ViewModels.RaterListingViewModel
+@{
+    ViewData["Title"] = "Rater List";
+}
+<div class="panel panel-headline">
+    <div class="panel-heading">
+        <h3 class="panel-title">List of Raters</h3>
+    </div>
+    <div class="panel-body">
+        <div class="table-responsive">
+            <table class="table table-condensed">
+                <thead>
+                    <tr>
+                        <th hidden="hidden">Id</th>
+                        <th>Name</th>
+                        <th>Company</th>
+                        <th>Branch</th>
+                        <th>Position</th>
+                        <th>Department</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Raters)
+                    {
+                        <tr>
+                            <td hidden="hidden">@item.Id</td>
+                            <td>@item.Name</td>
+                            <td>@item.Company</td>
+                            <td>@item.Branch</td>
+                            <td>@item.Position</td>
+                            <td>@item.Department</td>
+                            <td><a role="button" class="btn btn-success btn-sm" asp-controller="RaterAssignment" asp-action="EditRater" asp-route-id ="@item.Id">Edit</a></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+

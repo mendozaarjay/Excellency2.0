@@ -1,0 +1,39 @@
+﻿@model Excellency.ViewModels.EditBehavioralEvaluation
+@{
+    ViewData["Title"] = "Behavioral Factor";
+}
+<div class="panel panel-headline">
+    <div class="panel-heading">
+        <h3 class="panel-title"> Behavioral Evaluation : @Model.Name</h3>
+        <p class="panel-subtitle">@Model.Title : <i>@Model.Description - Weight : @Model.Weight</i> </p>
+    </div>
+    <div class="panel-body">
+        @using (Html.BeginForm("SubmitEditBehavioral", "Evaluation"))
+        {
+            @Html.AntiForgeryToken()
+            int count = 0;
+            <input type="hidden" name="BehavioralId" value="@Model.BehavioralId" />
+            <input type="hidden" name="HeaderId" value="@Model.HeaderId" />
+            <input type="hidden" name="EmployeeId" value="@Model.EmployeeId" />
+            @foreach (var item in Model.BehavioralItems)
+            {
+                <div class="form-group form-horizontal">
+                    @Html.HiddenFor(m => m.BehavioralItems[count].RecordId)
+                    @Html.HiddenFor(m => m.BehavioralItems[count].Id)
+                    <p><strong>@item.Description</strong> - <i>Weight : @item.Weight</i></p>
+                    @Html.ValidationMessageFor(m => item.Score)
+                    @Html.EditorFor(m => m.BehavioralItems[count].Score, new { htmlAttributes = new { @type = "number", @min = "1", @step = "1", @value = "1", @max = item.Weight, @class = "form-control" } })
+                    @Html.LabelFor(m => m.BehavioralItems[count].Comment)
+                    @Html.TextAreaFor(m => m.BehavioralItems[count].Comment, new { @class = "form-control" })
+                </div>
+                <hr />
+                count++;
+            }
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+        }
+    </div>
+</div>
+
+

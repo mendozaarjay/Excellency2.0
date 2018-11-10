@@ -1,0 +1,210 @@
+﻿@model Excellency.ViewModels.KeyResultAreaContentViewModel
+@{
+    ViewData["Title"] = "Content";
+}
+
+<div class="panel panel-headline">
+    <div class="panel-heading">
+        <h3 class="panel-title">@Model.Title</h3>
+        <p class="panel-subtitle">@Model.Description</p>
+    </div>
+    <div class="panel-body">
+        <div class="clearfix" />
+        <div class="panel">
+            <div class="panel-heading">
+                <h3 class="panel-title">Key Success Indicator</h3>
+                <div class="right">
+                    <button type="button" data-toggle="modal" data-target="#addnew" data-kraid="@Model.KeyResultAreaId"><i class="fa fa-plus"></i></button>
+                </div>
+            </div>
+            <div class="panel-body">
+                <div class="table-responsive">
+                    <table class="table table-condensed">
+                        <thead>
+                            <tr>
+                                <th hidden="hidden">Id</th>
+                                <th>Title</th>
+                                <th>Description</th>
+                                <th>Weight</th>
+                                <th scope="col" class="col-md-1"></th>
+                                <th scope="col" class="col-md-1"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.SuccessIndicators)
+                            {
+                                <tr>
+                                    <td hidden="hidden">@item.Id</td>
+                                    <td><strong>@item.Title</strong></td>
+                                    <td>@item.Description</td>
+                                    <td>@item.Weight</td>
+                                    <td class="text-center"><a data-toggle="modal" data-target="#edit" data-id="@item.Id" data-title="@item.Title" data-weight="@item.Weight" data-description="@item.Description" data-kraid="@Model.KeyResultAreaId" data-ratingtableid="@item.RatingTableId"><i class="fa fa-pencil text-success"></i></a></td>
+                                    <td class="text-center"><a data-toggle="modal" data-target="#delete" data-id="@item.Id" data-kraid="@Model.KeyResultAreaId"><i class="fa fa-trash text-danger"></i></a></td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add New -->
+<div class="modal fade" id="addnew" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    @using (Html.BeginForm("SaveKeySuccessIndicator", "KeyResultArea"))
+    {
+        @Html.AntiForgeryToken()
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Add New Key Success Indicator</h4>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="kraid" id="kraid" />
+                    <div class="form-group">
+                        <label for="ksititle">Title</label>
+                        <input class="form-control" name="ksititle" id="ksititle" placeholder="Title" />
+                    </div>
+                    <div class="form-group">
+                        <label for="ksidescription">Description</label>
+                        <input class="form-control" name="ksidescription" id="ksidescription" placeholder="Description" />
+                    </div>
+                    <div class="form-group">
+                        <label for="ksiweight">Weight</label>
+                        <input type="number" class="form-control" name="ksiweight" id="ksiweight" placeholder="Weight" />
+                    </div>
+                    <div class="form-group">
+                        <label for="ratingtableid">Rating Table</label>
+                        <select class="form-control" name="ratingtableid" id="ratingtableid">
+                            @foreach (var item in Model.RatingTables)
+                            {
+                                <option value="@item.Id">@item.Description</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+<!--End of Save-->
+<!-- Edit -->
+<div class="modal fade" id="edit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    @using (Html.BeginForm("SaveKeySuccessIndicator", "KeyResultArea"))
+    {
+        @Html.AntiForgeryToken()
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Edit Key Success Indicator</h4>
+                    
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="ksiid" id="ksiid" />
+                    <input type="hidden" name="kraid" id="kraid" />
+                    <div class="form-group">
+                        <label for="ksititle">Title</label>
+                        <input class="form-control" name="ksititle" id="ksititle" placeholder="Title" />
+                    </div>
+                    <div class="form-group">
+                        <label for="ksidescription">Description</label>
+                        <input class="form-control" name="ksidescription" id="ksidescription" placeholder="Description" />
+                    </div>
+                    <div class="form-group">
+                        <label for="ksiweight">Weight</label>
+                        <input type="number" class="form-control" name="ksiweight" id="ksiweight" placeholder="Weight" />
+                    </div>
+                    <div class="form-group">
+                        <label for="ratingtableid">Rating Table</label>
+                        <select class="form-control" name="ratingtableid" id="ratingtableid">
+                            @foreach (var item in Model.RatingTables)
+                            {
+                                <option value="@item.Id">@item.Description</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+<!--End Of Edit-->
+<!--Delete-->
+<div class="modal fade" id="delete" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        @using (Html.BeginForm("RemoveSuccessIndicator", "KeyResultArea"))
+        {
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Confirmation</h4>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="ksiid" id="ksiid" />
+                    <input type="hidden" name="kraid" id="kraid" />
+                    <p>Are you sure you want to delete the current record?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+<!--End of Delete-->
+
+
+@section Scripts{
+    <script type="text/javascript">
+        $('#addnew').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget)
+            var kraid = button.data('kraid')
+            var modal = $(this)
+            $(".modal-body #kraid").val(kraid)
+
+        })
+    </script>
+    <script type="text/javascript">
+        $('#edit').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget)
+            var kraid = button.data('kraid')
+            var id = button.data('id')
+            var title = button.data('title')
+            var description = button.data('description')
+            var ratingtableid = button.data('ratingtableid')
+            var weight = button.data('weight')
+            var modal = $(this)
+            $(".modal-body #kraid").val(kraid)
+            $(".modal-body #ksiid").val(id)
+            $(".modal-body #ksititle").val(title)
+            $(".modal-body #ksidescription").val(description)
+            $(".modal-body #ksiweight").val(weight)
+            $(".modal-body #ratingtableid").val(ratingtableid)
+
+        })
+    </script>
+
+    <script type="text/javascript">
+        $('#delete').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget)
+            var kraid = button.data('kraid')
+            var id = button.data('id')
+            var modal = $(this)
+            $(".modal-body #kraid").val(kraid)
+            $(".modal-body #ksiid").val(id)
+        })
+    </script>
+}
+
