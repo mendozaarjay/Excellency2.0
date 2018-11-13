@@ -9,12 +9,14 @@ using Excellency.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Excellency.Interfaces;
 using Excellency.Secured;
+using Newtonsoft.Json;
 
 namespace Excellency.Controllers
 {
     public class HomeController : Controller
     {
         private IHome _Home;
+        JsonSerializerSettings JsonSerializer = new JsonSerializerSettings() { NullValueHandling = NullValueHandling.Ignore };
 
         public HomeController(IHome home)
         {
@@ -22,6 +24,7 @@ namespace Excellency.Controllers
         }
         public IActionResult Index(UserAccountViewModel model)
         {
+
             return View(model);
         }
 

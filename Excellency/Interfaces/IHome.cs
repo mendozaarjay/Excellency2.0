@@ -1,4 +1,5 @@
 ﻿using Excellency.Models;
+using System.Collections.Generic;
 
 namespace Excellency.Interfaces
 {
@@ -19,5 +20,8 @@ namespace Excellency.Interfaces
         Account GetAccountById(int id);
 
         string GetUserNameById(int id);
+
+
+        //List<DataPoint> EvaluatedEmployees(int userid);
     }
 }
