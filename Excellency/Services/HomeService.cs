@@ -112,6 +112,7 @@ namespace Excellency.Services
                 KeyResultArea = (_isRater || _isAdmin),
                 BehavioralKRA = (_isRater || _isAdmin),
                 EmployeeKRAAssignment = (_isRater || _isAdmin),
+                PeerCriteria = (_isRater || _isAdmin),
                 //Accounts
                 Users = _isAdmin,
                 UserRoles = _isAdmin,

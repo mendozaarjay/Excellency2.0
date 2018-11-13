@@ -33,6 +33,7 @@ namespace Excellency.Models
         public bool RatingTable { get; set; }
         public bool KeyResultArea { get; set; }
         public bool BehavioralKRA { get; set; }
+        public bool PeerCriteria { get; set; }
         public bool EmployeeKRAAssignment { get; set; }
 
         /// <summary>

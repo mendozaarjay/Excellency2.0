@@ -1,0 +1,159 @@
+﻿@model Excellency.ViewModels.PeerCriteriaLineIndexViewModel
+@{
+    ViewData["Title"] = "Peer Criteria Items";
+}
+
+<div class="panel panel-headline">
+    <div class="panel-heading">
+        <h3 class="panel-title">@Model.HeaderTitle</h3>
+        <p class="panel-subtitle">@Model.HeaderDescription</p>
+        <div class="right">
+            <button type="button" data-toggle="modal" data-target="#addnew" data-headerid="@Model.HeaderId"><i class="fa fa-plus"></i></button>
+        </div>
+    </div>
+    <div class="panel-body">
+        <div class="table-responsive">
+            <table class="table table-condensed">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Description</th>
+                        <th>Weight</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.LineItems)
+                    {
+                        <tr>
+                            <td>@item.Id</td>
+                            <td>@item.Description</td>
+                            <td>@item.Weight</td>
+                            <td><a class="fa fa-pencil text-success" data-toggle="modal" data-target="#edit" data-id="@item.Id" data-description="@item.Description" data-weight="@item.Weight" data-headerid="@Model.HeaderId"></a></td>
+                            <td><a class="fa fa-trash text-danger" data-toggle="modal" data-target="#delete" data-id="@item.Id"></a></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="addnew" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    @using (Html.BeginForm("SaveLineItem", "PeerCriteria"))
+    {
+        @Html.AntiForgeryToken()
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Peer Criteria</h4>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="headerid" id="headerid" />
+                    <div class="form-group">
+                        <label for="description">Description</label>
+                        <input type="text" id="description" name="Criteria.Description" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label for="weight">Weight</label>
+                        <input type="number" id="weight" name="Criteria.Weight" class="form-control" />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+
+<div class="modal fade" id="edit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    @using (Html.BeginForm("SaveLineItem", "PeerCriteria"))
+    {
+        @Html.AntiForgeryToken()
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Peer Criteria</h4>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="headerid" id="headerid" />
+                    <input type="hidden" name="Criteria.Id" id="id" />
+                    <div class="form-group">
+                        <label for="description">Description</label>
+                        <input type="text" id="description" name="Criteria.Description" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label for="weight">Weight</label>
+                        <input type="number" id="weight" name="Criteria.Weight" class="form-control" />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+
+<div class="modal fade" id="delete" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        @using (Html.BeginForm("RemoveLineItem", "PeerCriteria"))
+        {
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Confirmation</h4>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="id" id="id" />
+                    <p>Are you sure you want to delete the current record?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+
+
+@section Scripts{
+    <script type="text/javascript">
+        $('#delete').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget)
+            var kraid = button.data('id')
+            var id = button.data('id')
+            $(".modal-body #id").val(id)
+        })
+        $('#edit').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget)
+
+            var id = button.data('id')
+            var description = button.data('description')
+            var weight = button.data('weight')
+            var headerid = button.data('headerid')
+
+            $(".modal-body #headerid").val(headerid)
+            $(".modal-body #id").val(id)
+            $(".modal-body #description").val(description)
+            $(".modal-body #weight").val(weight)
+
+        })
+
+        $('#delete').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget)
+            var id = button.data('id')
+            $(".modal-body #id").val(id)
+        })
+    </script>
+}

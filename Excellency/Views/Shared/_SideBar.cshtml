@@ -59,6 +59,10 @@
                             {
                                 <li><a asp-controller="BehavioralFactor" asp-action="Index" class="">Behavioral KRA</a></li>
                             }
+                            @if (Model.UserAccess.PeerCriteria)
+                            {
+                                <li><a asp-controller="PeerCriteria" asp-action="Index" class="">Peer Evaluation Criteria</a></li>
+                            }
                             @if (Model.UserAccess.EmployeeKRAAssignment)
                             {
                                 <li><a asp-controller="EmployeeAssignment" asp-action="Index" class="">Employee KRA Assignment</a></li>
