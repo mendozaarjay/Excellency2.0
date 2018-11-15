@@ -18,6 +18,7 @@ namespace Excellency.Controllers
         {
             _Module = module;
         }
+        [SessionAuthorized]
         public IActionResult Index()
         {
             var result = _Module.Modules().Select

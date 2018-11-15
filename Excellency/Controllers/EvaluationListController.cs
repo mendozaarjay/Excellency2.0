@@ -10,11 +10,12 @@ namespace Excellency.Controllers
 {
     public class EvaluationListController : Controller
     {
-        // GET: /<controller>/
+        [SessionAuthorized]
         public IActionResult Index()
         {
             return View();
         }
+        [SessionAuthorized]
         public IActionResult List()
         {
             return View();

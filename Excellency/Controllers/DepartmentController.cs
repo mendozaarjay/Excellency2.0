@@ -18,7 +18,7 @@ namespace Excellency.Controllers
         {
             _Department = department;
         }
-        // GET: /<controller>/
+        [SessionAuthorized]
         public IActionResult Index()
         {
             var result = _Department.Departments().Select

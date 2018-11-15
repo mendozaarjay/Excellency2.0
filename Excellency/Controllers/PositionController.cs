@@ -18,6 +18,7 @@ namespace Excellency.Controllers
         {
             _Position = position;
         }
+        [SessionAuthorized]
         public IActionResult Index()
         {
             var result = _Position.Positions().Select

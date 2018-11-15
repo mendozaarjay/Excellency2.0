@@ -19,7 +19,7 @@ namespace Excellency.Controllers
         {
             _BehavioralFactor = behavioralFactor;
         }
-
+        [SessionAuthorized]
         public IActionResult Index()
         {
             var result = _BehavioralFactor.GetBehavioralFactors()
@@ -73,6 +73,7 @@ namespace Excellency.Controllers
                 return RedirectToAction("Index",model);
             }
         }
+        [SessionAuthorized]
         public IActionResult BehavioralFactorItems(int id)
         {
             var _factor = _BehavioralFactor.GetBehavioralFactorById(id);

@@ -20,7 +20,7 @@ namespace Excellency.Controllers
         {
             _EmployeeCategory = employeeCategory;
         }
-        // GET: /<controller>/
+        [SessionAuthorized]
         public IActionResult Index()
         {
             var result = _EmployeeCategory.EmployeeCategories()

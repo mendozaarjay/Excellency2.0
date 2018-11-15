@@ -18,6 +18,7 @@ namespace Excellency.Controllers
         {
             _Employee = employee;
         }
+        [SessionAuthorized]
         public IActionResult Index()
         {
             var result = _Employee.Employees().Select
@@ -39,6 +40,7 @@ namespace Excellency.Controllers
             };
             return View(model);
         }
+        [SessionAuthorized]
         public IActionResult AddEmployee()
         {
             var model = new EmployeeRegisterViewModel
@@ -85,6 +87,7 @@ namespace Excellency.Controllers
                 return RedirectToAction("AddEmployee", model);
             }
         }
+        [SessionAuthorized]
         public IActionResult Edit(int id)
         {
             var item = _Employee.GetEmployeeById(id);

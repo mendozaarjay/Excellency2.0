@@ -19,7 +19,7 @@ namespace Excellency.Controllers
         {
             _Branch = branch;
         }
-
+        [SessionAuthorized]
         public IActionResult Index()
         {
             var result = _Branch.Branches().Select

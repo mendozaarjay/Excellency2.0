@@ -7,7 +7,6 @@ using Excellency.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-// For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace Excellency.Controllers
 {
@@ -19,7 +18,7 @@ namespace Excellency.Controllers
         {
             _EvaluationApproval = evaluation;
         }
-
+        [SessionAuthorized]
         public IActionResult Index()
         {
             var UserId = int.Parse(HttpContext.Session.GetString("UserId"));
@@ -40,6 +39,7 @@ namespace Excellency.Controllers
             };
             return View();
         }
+        [SessionAuthorized]
         public IActionResult ViewBehavioral(int headerid)
         {
             var header = _EvaluationApproval.GetRatingHeaderById(headerid);
@@ -67,6 +67,7 @@ namespace Excellency.Controllers
             };
             return View(model);
         }
+        [SessionAuthorized]
         public IActionResult ViewKeyResultArea(int headerid)
         {
             var header = _EvaluationApproval.GetRatingHeaderById(headerid);
@@ -97,7 +98,7 @@ namespace Excellency.Controllers
             };
             return View(model);
         }
-
+        [SessionAuthorized]
         public IActionResult ViewEvaluation(int id,string type)
         {
             if (type == "kra")

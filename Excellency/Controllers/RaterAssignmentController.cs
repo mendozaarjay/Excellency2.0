@@ -18,11 +18,13 @@ namespace Excellency.Controllers
         {
             _RaterAssignment = raterAssignment;
         }
+        [SessionAuthorized]
         public IActionResult Index()
         {
 
             return View();
         }
+        [SessionAuthorized]
         public IActionResult RaterList()
         {
             var result = _RaterAssignment.Raters().Select
@@ -41,6 +43,7 @@ namespace Excellency.Controllers
             model.Raters = result;
             return View(model);
         }
+        [SessionAuthorized]
         [HttpGet]
         public IActionResult EditRater(int id)
         {

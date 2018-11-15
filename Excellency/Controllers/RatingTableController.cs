@@ -18,7 +18,7 @@ namespace Excellency.Controllers
         {
             _RatingTable = ratingTable;
         }
-        // GET: /<controller>/
+        [SessionAuthorized]
         public IActionResult Index()
         {
             var result = _RatingTable.RatingTables().Select(a => new RatingTableViewModel
@@ -59,6 +59,7 @@ namespace Excellency.Controllers
             _RatingTable.RemoveById(model.RatingTable.Id);
             return RedirectToAction("Index");
         }
+        [SessionAuthorized]
         public IActionResult RatingTableItems(int id)
         {
             var result = _RatingTable.TableItemsPerId(id).Select(a => new RatingTableItemViewModel

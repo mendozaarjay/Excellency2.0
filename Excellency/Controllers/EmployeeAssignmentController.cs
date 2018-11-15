@@ -16,6 +16,7 @@ namespace Excellency.Controllers
         {
             _EmployeeAssignment = employeeAssignment;
         }
+        [SessionAuthorized]
         public IActionResult Index()
         {
             var result = _EmployeeAssignment.Employees().Select(a => new EmployeeViewModel
@@ -35,6 +36,7 @@ namespace Excellency.Controllers
             };
             return View(model);
         }
+        [SessionAuthorized]
         public IActionResult Assignment(int id)
         {
             var _employee = _EmployeeAssignment.EmployeeById(id);

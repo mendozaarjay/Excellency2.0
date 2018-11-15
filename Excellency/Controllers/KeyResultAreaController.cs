@@ -20,6 +20,7 @@ namespace Excellency.Controllers
             _KeyResultArea = keyResultArea;
         }
         #region Key Result Area
+        [SessionAuthorized]
         public IActionResult Index()
         {
             var result = _KeyResultArea.GetAllKeyResultArea().Select(
@@ -74,9 +75,10 @@ namespace Excellency.Controllers
         {
             _KeyResultArea.RemoveById(id);
             return RedirectToAction("Index");
-        } 
+        }
         #endregion
         #region Key Success Indicator
+        [SessionAuthorized]
         public IActionResult Content(int id)
         {
             var kra = _KeyResultArea.GetKeyResultAreaById(id);
@@ -141,6 +143,7 @@ namespace Excellency.Controllers
         #endregion
 
         #region Category
+        [SessionAuthorized]
         public IActionResult Category(int id)
         {
             var result = _KeyResultArea.CategoriesPerKSIId(id).

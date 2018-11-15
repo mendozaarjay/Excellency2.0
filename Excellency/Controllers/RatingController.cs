@@ -18,6 +18,7 @@ namespace Excellency.Controllers
         {
             _Rating = rating;
         }
+        [SessionAuthorized]
         public IActionResult Index()
         {
             var result = _Rating.GetAllRatings().Select(

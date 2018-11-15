@@ -22,6 +22,7 @@ namespace Excellency.Controllers
         {
             _Home = home;
         }
+        [SessionAuthorized]
         public IActionResult Index(UserAccountViewModel model)
         {
 

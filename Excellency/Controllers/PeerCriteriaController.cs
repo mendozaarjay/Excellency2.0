@@ -18,7 +18,7 @@ namespace Excellency.Controllers
         {
             _PeerCriteria = peer;
         }
-
+        [SessionAuthorized]
         public IActionResult Index()
         {
             var result = _PeerCriteria.PeerCriteriaHeaders()
@@ -60,6 +60,7 @@ namespace Excellency.Controllers
             _PeerCriteria.RemoveHeaderById(id);
             return RedirectToAction("Index");
         }
+        [SessionAuthorized]
         public IActionResult PeerLineItem(int id)
         {
             var header = _PeerCriteria.GetPeerCriteriaHeaderById(id);

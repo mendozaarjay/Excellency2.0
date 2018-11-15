@@ -19,7 +19,7 @@ namespace Excellency.Controllers
         {
             _Evaluation = evaluation;
         }
-        // GET: /<controller>/
+
         public IActionResult Index()
         {
             var UserId = int.Parse(HttpContext.Session.GetString("UserId"));
@@ -41,6 +41,7 @@ namespace Excellency.Controllers
             };
             return View(model);
         }
+        [SessionAuthorized]
         public IActionResult Create()
         {
             var UserId = int.Parse(HttpContext.Session.GetString("UserId"));
@@ -65,6 +66,7 @@ namespace Excellency.Controllers
             };
             return View(model);
         }
+        [SessionAuthorized]
         [HttpGet]
         public IActionResult Evaluate(int id,int kra)
         {
@@ -156,6 +158,7 @@ namespace Excellency.Controllers
             _Evaluation.Save(Header, LineItems, account);
             return RedirectToAction("Create");
         }
+        [SessionAuthorized]
         public IActionResult EmployeeEvaluation(int id)
         {
             var model = new EmployeeEvaluationViewModel();
@@ -187,6 +190,7 @@ namespace Excellency.Controllers
             model.KRACategories = kra;
             return View(model);
         }
+        [SessionAuthorized]
         public IActionResult EvaluateBehavioral(int id,int factor)
         {
             var name = _Evaluation.EmployeeNameById(id);
@@ -248,6 +252,7 @@ namespace Excellency.Controllers
                 return RedirectToAction("EvaluateBehavioral",new { id = model.EmployeeId, factor = model.BehavioralId });
             }
         }
+        [SessionAuthorized]
         public IActionResult EvaluateKeyResultArea(int id,int kraid)
         {
             var name = _Evaluation.EmployeeNameById(id);
@@ -319,7 +324,7 @@ namespace Excellency.Controllers
                 return RedirectToAction("EvaluateBehavioral", new { id = model.EmployeeId, kraid = model.KeyResultAreaId });
             }
         }
-
+        [SessionAuthorized]
         public IActionResult EditBehavioral(int empid,int id)
         {
             var name = _Evaluation.EmployeeNameById(empid);
@@ -369,6 +374,7 @@ namespace Excellency.Controllers
             _Evaluation.UpdateRatingBehavioral(model.HeaderId, UserId, items);
             return RedirectToAction("EmployeeEvaluation", new { id = model.EmployeeId });
         }
+        [SessionAuthorized]
         public IActionResult EditKeyResult(int empid,int id)
         {
             var name = _Evaluation.EmployeeNameById(empid);

@@ -18,6 +18,7 @@ namespace Excellency.Controllers
         {
             _Company = company;
         }
+        [SessionAuthorized]
         public IActionResult Index()
         {
             var result = _Company.Companies().Select

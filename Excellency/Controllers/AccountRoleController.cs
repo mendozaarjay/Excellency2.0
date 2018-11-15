@@ -16,7 +16,7 @@ namespace Excellency.Controllers
         {
             _AccountRole = role;
         }
-
+        [SessionAuthorized]
         public IActionResult Index()
         {
             var items = _AccountRole.GetAllRoles()
@@ -32,6 +32,7 @@ namespace Excellency.Controllers
             };
             return View(model);
         }
+        [SessionAuthorized]
         public IActionResult ViewRoleAssignment(int id)
         {
             var header = _AccountRole.GetRoleById(id);

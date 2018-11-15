@@ -9,6 +9,7 @@ using System.Linq;
 
 namespace Excellency.Controllers
 {
+
     public class ApproverAssignmentController : Controller
     {
         private IApproverAssignment _Approver;
@@ -17,7 +18,7 @@ namespace Excellency.Controllers
         {
             _Approver = approver;
         }
-        // GET: /<controller>/
+        [SessionAuthorized]
         public IActionResult Index()
         {
             var result = _Approver.GetAllAccounts()
@@ -37,6 +38,7 @@ namespace Excellency.Controllers
             };
             return View(model);
         }
+        [SessionAuthorized]
         public IActionResult Assignment(int id)
         {
             var name = _Approver.GetNameById(id);

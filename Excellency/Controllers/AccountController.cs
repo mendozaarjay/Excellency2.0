@@ -20,6 +20,7 @@ namespace Excellency.Controllers
         {
             _UserAccount = account;
         }
+        [SessionAuthorized]
         public IActionResult Index()
         {
 
@@ -39,6 +40,7 @@ namespace Excellency.Controllers
         }
 
         #region User Registration
+        [SessionAuthorized]
         public IActionResult Register()
         {
             var model = new AccountRegisterViewModel
