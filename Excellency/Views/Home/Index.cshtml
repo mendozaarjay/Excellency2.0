@@ -169,7 +169,14 @@
                             @foreach (var item in Model.Employees)
                             {
                                 <tr>
-                                    <td><a href="#">@item.Name </a></td>
+                                    @if (item.IsRated)
+                                    {
+                                        <td><a asp-controller="Home" asp-action="EmployeeDashboard" asp-route-id="@item.Id">@item.Name </a></td>
+                                    }
+                                    else
+                                    {
+                                        <td>@item.Name</td>
+                                    }
                                     @if (item.IsRated)
                                     {
                                         <td>

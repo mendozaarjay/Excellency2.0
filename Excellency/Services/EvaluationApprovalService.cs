@@ -55,12 +55,22 @@ namespace Excellency.Services
                 .Where(a => a.Approver.Id == UserId && a.IsDeleted == false)
                 .Select(a => a.User.Id);
 
-            var ratings = _dbContext.RatingHeader
+            var ratings = new List<RatingHeader>();
+            foreach(var id in AssignedUser)
+            {
+                var items = _dbContext.RatingHeader
                 .Include(a => a.Rater)
                 .Include(a => a.Ratee)
                 .Include(a => a.Status)
-                .Include(a => a.Type)
-                .Where(a => AssignedUser.Contains(a.Rater.Id) && a.IsExpired == false);
+ 
+                .Where(a => a.Rater.Id == id && a.IsExpired == false);
+
+                foreach(var item in items)
+                {
+                    ratings.Add(item);
+                }
+            }
+
             return ratings;         
         }
 
@@ -79,6 +89,7 @@ namespace Excellency.Services
             var result = _dbContext.RatingKeySuccessAreas
                 .Include(a => a.KeyResultArea)
                 .Include(a => a.KeySuccessIndicator)
+                .Include(a => a.KeySuccessIndicator.RatingTable)
                 .Include(a => a.RatingHeader)
                 .Include(a => a.RatingHeader.Ratee)
                 .Where(a => a.RatingHeader.Id == headerid);

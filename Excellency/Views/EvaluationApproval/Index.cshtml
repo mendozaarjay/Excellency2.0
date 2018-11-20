@@ -25,14 +25,21 @@
                 <tbody>
                     @foreach(var item in Model.Evaluations)
                     {
-                        <tr>
-                            <td>@item.EmployeeName</td>
-                            <td>@item.RaterName</td>
-                            <td>@item.CreationDate</td>
-                            <td>@item.Status</td>
-                            <td>@item.TypeDescription</td>
+                    <tr>
+                        <td>@item.EmployeeName</td>
+                        <td>@item.RaterName</td>
+                        <td>@item.CreationDate</td>
+                        <td>@item.Status</td>
+                        <td>@item.TypeDescription</td>
+                        @if (!item.Status.ToLower().Equals("approved"))
+                        {
                             <td><a class="fa fa-check text-primary" asp-controller="EvaluationApproval" asp-action="ViewEvaluation" asp-route-id="@item.Id" asp-route-type="@item.Type"></a></td>
-                        </tr>
+                        }
+                        else
+                        {
+                            <td><span class="label label-success">Approved</span></td>
+                        }
+                    </tr>
                     }
                 </tbody>
             </table>

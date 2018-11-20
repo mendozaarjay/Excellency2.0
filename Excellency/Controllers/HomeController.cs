@@ -162,5 +162,26 @@ namespace Excellency.Controllers
 
             return RedirectToAction("Login");
         }
+        [SessionAuthorized]
+        public IActionResult EmployeeDashboard(int id)
+        {
+            var total = _Home.EmployeeTotalScore(id);
+            var name = _Home.EmployeeNameById(id);
+            var bstrength = _Home.BehavioralStrength(id);
+            var bweakness = _Home.BehavioralWeakness(id);
+            var krastregth = _Home.KeyResultAreaStrength(id);
+            var kraweakness = _Home.KeyResultAreaWeakness(id);
+            var model = new EmployeeDashboardViewModel
+            {
+                EmployeeId = id,
+                EmployeeName = name,
+                TotalScore = total,
+                BehavioralStrength = bstrength,
+                BehavioralWeakness = bweakness,
+                KeyResultStrength = krastregth,
+                KeyResultWeakness = kraweakness,
+            };
+            return View(model);
+        }
     }
 }

@@ -1,0 +1,199 @@
+﻿@model Excellency.Dashboard.EmployeeDashboardViewModel
+@{
+    ViewData["Title"] = "Evaluation Summary";
+}
+
+
+<div class="panel">
+    <div class="panel-heading">
+        <h3 class="panel-title">@Model.EmployeeName</h3>
+        <p class="panel-subtitle">Total Evaluation Score : @Model.TotalScore</p>
+    </div>
+    <div class="panel-body">
+        <div class="row">
+        <div class="panel">
+            <div class="panel-heading">
+                <h3 class="panel-title">Behavioral Factors</h3>
+            </div>
+            <div class="panel-body">
+                <div class="col-md-6">
+                    <p>Top Behavioral Factors (Excellence)</p>
+                    <ul class="list-unstyled task-list">
+                        @foreach (var item in Model.BehavioralStrength)
+                        {
+                            var percentagepx = (item.Percentage * 100).ToString() + "%";
+                            var percentage = (item.Percentage * 100);
+                            <li>
+
+                                <p>@item.Title : <i>Weight : @item.Weight</i> <span class="label-percent">@item.Score</span></p>
+                                <div class="progress progress-xs">
+                                    @if (percentage < 50)
+                                    {
+                                        <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="@percentage" aria-valuemin="0" aria-valuemax="100" style="width : @percentagepx">
+                                            <span class="sr-only">Scored : @percentage</span>
+                                        </div>
+                                    }
+                                    else if (percentage < 70)
+                                    {
+                                        <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="@percentage" aria-valuemin="0" aria-valuemax="100" style="width : @percentagepx">
+                                            <span class="sr-only">Scored : @percentage</span>
+                                        </div>
+                                    }
+                                    else if (percentage < 90)
+                                    {
+                                        <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="@percentage" aria-valuemin="0" aria-valuemax="100" style="width : @percentagepx">
+                                            <span class="sr-only">Scored : @percentage</span>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="@percentage" aria-valuemin="0" aria-valuemax="100" style="width : @percentagepx">
+                                            <span class="sr-only">Scored : @percentage</span>
+                                        </div>
+                                    }
+                                </div>
+                            </li>
+                        }
+
+                    </ul>
+                </div>
+                <div class="col-md-6">
+                    <p>Low Behavioral Factors (For Improvement)</p>
+                    <ul class="list-unstyled task-list">
+                        @foreach (var item in Model.BehavioralWeakness)
+                        {
+                            var percentagepx = (item.Percentage * 100).ToString() + "%";
+                            var percentage = (item.Percentage * 100);
+                            <li>
+
+                                <p>@item.Title : <i>Weight : @item.Weight</i> <span class="label-percent">@item.Score</span></p>
+                                <div class="progress progress-xs">
+                                    @if (percentage < 50)
+                                    {
+                                        <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="@percentage" aria-valuemin="0" aria-valuemax="100" style="width : @percentagepx">
+                                            <span class="sr-only">Scored : @percentage</span>
+                                        </div>
+                                    }
+                                    else if (percentage < 70)
+                                    {
+                                        <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="@percentage" aria-valuemin="0" aria-valuemax="100" style="width : @percentagepx">
+                                            <span class="sr-only">Scored : @percentage</span>
+                                        </div>
+                                    }
+                                    else if (percentage < 90)
+                                    {
+                                        <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="@percentage" aria-valuemin="0" aria-valuemax="100" style="width : @percentagepx">
+                                            <span class="sr-only">Scored : @percentage</span>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="@percentage" aria-valuemin="0" aria-valuemax="100" style="width : @percentagepx">
+                                            <span class="sr-only">Scored : @percentage</span>
+                                        </div>
+                                    }
+                                </div>
+                            </li>
+                        }
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+        </div>
+
+        <div class="row">
+            <div class="panel">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Key Result Area</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="col-md-6">
+                        <p>Top Key Result Area (Excellence)</p>
+                        <ul class="list-unstyled task-list">
+                            @foreach (var item in Model.KeyResultStrength)
+                            {
+                                var percentagepx = (item.Percentage * 100).ToString() + "%";
+                                var percentage = (item.Percentage * 100);
+                                <li>
+
+                                    <p>@item.Title : <i>Weight : @item.Weight</i> <span class="label-percent">@item.Score</span></p>
+                                    <div class="progress progress-xs">
+                                        @if (percentage < 50)
+                                        {
+                                            <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="@percentage" aria-valuemin="0" aria-valuemax="100" style="width : @percentagepx">
+                                                <span class="sr-only">Scored : @percentage</span>
+                                            </div>
+                                        }
+                                        else if (percentage < 70)
+                                        {
+                                            <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="@percentage" aria-valuemin="0" aria-valuemax="100" style="width : @percentagepx">
+                                                <span class="sr-only">Scored : @percentage</span>
+                                            </div>
+                                        }
+                                        else if (percentage < 90)
+                                        {
+                                            <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="@percentage" aria-valuemin="0" aria-valuemax="100" style="width : @percentagepx">
+                                                <span class="sr-only">Scored : @percentage</span>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="@percentage" aria-valuemin="0" aria-valuemax="100" style="width : @percentagepx">
+                                                <span class="sr-only">Scored : @percentage</span>
+                                            </div>
+                                        }
+                                    </div>
+                                </li>
+                            }
+
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <p>Low Key Result Area (For Improvement)</p>
+                        <ul class="list-unstyled task-list">
+                            @foreach (var item in Model.KeyResultWeakness)
+                            {
+                                var percentagepx = (item.Percentage * 100).ToString() + "%";
+                                var percentage = (item.Percentage * 100);
+                                <li>
+
+                                    <p>@item.Title : <i>Weight : @item.Weight</i> <span class="label-percent">@item.Score</span></p>
+                                    <div class="progress progress-xs">
+                                        @if (percentage < 50)
+                                        {
+                                            <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="@percentage" aria-valuemin="0" aria-valuemax="100" style="width : @percentagepx">
+                                                <span class="sr-only">Scored : @percentage</span>
+                                            </div>
+                                        }
+                                        else if (percentage < 70)
+                                        {
+                                            <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="@percentage" aria-valuemin="0" aria-valuemax="100" style="width : @percentagepx">
+                                                <span class="sr-only">Scored : @percentage</span>
+                                            </div>
+                                        }
+                                        else if (percentage < 90)
+                                        {
+                                            <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="@percentage" aria-valuemin="0" aria-valuemax="100" style="width : @percentagepx">
+                                                <span class="sr-only">Scored : @percentage</span>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="@percentage" aria-valuemin="0" aria-valuemax="100" style="width : @percentagepx">
+                                                <span class="sr-only">Scored : @percentage</span>
+                                            </div>
+                                        }
+                                    </div>
+                                </li>
+                            }
+
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

@@ -32,12 +32,13 @@ namespace Excellency.Controllers
                     Status = a.Status.Description,
                     Type = a.Type,
                     TypeDescription = a.Type == "kra" ? "Key Result Area" : "Behavioral Factor",
+                    
                 }).ToList();
             var model = new EvaluationApprovalIndexViewModel
             {
                 Evaluations = items,
             };
-            return View();
+            return View(model);
         }
         [SessionAuthorized]
         public IActionResult ViewBehavioral(int headerid)
@@ -121,7 +122,7 @@ namespace Excellency.Controllers
             {
                 _EvaluationApproval.Disapproved(model.Id, UserId, model.Remarks);
             }
-            return View("Index");
+            return RedirectToAction("Index");
         }
 
         
@@ -139,7 +140,7 @@ namespace Excellency.Controllers
                 _EvaluationApproval.Disapproved(model.Id, UserId, model.Remarks);
             }
 
-            return View("Index");
+            return RedirectToAction("Index");
         }
     }
 }

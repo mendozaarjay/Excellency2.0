@@ -48,10 +48,12 @@ namespace Excellency.Interfaces
 
         DataPoint RatedEmployees(int userid);
         IEnumerable<EmployeePerRaterViewModel> EmployeesPerRater(int userid);
-        IEnumerable<EvaluationCriteria> BehavioralStrength(int employeeid, int userid);
-        IEnumerable<EvaluationCriteria> BehavioralWeakness(int employeeid, int userid);
-        IEnumerable<EvaluationCriteria> KeyResultAreaStrength(int employeeid, int userid);
-        IEnumerable<EvaluationCriteria> KeyResultAreaWeakness(int employeeid, int userid);
+        string EmployeeNameById(int id);
+        int EmployeeTotalScore(int id);
+        IEnumerable<EvaluationCriteria> BehavioralStrength(int employeeid);
+        IEnumerable<EvaluationCriteria> BehavioralWeakness(int employeeid);
+        IEnumerable<EvaluationCriteria> KeyResultAreaStrength(int employeeid);
+        IEnumerable<EvaluationCriteria> KeyResultAreaWeakness(int employeeid);
         //Approver
         int AssignedPerApprover(int userid);
         int ApprovedEvaluation(int userid);

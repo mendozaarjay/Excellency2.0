@@ -382,91 +382,142 @@ namespace Excellency.Services
                 return null;
             }
         }
-        public IEnumerable<EvaluationCriteria> BehavioralStrength(int employeeid, int userid)
+        public string EmployeeNameById(int id)
         {
+            var item = _dbContext.Employees.FirstOrDefault(a => a.Id == id);
+            var name = item.FirstName + " " + item.LastName;
+            return name;
+        }
+        public int EmployeeTotalScore(int id)
+        {
+            var behavioralid = _dbContext.RatingHeader
+                .Include(a => a.Ratee)
+                .Where(a => a.Ratee.Id == id && a.IsExpired == false && a.Type == "behavioral" && a.Status.Id == TransactionStatus.Approved.ToInt())
+                .Select(a => a.Id);
+            var kraid = _dbContext.RatingHeader
+               .Include(a => a.Ratee)
+               .Where(a => a.Ratee.Id == id && a.IsExpired == false && a.Type == "kra" && a.Status.Id == TransactionStatus.Approved.ToInt())
+               .Select(a => a.Id);
+            var behavioraltotal = _dbContext.RatingBehavioralFactors
+                .Include(a => a.RatingHeader)
+                .Where(a => behavioralid.Contains(a.RatingHeader.Id))
+                .Sum(a => a.Score);
+            var kratotal = _dbContext.RatingKeySuccessAreas
+                .Include(a => a.RatingHeader)
+                .Where(a => kraid.Contains(a.RatingHeader.Id))
+                .Sum(a => a.Score);
+            return behavioraltotal + kratotal;
+
+        }
+        public IEnumerable<EvaluationCriteria> BehavioralStrength(int employeeid)
+        {
+            var behavioralid = _dbContext.RatingHeader
+                .Include(a => a.Ratee)
+                .Where(a => a.Ratee.Id == employeeid && a.IsExpired == false && a.Type == "behavioral" && a.Status.Id == TransactionStatus.Approved.ToInt())
+                .Select(a => a.Id);
+
             var result = _dbContext.RatingBehavioralFactors
                 .Include(a => a.RatingHeader)
                 .Include(a => a.RatingHeader.Rater)
                 .Include(a => a.RatingHeader.Ratee)
                 .Include(a => a.BehavioralFactorItem)
-                .Where(a => a.RatingHeader.Ratee.Id == employeeid && a.RatingHeader.Rater.Id == userid && a.RatingHeader.IsExpired == false);
+                .Where(a => behavioralid.Contains(a.RatingHeader.Id));
+
             var items = result.Select(a => new { _Title = a.BehavioralFactorItem.Description, _Weight = a.BehavioralFactorItem.Weight, _Score = a.Score, _Difference = a.BehavioralFactorItem.Weight - a.Score })
                 .ToList()
                 .OrderBy(a => a._Difference);
 
-            var strengths = items.Take(5).Where(a => a._Difference <= 0)
+            var strengths = items.Take(5)
                 .Select(a => new EvaluationCriteria
                 {
                     Title = a._Title,
                     Description = string.Empty,
                     Weight = a._Weight,
-                    Score = a._Score
+                    Score = a._Score,
+                    Percentage = decimal.Parse(a._Score.ToString()) / decimal.Parse(a._Weight.ToString()),
                 }).ToList();
             return strengths;
         }
-        public IEnumerable<EvaluationCriteria> BehavioralWeakness(int employeeid, int userid)
+        public IEnumerable<EvaluationCriteria> BehavioralWeakness(int employeeid)
         {
+            var behavioralid = _dbContext.RatingHeader
+                .Include(a => a.Ratee)
+                .Where(a => a.Ratee.Id == employeeid && a.IsExpired == false && a.Type == "behavioral" && a.Status.Id == TransactionStatus.Approved.ToInt())
+                .Select(a => a.Id);
+
             var result = _dbContext.RatingBehavioralFactors
                 .Include(a => a.RatingHeader)
                 .Include(a => a.RatingHeader.Rater)
                 .Include(a => a.RatingHeader.Ratee)
                 .Include(a => a.BehavioralFactorItem)
-                .Where(a => a.RatingHeader.Ratee.Id == employeeid && a.RatingHeader.Rater.Id == userid && a.RatingHeader.IsExpired == false);
+                .Where(a => behavioralid.Contains(a.RatingHeader.Id));
+
             var items = result.Select(a => new { _Title = a.BehavioralFactorItem.Description, _Weight = a.BehavioralFactorItem.Weight, _Score = a.Score, _Difference = a.BehavioralFactorItem.Weight - a.Score })
                 .ToList()
                 .OrderByDescending(a => a._Difference);
 
-            var weakness = items.Take(5).Where(a => a._Difference <= 0)
+            var weakness = items.Take(5)
                 .Select(a => new EvaluationCriteria
                 {
                     Title = a._Title,
                     Description = string.Empty,
                     Weight = a._Weight,
-                    Score = a._Score
+                    Score = a._Score,
+                    Percentage = decimal.Parse(a._Score.ToString()) / decimal.Parse(a._Weight.ToString()),
                 }).ToList();
             return weakness;
         }
-        public IEnumerable<EvaluationCriteria> KeyResultAreaStrength(int employeeid, int userid)
+        public IEnumerable<EvaluationCriteria> KeyResultAreaStrength(int employeeid)
         {
+            var kraid = _dbContext.RatingHeader
+               .Include(a => a.Ratee)
+               .Where(a => a.Ratee.Id == employeeid && a.IsExpired == false && a.Type == "kra" && a.Status.Id == TransactionStatus.Approved.ToInt())
+               .Select(a => a.Id);
             var result = _dbContext.RatingKeySuccessAreas
                 .Include(a => a.RatingHeader)
                 .Include(a => a.RatingHeader.Rater)
                 .Include(a => a.RatingHeader.Ratee)
                 .Include(a => a.KeySuccessIndicator)
-                .Where(a => a.RatingHeader.Ratee.Id == employeeid && a.RatingHeader.Rater.Id == userid && a.RatingHeader.IsExpired == false);
+                .Where(a => kraid.Contains(a.RatingHeader.Id));
             var items = result.Select(a => new { _Title = a.KeySuccessIndicator.Title, _Description = a.KeySuccessIndicator.Description, _Weight = a.KeySuccessIndicator.Weight, _Score = a.Score, _Difference = a.KeySuccessIndicator.Weight - a.Score })
                 .ToList()
                 .OrderBy(a => a._Difference);
 
-            var strengths = items.Take(5).Where(a => a._Difference <= 0)
+            var strengths = items.Take(5)
                 .Select(a => new EvaluationCriteria
                 {
                     Title = a._Title,
                     Description = a._Description,
                     Weight = a._Weight,
-                    Score = a._Score
+                    Score = a._Score,
+                    Percentage = decimal.Parse(a._Score.ToString()) / decimal.Parse(a._Weight.ToString()),
                 }).ToList();
             return strengths;
         }
-        public IEnumerable<EvaluationCriteria> KeyResultAreaWeakness(int employeeid, int userid)
+        public IEnumerable<EvaluationCriteria> KeyResultAreaWeakness(int employeeid)
         {
+            var kraid = _dbContext.RatingHeader
+               .Include(a => a.Ratee)
+               .Where(a => a.Ratee.Id == employeeid && a.IsExpired == false && a.Type == "kra" && a.Status.Id == TransactionStatus.Approved.ToInt())
+               .Select(a => a.Id);
             var result = _dbContext.RatingKeySuccessAreas
                 .Include(a => a.RatingHeader)
                 .Include(a => a.RatingHeader.Rater)
                 .Include(a => a.RatingHeader.Ratee)
                 .Include(a => a.KeySuccessIndicator)
-                .Where(a => a.RatingHeader.Ratee.Id == employeeid && a.RatingHeader.Rater.Id == userid && a.RatingHeader.IsExpired == false);
+                .Where(a => kraid.Contains(a.RatingHeader.Id));
             var items = result.Select(a => new { _Title = a.KeySuccessIndicator.Title, _Description = a.KeySuccessIndicator.Description, _Weight = a.KeySuccessIndicator.Weight, _Score = a.Score, _Difference = a.KeySuccessIndicator.Weight - a.Score })
                 .ToList()
                 .OrderByDescending(a => a._Difference);
 
-            var weakness = items.Take(5).Where(a => a._Difference <= 0)
+            var weakness = items.Take(5)
                 .Select(a => new EvaluationCriteria
                 {
                     Title = a._Title,
                     Description = a._Description,
                     Weight = a._Weight,
-                    Score = a._Score
+                    Score = a._Score,
+                    Percentage = decimal.Parse(a._Score.ToString()) / decimal.Parse(a._Weight.ToString()),
                 }).ToList();
             return weakness;
         }
