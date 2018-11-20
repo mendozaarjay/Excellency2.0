@@ -29,10 +29,23 @@ namespace Excellency.Interfaces
         DashboardAccess DashboardAccessPerUser(int userid);
         //Administrator
         IEnumerable<Account> Accounts();
-        IEnumerable<DataPoint> AccountPerCompany();
+        IEnumerable<ChartPoint> AccountPerCompany();
         IEnumerable<DataPoint> EmployeePerCompany();
-
+        int UserCount();
+        int RaterCount();
+        int ApproverCount();
+        int EmployeeCount();
+        string AccountPeriod();
+        IEnumerable<Account> MostRecentAccounts();
+        IEnumerable<Employee> MostRecentEmployees();
         //Rater
+
+
+        int AssignedRateeCount(int userid);
+        int EvaluatedRateeCount(int userid);
+        int ApprovedRatingCount(int userid);
+        int PendingRatingCount(int userid);
+
         DataPoint RatedEmployees(int userid);
         IEnumerable<EmployeePerRaterViewModel> EmployeesPerRater(int userid);
         IEnumerable<EvaluationCriteria> BehavioralStrength(int employeeid, int userid);
@@ -40,6 +53,10 @@ namespace Excellency.Interfaces
         IEnumerable<EvaluationCriteria> KeyResultAreaStrength(int employeeid, int userid);
         IEnumerable<EvaluationCriteria> KeyResultAreaWeakness(int employeeid, int userid);
         //Approver
+        int AssignedPerApprover(int userid);
+        int ApprovedEvaluation(int userid);
+        int PendingForApproval(int userid);
+        IEnumerable<UserPerApprover> ApproverAssignedUser(int userid);
 
     }
 }

@@ -13,7 +13,7 @@ namespace Excellency
             {
                 context.Result = new RedirectToRouteResult(new RouteValueDictionary
                 {
-                    {"controller", "UserAccount"},
+                    {"controller", "Home"},
                     {"action", "Login"}
                 });
                 return;
@@ -22,7 +22,7 @@ namespace Excellency
             {
                 context.Result = new RedirectToRouteResult(new RouteValueDictionary
                 {
-                    {"controller", "UserAccount"},
+                    {"controller", "Home"},
                     {"action", "Login"}
                 });
                 return;

@@ -1,1 +1,255 @@
-﻿
+﻿@model Excellency.ViewModels.UserAccountViewModel
+
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+@if (Model.DashboardAccess.IsAdministrator)
+{
+
+    <div class="panel panel-headline">
+        <div class="panel-heading">
+            <div class="panel-title">Accounts Overview</div>
+            <p class="panel-subtitle">@Model.AccountPeriod</p>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="metric">
+                        <span class="icon"><i class="fa fa-users"></i></span>
+                        <p>
+                            <span class="number">@Model.UserCount</span>
+                            <span class="title">Users</span>
+                        </p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="metric">
+                        <span class="icon"><i class="fa fa-users"></i></span>
+                        <p>
+                            <span class="number">@Model.RaterCount</span>
+                            <span class="title">Raters</span>
+                        </p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="metric">
+                        <span class="icon"><i class="fa fa-users"></i></span>
+                        <p>
+                            <span class="number">@Model.ApproverCount</span>
+                            <span class="title">Approvers</span>
+                        </p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="metric">
+                        <span class="icon"><i class="fa fa-users"></i></span>
+                        <p>
+                            <span class="number">@Model.EmployeeCount</span>
+                            <span class="title">Employees</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="custom-tabs-line tabs-line-bottom left-aligned">
+                <ul class="nav" role="tablist">
+                    <li class="active"><a href="#tab-bottom-left1" role="tab" data-toggle="tab">Recent Accounts </a></li>
+                    <li><a href="#tab-bottom-left2" role="tab" data-toggle="tab">Recent Employees </a></li>
+                </ul>
+            </div>
+            <div class="tab-content">
+                <div class="tab-pane fade in active" id="tab-bottom-left1">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Creation Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.RecentAccounts)
+                                {
+                                    <tr>
+                                        <td>@item.Name</td>
+                                        <td>@item.CreationDate</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="margin-top-30 text-center"><a asp-controller="Account" asp-action="Index" class="btn btn-default">See all accounts</a></div>
+                </div>
+                <div class="tab-pane fade" id="tab-bottom-left2">
+                    <div class="table-responsive">
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Creation Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.RecentEmployees)
+                                    {
+                                        <tr>
+                                            <td>@item.Name</td>
+                                            <td>@item.CreationDate</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="margin-top-30 text-center"><a asp-controller="Employee" asp-action="Index" class="btn btn-default">See all employees</a></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@if (Model.DashboardAccess.IsRater)
+{
+    <div class="panel panel-headline">
+        <div class="panel-heading">
+            <div class="panel-title">Evaluation Overview</div>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="metric">
+                        <span class="icon"><i class="fa fa-users"></i></span>
+                        <p>
+                            <span class="number">@Model.AssignedRateeCount</span>
+                            <span class="title">Assigned</span>
+                        </p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="metric">
+                        <span class="icon"><i class="fa fa-star"></i></span>
+                        <p>
+                            <span class="number">@Model.EvaluatedRateeCount</span>
+                            <span class="title">Evaluated</span>
+                        </p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="metric">
+                        <span class="icon"><i class="fa fa-thumbs-up"></i></span>
+                        <p>
+                            <span class="number">@Model.ApprovedRatingCount</span>
+                            <span class="title">Approved</span>
+                        </p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="metric">
+                        <span class="icon"><i class="fa fa-archive"></i></span>
+                        <p>
+                            <span class="number">@Model.PendingRatingCount</span>
+                            <span class="title">Pending</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.Employees != null)
+                        {
+                            @foreach (var item in Model.Employees)
+                            {
+                                <tr>
+                                    <td><a href="#">@item.Name </a></td>
+                                    @if (item.IsRated)
+                                    {
+                                        <td>
+                                            <span class="label label-success">Evaluated</span>
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td>
+                                            <span class="label label-warning">Pending</span>
+                                        </td>
+                                    }
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+}
+
+@if (Model.DashboardAccess.IsApprover)
+{
+    <div class="panel panel-headline">
+        <div class="panel-heading">
+            <div class="panel-title">Approval Overview</div>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="metric">
+                        <span class="icon"><i class="fa fa-users"></i></span>
+                        <p>
+                            <span class="number">@Model.AssignedPerApprover</span>
+                            <span class="title">Assigned</span>
+                        </p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="metric">
+                        <span class="icon"><i class="fa fa-users"></i></span>
+                        <p>
+                            <span class="number">@Model.ApprovedEvaluation</span>
+                            <span class="title">Approved</span>
+                        </p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="metric">
+                        <span class="icon"><i class="fa fa-users"></i></span>
+                        <p>
+                            <span class="number">@Model.PendingEvaluation</span>
+                            <span class="title">Pending</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.UserPerApprovers)
+                        {
+                            <tr>
+                                <td>@item.Name</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts{
+
+}

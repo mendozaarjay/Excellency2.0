@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Http;
 using Excellency.Interfaces;
 using Excellency.Secured;
 using Newtonsoft.Json;
+using Excellency.Dashboard;
 
 namespace Excellency.Controllers
 {
@@ -23,8 +24,47 @@ namespace Excellency.Controllers
             _Home = home;
         }
         [SessionAuthorized]
-        public IActionResult Index(UserAccountViewModel model)
+        public IActionResult Index()
         {
+            var userid = int.Parse(HttpContext.Session.GetString("UserId"));
+
+            var model = new UserAccountViewModel();
+            model.DashboardAccess = _Home.DashboardAccessPerUser(userid);
+            model.UserCount = _Home.UserCount();
+            model.RaterCount = _Home.RaterCount();
+            model.ApproverCount = _Home.ApproverCount();
+            model.EmployeeCount = _Home.EmployeeCount();
+            model.AccountPeriod = _Home.AccountPeriod();
+            var recentaccounts = _Home.MostRecentAccounts()
+                .Select(a => new RecentAccount
+                {
+                    Id = a.Id,
+                    Name = a.FirstName + " " + a.LastName,
+                    CreationDate = a.CreationDate,
+                }).ToList();
+            model.RecentAccounts = recentaccounts;
+            var recentemp = _Home.MostRecentEmployees()
+                .Select(a => new RecentEmployee
+                {
+                    Id = a.Id,
+                    Name = a.FirstName + " " + a.LastName,
+                    CreationDate = a.CreationDate,
+                }).ToList();
+            model.RecentEmployees = recentemp;
+
+            //rater
+            model.AssignedRateeCount = _Home.AssignedRateeCount(userid);
+            model.EvaluatedRateeCount = _Home.EvaluatedRateeCount(userid);
+            model.ApprovedRatingCount = _Home.ApprovedRatingCount(userid);
+            model.PendingRatingCount = _Home.PendingRatingCount(userid);
+            model.Employees = _Home.EmployeesPerRater(userid);
+
+            //Approver
+            model.AssignedPerApprover = _Home.AssignedPerApprover(userid);
+            model.ApprovedEvaluation = _Home.ApprovedEvaluation(userid);
+            model.PendingEvaluation = _Home.PendingForApproval(userid);
+            model.UserPerApprovers = _Home.ApproverAssignedUser(userid);
+
 
             return View(model);
         }
@@ -100,7 +140,7 @@ namespace Excellency.Controllers
                     var _id = HttpContext.Session.GetString("UserId");
                     var name = _Home.GetAccountById(int.Parse(_id)).FirstName;
                     HttpContext.Session.SetString("CurrentUser", name);
-                    return View("Index");
+                    return RedirectToAction("Index");
                 }
                 else
                 {

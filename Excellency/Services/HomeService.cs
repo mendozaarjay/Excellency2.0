@@ -24,6 +24,7 @@ namespace Excellency.Services
         {
             return _dbContext.Accounts.FirstOrDefault(a => a.Id == id);
         }
+        #region User Account Access
 
         public string GetUserId(Account account)
         {
@@ -92,7 +93,7 @@ namespace Excellency.Services
         {
             return _dbContext.Accounts.Any(a => a.Username == account.Username || a.Email == account.Email);
         }
-        
+
         public UserAccess UserAccess(int UserId)
         {
             var _isAdmin = IsAdministrator(UserId);
@@ -108,7 +109,7 @@ namespace Excellency.Services
                 Position = _isAdmin,
                 EmployeeCategory = _isAdmin,
                 //Settings
-                Ratings = (_isRater|| _isAdmin),
+                Ratings = (_isRater || _isAdmin),
                 RatingTable = (_isRater || _isAdmin),
                 KeyResultArea = (_isRater || _isAdmin),
                 BehavioralKRA = (_isRater || _isAdmin),
@@ -122,26 +123,26 @@ namespace Excellency.Services
                 Employee = _isAdmin,
                 RaterAssignment = _isAdmin,
                 //Evaluation
-                CreateEvaluation =_isRater,
+                CreateEvaluation = _isRater,
                 Approval = _isApprover,
             };
-            if(access.Company || access.Branch || access.Department || access.Position || access.EmployeeCategory)
+            if (access.Company || access.Branch || access.Department || access.Position || access.EmployeeCategory)
             {
                 access.Maintenance = true;
             }
-            if(access.Ratings || access.RatingTable || access.KeyResultArea || access.BehavioralKRA || access.EmployeeKRAAssignment)
+            if (access.Ratings || access.RatingTable || access.KeyResultArea || access.BehavioralKRA || access.EmployeeKRAAssignment)
             {
                 access.Settings = true;
             }
-            if(access.Users || access.UserRoles || access.ApproverAssignment)
+            if (access.Users || access.UserRoles || access.ApproverAssignment)
             {
                 access.Accounts = true;
             }
-            if(access.Employee || access.RaterAssignment)
+            if (access.Employee || access.RaterAssignment)
             {
                 access.Employees = true;
             }
-            if(access.CreateEvaluation || access.Approval)
+            if (access.CreateEvaluation || access.Approval)
             {
                 access.Evaluation = true;
             }
@@ -149,6 +150,7 @@ namespace Excellency.Services
             return access;
         }
 
+        #endregion
         #region Dashboard
         public DashboardAccess DashboardAccessPerUser(int userid)
         {
@@ -174,20 +176,26 @@ namespace Excellency.Services
                 .Include(a => a.Position)
                 .Where(a => a.IsDeleted == false && a.IsDeactivated == false);
         }
-        public IEnumerable<DataPoint> AccountPerCompany()
+        public IEnumerable<ChartPoint> AccountPerCompany()
         {
-            var result = _dbContext.Accounts
-                        .Include(a => a.Company)
-                        .Where(a => a.IsDeactivated == false && a.IsDeleted == false)
-                        .GroupBy(a => a.Company)
-                        .Select(x => new { label = x.Key.Description, count = x.Count() });
-            var _dataPoints = new List<DataPoint>();
-            foreach (var item in result)
+            var companies = _dbContext.Companies.Where(a => a.IsDeleted == false);
+            var _dataPoints = new List<ChartPoint>();
+            foreach (var item in companies)
             {
-                var point = new DataPoint(item.count, item.label);
+                var point = new ChartPoint{
+                  X = GetAccountPerCompany(item.Id).ToString(),
+                  Y = item.Description
+                };
                 _dataPoints.Add(point);
             }
             return _dataPoints;
+        }
+        private int GetAccountPerCompany(int id)
+        {
+            var count = _dbContext.Accounts
+                .Include(a => a.Company)
+                .Where(a => a.Company.Id == id).Count();
+            return count;
         }
         public IEnumerable<DataPoint> EmployeePerCompany()
         {
@@ -204,10 +212,62 @@ namespace Excellency.Services
             }
             return _dataPoints;
         } 
+
+
+        public int UserCount()
+        {
+            var item = _dbContext.Accounts.Where(a => a.IsDeactivated == false && a.IsDeleted == false).Count();
+            return item;
+        }
+        public int RaterCount()
+        {
+            var item = _dbContext.RaterHeader
+                .Include(a => a.Rater)
+                .Where(a => a.IsDeleted == false)
+                .Select(a => a.Rater.Id)
+                .Distinct().Count();
+            return item;
+        }
+        public int ApproverCount()
+        {
+            var item = _dbContext.ApproverAssignments
+              .Include(a => a.User)
+              .Include(a => a.Approver)
+              .Where(a => a.IsDeleted == false)
+              .Select(a => a.Approver)
+              .Distinct()
+              .Count();
+            return item;
+        }
+        public int EmployeeCount()
+        {
+            var item = _dbContext.Employees.Where(a => a.IsDeleted == false).Count();
+            return item;
+        }
+        public string AccountPeriod()
+        {
+            var start = _dbContext.Accounts.Where(a => a.IsDeleted == false).OrderBy(a => a.CreationDate).Select(a => a.CreationDate).Take(1);
+            var end = _dbContext.Accounts.Where(a => a.IsDeleted == false).OrderByDescending(a => a.CreationDate).Select(a => a.CreationDate).Take(1);
+            var period = "Period : " + start.First().ToString("MM/dd/yyyy") + " - " + end.First().ToString("MM/dd/yyyy");
+            return period;
+        }
+
+
+        public IEnumerable<Account> MostRecentAccounts()
+        {
+            var items = _dbContext.Accounts.Where(a => a.IsDeleted == false).OrderByDescending(a => a.CreationDate).Take(5);
+            return items;
+        }
+        public IEnumerable<Employee> MostRecentEmployees()
+        {
+            var items = _dbContext.Employees.Where(a => a.IsDeleted == false).OrderByDescending(a => a.CreationDate).Take(5);
+            return items;
+        }
         #endregion
 
         //Rater
         #region Rater Dashboard
+        
         public DataPoint RatedEmployees(int userid)
         {
             var header = _dbContext.RaterHeader
@@ -233,27 +293,94 @@ namespace Excellency.Services
             }
             return new DataPoint(total, count, "Rated Employees");
         }
-        public IEnumerable<EmployeePerRaterViewModel> EmployeesPerRater(int userid)
+
+        public int AssignedRateeCount(int userid)
         {
-            var headerid = _dbContext.RaterHeader
+            try
+            {
+                var headerid = _dbContext.RaterHeader
                 .Include(a => a.Rater)
                 .FirstOrDefault(a => a.Rater.Id == userid && a.IsDeleted == false).Id;
 
-            var result = _dbContext.RaterLine
-               .Include(a => a.EmployeeRater)
-               .Include(a => a.Employee)
-               .Include(a => a.Employee.Company)
-               .Include(a => a.Employee.Branch)
-               .Include(a => a.Employee.Department)
-               .Include(a => a.Employee.Position)
-               .Where(a => a.IsDeleted == false && a.EmployeeRater.Id == headerid);
-            var items = result.Select(a => new EmployeePerRaterViewModel
+                var result = _dbContext.RaterLine
+                   .Include(a => a.EmployeeRater)
+                   .Include(a => a.Employee)
+                   .Include(a => a.Employee.Company)
+                   .Include(a => a.Employee.Branch)
+                   .Include(a => a.Employee.Department)
+                   .Include(a => a.Employee.Position)
+                   .Where(a => a.IsDeleted == false && a.EmployeeRater.Id == headerid);
+                return result.Select(a => a.Employee.Id).Distinct().Count();
+            }
+            catch (Exception ex)
             {
-                Id = a.Employee.Id,
-                Name = a.Employee.FirstName + " " + a.Employee.MiddleName + " " + a.Employee.LastName,
-                IsRated = IsEvaluated(userid, a.Employee.Id)
-            }).ToList();
-            return items;
+                return 0;
+            }
+        }
+        public int EvaluatedRateeCount(int userid)
+        {
+            var item = _dbContext.RatingHeader
+                .Include(a => a.Rater)
+                .Include(a => a.Ratee)
+                .Where(a => a.Rater.Id == userid && a.IsExpired == false)
+                .Select(a => a.Ratee.Id ).Distinct().Count();
+            return item;
+        }
+        public int ApprovedRatingCount(int userid)
+        {
+            var item = _dbContext.RatingHeader
+                .Include(a => a.Rater)
+                .Include(a => a.Ratee)
+                .Include(a => a.Status)
+                .Where(a => a.Rater.Id == userid && a.IsExpired == false && a.Status.Id == TransactionStatus.Approved.ToInt())
+                .Select(a => a.Rater.Id).Distinct().Count();
+            return item;
+        }
+        public int PendingRatingCount(int userid)
+        {
+            var item = _dbContext.RatingHeader
+                .Include(a => a.Rater)
+                .Include(a => a.Ratee)
+                .Include(a => a.Status)
+                .Where(a => a.Rater.Id == userid && a.IsExpired == false && a.Status.Id != TransactionStatus.Approved.ToInt())
+                .Select(a => a.Rater.Id).Distinct().Count();
+            return item;
+        }
+        public IEnumerable<EmployeePerRaterViewModel> EmployeesPerRater(int userid)
+        {
+            try
+            {
+                var headerid = _dbContext.RaterHeader
+                .Include(a => a.Rater)
+                .FirstOrDefault(a => a.Rater.Id == userid && a.IsDeleted == false).Id;
+
+                var result = _dbContext.RaterLine
+                   .Include(a => a.EmployeeRater)
+                   .Include(a => a.Employee)
+                   .Include(a => a.Employee.Company)
+                   .Include(a => a.Employee.Branch)
+                   .Include(a => a.Employee.Department)
+                   .Include(a => a.Employee.Position)
+                   .Where(a => a.IsDeleted == false && a.EmployeeRater.Id == headerid);
+                var employees = result.Select(a => new EmployeePerRaterViewModel
+                {
+                    Id = a.Employee.Id,
+                    Name = a.Employee.FirstName + " " + a.Employee.MiddleName + " " + a.Employee.LastName,
+                    IsRated = false
+                }).ToList();
+
+                var _returnThis = new List<EmployeePerRaterViewModel>();
+                foreach (var item in employees)
+                {
+                    item.IsRated = IsEvaluated(userid, item.Id);
+                    _returnThis.Add(item);
+                }
+                return _returnThis;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
         }
         public IEnumerable<EvaluationCriteria> BehavioralStrength(int employeeid, int userid)
         {
@@ -353,24 +480,49 @@ namespace Excellency.Services
         }
         #endregion
         #region Approver Dashboard
-        public DataPoint ApprovedEvaluation(int userid)
-        {
-            var AssignedUser = _dbContext.ApproverAssignments
-                .Include(a => a.User)
-                .Include(a => a.Approver)
-                .Where(a => a.Approver.Id == userid && a.IsDeleted == false)
-                .Select(a => a.User.Id);
 
-            var ratings = _dbContext.RatingHeader
+        public int AssignedPerApprover(int userid)
+        {
+            var item = _dbContext.ApproverAssignments
+              .Include(a => a.User)
+              .Include(a => a.Approver)
+              .Where(a => a.Approver.Id == userid && a.IsDeleted == false)
+              .Select(a => a.User.Id)
+              .Distinct()
+              .Count();
+            return item;
+        }
+        public int ApprovedEvaluation(int userid)
+        {
+            var users = _dbContext.ApproverAssignments
+              .Include(a => a.User)
+              .Include(a => a.Approver)
+              .Where(a => a.Approver.Id == userid && a.IsDeleted == false)
+              .Select(a => a.User.Id)
+              .Distinct();
+            var item = _dbContext.RatingHeader
                 .Include(a => a.Rater)
-                .Include(a => a.Ratee)
                 .Include(a => a.Status)
-                .Include(a => a.Type)
-                .Where(a => AssignedUser.Contains(a.Rater.Id) && a.IsExpired == false);
-            var count = ratings.Count();
-            var approved = ratings.Where(a => a.Status.Id == TransactionStatus.Approved.ToInt()).Count();
-            var pending = ratings.Where(a => a.Status.Id == TransactionStatus.ForApproval.ToInt()).Count();
-            return new DataPoint(count, approved, pending, "Approved Evalation");
+                .Where(a => a.IsExpired == false && a.Status.Id == TransactionStatus.Approved.ToInt() && users.Contains(a.Rater.Id))
+                .Distinct()
+                .Count();
+            return item;
+        }
+        public int PendingForApproval(int userid)
+        {
+            var users = _dbContext.ApproverAssignments
+              .Include(a => a.User)
+              .Include(a => a.Approver)
+              .Where(a => a.Approver.Id == userid && a.IsDeleted == false)
+              .Select(a => a.User.Id)
+              .Distinct();
+            var item = _dbContext.RatingHeader
+                .Include(a => a.Rater)
+                .Include(a => a.Status)
+                .Where(a => a.IsExpired == false && a.Status.Id != TransactionStatus.Approved.ToInt() && users.Contains(a.Rater.Id))
+                .Distinct()
+                .Count();
+            return item;
         }
         public IEnumerable<UserPerApprover> ApproverAssignedUser(int userid)
         {
