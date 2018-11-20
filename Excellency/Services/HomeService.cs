@@ -1,4 +1,5 @@
-﻿using Excellency.Interfaces;
+﻿using Excellency.Dashboard;
+using Excellency.Interfaces;
 using Excellency.Models;
 using Excellency.Persistence;
 using Excellency.Secured;
@@ -147,5 +148,244 @@ namespace Excellency.Services
 
             return access;
         }
+
+        #region Dashboard
+        public DashboardAccess DashboardAccessPerUser(int userid)
+        {
+            var _isAdmin = IsAdministrator(userid);
+            var _isRater = IsRater(userid);
+            var _isApprover = IsApprover(userid);
+            var item = new DashboardAccess
+            {
+                IsAdministrator = _isAdmin,
+                IsRater = _isRater,
+                IsApprover = _isApprover
+            };
+
+            return item;
+        }
+        #region Administrator Dashboard
+        public IEnumerable<Account> Accounts()
+        {
+            return _dbContext.Accounts
+                .Include(a => a.Company)
+                .Include(a => a.Branch)
+                .Include(a => a.Department)
+                .Include(a => a.Position)
+                .Where(a => a.IsDeleted == false && a.IsDeactivated == false);
+        }
+        public IEnumerable<DataPoint> AccountPerCompany()
+        {
+            var result = _dbContext.Accounts
+                        .Include(a => a.Company)
+                        .Where(a => a.IsDeactivated == false && a.IsDeleted == false)
+                        .GroupBy(a => a.Company)
+                        .Select(x => new { label = x.Key.Description, count = x.Count() });
+            var _dataPoints = new List<DataPoint>();
+            foreach (var item in result)
+            {
+                var point = new DataPoint(item.count, item.label);
+                _dataPoints.Add(point);
+            }
+            return _dataPoints;
+        }
+        public IEnumerable<DataPoint> EmployeePerCompany()
+        {
+            var result = _dbContext.Employees
+                .Include(a => a.Company)
+                .Where(a => a.IsDeleted == false)
+                .GroupBy(a => a.Company)
+                .Select(a => new { label = a.Key.Description, count = a.Count() });
+            var _dataPoints = new List<DataPoint>();
+            foreach (var item in result)
+            {
+                var point = new DataPoint(item.count, item.label);
+                _dataPoints.Add(point);
+            }
+            return _dataPoints;
+        } 
+        #endregion
+
+        //Rater
+        #region Rater Dashboard
+        public DataPoint RatedEmployees(int userid)
+        {
+            var header = _dbContext.RaterHeader
+                .Include(a => a.Rater)
+                .FirstOrDefault(a => a.Rater.Id == userid && a.IsDeleted == false);
+            var assigned = _dbContext.RaterLine
+                .Include(a => a.EmployeeRater)
+                .Include(a => a.Employee)
+                .Where(a => a.EmployeeRater.Id == header.Id && a.IsDeleted == false)
+                .Select(a => new { employee = a.Employee.Id });
+            var total = assigned.Count();
+            int count = 0;
+            foreach (var item in assigned)
+            {
+                var isExist = _dbContext.EvaluationHeader
+                    .Include(a => a.Ratee)
+                    .Include(a => a.Rater)
+                    .Any(a => a.Rater.Id == header.Rater.Id && a.Ratee.Id == item.employee && a.IsDeleted == false);
+                if (isExist)
+                {
+                    count++;
+                }
+            }
+            return new DataPoint(total, count, "Rated Employees");
+        }
+        public IEnumerable<EmployeePerRaterViewModel> EmployeesPerRater(int userid)
+        {
+            var headerid = _dbContext.RaterHeader
+                .Include(a => a.Rater)
+                .FirstOrDefault(a => a.Rater.Id == userid && a.IsDeleted == false).Id;
+
+            var result = _dbContext.RaterLine
+               .Include(a => a.EmployeeRater)
+               .Include(a => a.Employee)
+               .Include(a => a.Employee.Company)
+               .Include(a => a.Employee.Branch)
+               .Include(a => a.Employee.Department)
+               .Include(a => a.Employee.Position)
+               .Where(a => a.IsDeleted == false && a.EmployeeRater.Id == headerid);
+            var items = result.Select(a => new EmployeePerRaterViewModel
+            {
+                Id = a.Employee.Id,
+                Name = a.Employee.FirstName + " " + a.Employee.MiddleName + " " + a.Employee.LastName,
+                IsRated = IsEvaluated(userid, a.Employee.Id)
+            }).ToList();
+            return items;
+        }
+        public IEnumerable<EvaluationCriteria> BehavioralStrength(int employeeid, int userid)
+        {
+            var result = _dbContext.RatingBehavioralFactors
+                .Include(a => a.RatingHeader)
+                .Include(a => a.RatingHeader.Rater)
+                .Include(a => a.RatingHeader.Ratee)
+                .Include(a => a.BehavioralFactorItem)
+                .Where(a => a.RatingHeader.Ratee.Id == employeeid && a.RatingHeader.Rater.Id == userid && a.RatingHeader.IsExpired == false);
+            var items = result.Select(a => new { _Title = a.BehavioralFactorItem.Description, _Weight = a.BehavioralFactorItem.Weight, _Score = a.Score, _Difference = a.BehavioralFactorItem.Weight - a.Score })
+                .ToList()
+                .OrderBy(a => a._Difference);
+
+            var strengths = items.Take(5).Where(a => a._Difference <= 0)
+                .Select(a => new EvaluationCriteria
+                {
+                    Title = a._Title,
+                    Description = string.Empty,
+                    Weight = a._Weight,
+                    Score = a._Score
+                }).ToList();
+            return strengths;
+        }
+        public IEnumerable<EvaluationCriteria> BehavioralWeakness(int employeeid, int userid)
+        {
+            var result = _dbContext.RatingBehavioralFactors
+                .Include(a => a.RatingHeader)
+                .Include(a => a.RatingHeader.Rater)
+                .Include(a => a.RatingHeader.Ratee)
+                .Include(a => a.BehavioralFactorItem)
+                .Where(a => a.RatingHeader.Ratee.Id == employeeid && a.RatingHeader.Rater.Id == userid && a.RatingHeader.IsExpired == false);
+            var items = result.Select(a => new { _Title = a.BehavioralFactorItem.Description, _Weight = a.BehavioralFactorItem.Weight, _Score = a.Score, _Difference = a.BehavioralFactorItem.Weight - a.Score })
+                .ToList()
+                .OrderByDescending(a => a._Difference);
+
+            var weakness = items.Take(5).Where(a => a._Difference <= 0)
+                .Select(a => new EvaluationCriteria
+                {
+                    Title = a._Title,
+                    Description = string.Empty,
+                    Weight = a._Weight,
+                    Score = a._Score
+                }).ToList();
+            return weakness;
+        }
+        public IEnumerable<EvaluationCriteria> KeyResultAreaStrength(int employeeid, int userid)
+        {
+            var result = _dbContext.RatingKeySuccessAreas
+                .Include(a => a.RatingHeader)
+                .Include(a => a.RatingHeader.Rater)
+                .Include(a => a.RatingHeader.Ratee)
+                .Include(a => a.KeySuccessIndicator)
+                .Where(a => a.RatingHeader.Ratee.Id == employeeid && a.RatingHeader.Rater.Id == userid && a.RatingHeader.IsExpired == false);
+            var items = result.Select(a => new { _Title = a.KeySuccessIndicator.Title, _Description = a.KeySuccessIndicator.Description, _Weight = a.KeySuccessIndicator.Weight, _Score = a.Score, _Difference = a.KeySuccessIndicator.Weight - a.Score })
+                .ToList()
+                .OrderBy(a => a._Difference);
+
+            var strengths = items.Take(5).Where(a => a._Difference <= 0)
+                .Select(a => new EvaluationCriteria
+                {
+                    Title = a._Title,
+                    Description = a._Description,
+                    Weight = a._Weight,
+                    Score = a._Score
+                }).ToList();
+            return strengths;
+        }
+        public IEnumerable<EvaluationCriteria> KeyResultAreaWeakness(int employeeid, int userid)
+        {
+            var result = _dbContext.RatingKeySuccessAreas
+                .Include(a => a.RatingHeader)
+                .Include(a => a.RatingHeader.Rater)
+                .Include(a => a.RatingHeader.Ratee)
+                .Include(a => a.KeySuccessIndicator)
+                .Where(a => a.RatingHeader.Ratee.Id == employeeid && a.RatingHeader.Rater.Id == userid && a.RatingHeader.IsExpired == false);
+            var items = result.Select(a => new { _Title = a.KeySuccessIndicator.Title, _Description = a.KeySuccessIndicator.Description, _Weight = a.KeySuccessIndicator.Weight, _Score = a.Score, _Difference = a.KeySuccessIndicator.Weight - a.Score })
+                .ToList()
+                .OrderByDescending(a => a._Difference);
+
+            var weakness = items.Take(5).Where(a => a._Difference <= 0)
+                .Select(a => new EvaluationCriteria
+                {
+                    Title = a._Title,
+                    Description = a._Description,
+                    Weight = a._Weight,
+                    Score = a._Score
+                }).ToList();
+            return weakness;
+        }
+        private bool IsEvaluated(int userid, int rateeid)
+        {
+            var isEvaluated = _dbContext.RatingHeader
+                .Include(a => a.Ratee)
+                .Include(a => a.Rater)
+                .Any(a => a.Rater.Id == userid && a.Ratee.Id == rateeid && a.IsDeleted == false && a.IsExpired == false);
+            return isEvaluated;
+        }
+        #endregion
+        #region Approver Dashboard
+        public DataPoint ApprovedEvaluation(int userid)
+        {
+            var AssignedUser = _dbContext.ApproverAssignments
+                .Include(a => a.User)
+                .Include(a => a.Approver)
+                .Where(a => a.Approver.Id == userid && a.IsDeleted == false)
+                .Select(a => a.User.Id);
+
+            var ratings = _dbContext.RatingHeader
+                .Include(a => a.Rater)
+                .Include(a => a.Ratee)
+                .Include(a => a.Status)
+                .Include(a => a.Type)
+                .Where(a => AssignedUser.Contains(a.Rater.Id) && a.IsExpired == false);
+            var count = ratings.Count();
+            var approved = ratings.Where(a => a.Status.Id == TransactionStatus.Approved.ToInt()).Count();
+            var pending = ratings.Where(a => a.Status.Id == TransactionStatus.ForApproval.ToInt()).Count();
+            return new DataPoint(count, approved, pending, "Approved Evalation");
+        }
+        public IEnumerable<UserPerApprover> ApproverAssignedUser(int userid)
+        {
+            var AssignedUser = _dbContext.ApproverAssignments
+              .Include(a => a.User)
+              .Include(a => a.Approver)
+              .Where(a => a.Approver.Id == userid && a.IsDeleted == false)
+              .Select(a => new UserPerApprover
+              {
+                  Id = a.User.Id,
+                  Name = a.User.FirstName + " " + a.User.LastName
+              }).ToList();
+            return AssignedUser;
+        }
+        #endregion
+        #endregion
     }
 }

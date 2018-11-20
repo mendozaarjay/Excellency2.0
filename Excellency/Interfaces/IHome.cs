@@ -1,4 +1,5 @@
-﻿using Excellency.Models;
+﻿using Excellency.Dashboard;
+using Excellency.Models;
 using System.Collections.Generic;
 
 namespace Excellency.Interfaces
@@ -23,5 +24,22 @@ namespace Excellency.Interfaces
 
 
         //List<DataPoint> EvaluatedEmployees(int userid);
+
+        //DASHBOARD METHODS AND FUNCTIONS
+        DashboardAccess DashboardAccessPerUser(int userid);
+        //Administrator
+        IEnumerable<Account> Accounts();
+        IEnumerable<DataPoint> AccountPerCompany();
+        IEnumerable<DataPoint> EmployeePerCompany();
+
+        //Rater
+        DataPoint RatedEmployees(int userid);
+        IEnumerable<EmployeePerRaterViewModel> EmployeesPerRater(int userid);
+        IEnumerable<EvaluationCriteria> BehavioralStrength(int employeeid, int userid);
+        IEnumerable<EvaluationCriteria> BehavioralWeakness(int employeeid, int userid);
+        IEnumerable<EvaluationCriteria> KeyResultAreaStrength(int employeeid, int userid);
+        IEnumerable<EvaluationCriteria> KeyResultAreaWeakness(int employeeid, int userid);
+        //Approver
+
     }
 }
