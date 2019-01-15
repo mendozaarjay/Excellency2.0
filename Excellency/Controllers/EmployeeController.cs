@@ -60,7 +60,7 @@ namespace Excellency.Controllers
             var UserId = HttpContext.Session.GetString("UserId");
             if (ModelState.IsValid)
             {
-                var item = new Models.Employee
+                var item = new Models.Account
                 {
 
                     Branch = _Employee.GetBranchById(int.Parse(model.Branch)),
@@ -118,7 +118,7 @@ namespace Excellency.Controllers
             var UserId = HttpContext.Session.GetString("UserId");
             if (ModelState.IsValid)
             {
-                var item = new Models.Employee
+                var item = new Models.Account
                 {
                     Id = int.Parse(model.Id),
                     Branch = _Employee.GetBranchById(int.Parse(model.Branch)),

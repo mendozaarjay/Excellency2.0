@@ -17,9 +17,9 @@ namespace Excellency.Services
         {
             _dbContext = dbContext;
         }
-        public void Add(Employee Employee)
+        public void Add(Account Employee)
         {
-            _dbContext.Employees.Add(Employee);
+            _dbContext.Accounts.Add(Employee);
             _dbContext.SaveChanges();
         }
 
@@ -43,9 +43,9 @@ namespace Excellency.Services
             return _dbContext.EmployeeCategories.Where(a => a.IsDeleted == false);
         }
 
-        public IEnumerable<Employee> Employees()
+        public IEnumerable<Account> Employees()
         {
-            return _dbContext.Employees
+            return _dbContext.Accounts
                    .Include(a => a.Company)
                    .Include(a => a.Branch)
                    .Include(a => a.Department)
@@ -74,9 +74,9 @@ namespace Excellency.Services
             return _dbContext.Departments.FirstOrDefault(a => a.Id == id);
         }
 
-        public Employee GetEmployeeById(int id)
+        public Account GetEmployeeById(int id)
         {
-            return _dbContext.Employees
+            return _dbContext.Accounts
                    .Include(a => a.Company)
                    .Include(a => a.Branch)
                    .Include(a => a.Department)
@@ -92,7 +92,7 @@ namespace Excellency.Services
 
         public bool IsAlreadyExisting(string EmployeeNo)
         {
-            return _dbContext.Employees.Any(a => a.EmployeeNo == EmployeeNo);
+            return _dbContext.Accounts.Any(a => a.EmployeeNo == EmployeeNo);
         }
 
         public IEnumerable<Position> Positions()
@@ -102,12 +102,12 @@ namespace Excellency.Services
 
         public void RemoveById(int Id)
         {
-            var employee = _dbContext.Employees.FirstOrDefault(a => a.Id == Id);
+            var employee = _dbContext.Accounts.FirstOrDefault(a => a.Id == Id);
             _dbContext.Entry(employee).State = EntityState.Modified;
             _dbContext.SaveChanges();
         }
 
-        public void Update(Employee Employee)
+        public void Update(Account Employee)
         {
             _dbContext.Entry(Employee).State = EntityState.Modified;
             _dbContext.SaveChanges();

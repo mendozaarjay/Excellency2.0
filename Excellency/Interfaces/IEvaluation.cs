@@ -8,9 +8,9 @@ namespace Excellency.Interfaces
 {
     public interface IEvaluation
     {
-        IEnumerable<Employee> Employees();
-        IEnumerable<Employee> AssignedEmployees(int UserId);
-        Employee GetEmployeePerId(int id);
+        IEnumerable<Account> Employees();
+        IEnumerable<Account> AssignedEmployees(int UserId);
+        Account GetEmployeePerId(int id);
         string EmployeeNameById(int id);
         IEnumerable<KeyResultArea> KeyResultAreas();
         KeyResultArea KeyResultAreaPerId(int id);

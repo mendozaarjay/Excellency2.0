@@ -37,7 +37,7 @@ namespace Excellency.Interfaces
         int EmployeeCount();
         string AccountPeriod();
         IEnumerable<Account> MostRecentAccounts();
-        IEnumerable<Employee> MostRecentEmployees();
+        IEnumerable<Account> MostRecentEmployees();
         //Rater
 
 

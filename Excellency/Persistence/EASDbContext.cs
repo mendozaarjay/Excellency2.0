@@ -17,7 +17,6 @@ namespace Excellency.Persistence
         public DbSet<Department> Departments { get; set; }
         public DbSet<Position> Positions { get; set; }
         public DbSet<Account> Accounts { get; set; }
-        public DbSet<Employee> Employees { get; set; }
         public DbSet<Module> Modules { get; set; }
         public DbSet<EmployeeRaterHeader> RaterHeader { get; set; }
         public DbSet<EmployeeRaterLine> RaterLine { get; set; }
@@ -48,5 +47,7 @@ namespace Excellency.Persistence
         public DbSet<Criteria> Criterias { get; set; }
         public DbSet<PeerCriteriaHeader> PeerCriteriaHeader { get; set; }
         public DbSet<PeerCriteriaLine> PeerCriteriaLine { get; set; }
+        public DbSet<Registration> Registrations { get; set; } 
+        public DbSet<Interpretation> Interpretations { get; set; }
     }
 }

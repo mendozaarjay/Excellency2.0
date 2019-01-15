@@ -199,7 +199,7 @@ namespace Excellency.Services
         }
         public IEnumerable<DataPoint> EmployeePerCompany()
         {
-            var result = _dbContext.Employees
+            var result = _dbContext.Accounts
                 .Include(a => a.Company)
                 .Where(a => a.IsDeleted == false)
                 .GroupBy(a => a.Company)
@@ -241,7 +241,7 @@ namespace Excellency.Services
         }
         public int EmployeeCount()
         {
-            var item = _dbContext.Employees.Where(a => a.IsDeleted == false).Count();
+            var item = _dbContext.Accounts.Where(a => a.IsDeleted == false).Count();
             return item;
         }
         public string AccountPeriod()
@@ -258,9 +258,9 @@ namespace Excellency.Services
             var items = _dbContext.Accounts.Where(a => a.IsDeleted == false).OrderByDescending(a => a.CreationDate).Take(5);
             return items;
         }
-        public IEnumerable<Employee> MostRecentEmployees()
+        public IEnumerable<Account> MostRecentEmployees()
         {
-            var items = _dbContext.Employees.Where(a => a.IsDeleted == false).OrderByDescending(a => a.CreationDate).Take(5);
+            var items = _dbContext.Accounts.Where(a => a.IsDeleted == false).OrderByDescending(a => a.CreationDate).Take(5);
             return items;
         }
         #endregion
@@ -384,7 +384,7 @@ namespace Excellency.Services
         }
         public string EmployeeNameById(int id)
         {
-            var item = _dbContext.Employees.FirstOrDefault(a => a.Id == id);
+            var item = _dbContext.Accounts.FirstOrDefault(a => a.Id == id);
             var name = item.FirstName + " " + item.LastName;
             return name;
         }

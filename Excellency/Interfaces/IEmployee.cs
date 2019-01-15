@@ -5,10 +5,10 @@ namespace Excellency.Interfaces
 {
     public interface IEmployee
     {
-        void Add(Employee Employee);
-        void Update(Employee Employee);
-        IEnumerable<Employee> Employees();
-        Employee GetEmployeeById(int id);
+        void Add(Account Account);
+        void Update(Account Account);
+        IEnumerable<Account> Employees();
+        Account GetEmployeeById(int id);
         void RemoveById(int Id);
 
         IEnumerable<Company> Companies();
@@ -23,7 +23,7 @@ namespace Excellency.Interfaces
         Position GetPositionById(int id);
         EmployeeCategory GetCategoryById(int id);
 
-        bool IsAlreadyExisting(string EmployeeNo);
+        bool IsAlreadyExisting(string AccountNo);
 
     }
 }

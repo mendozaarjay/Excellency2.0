@@ -6,7 +6,7 @@ namespace Excellency.Models
     public class EvaluationHeader
     {
         public int Id { get; set; }
-        public virtual Employee Ratee { get; set; }
+        public virtual Account Ratee { get; set; }
         public virtual KeyResultArea  KeyResultArea { get; set; }
 
         public virtual Account Rater { get; set; }

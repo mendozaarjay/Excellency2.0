@@ -27,7 +27,7 @@ namespace Excellency.Services
             _dbContext.SaveChanges();
         }
 
-        public IEnumerable<Employee> AssignedEmployees(int UserId)
+        public IEnumerable<Account> AssignedEmployees(int UserId)
         {
             var result = _dbContext.RaterLine.Include(a => a.EmployeeRater)
                 .Include(a => a.EmployeeRater.Rater)
@@ -38,7 +38,7 @@ namespace Excellency.Services
                 .Include(a => a.Employee.Position)
                 .Include(a => a.Employee.Category)
                 .Where(a => a.EmployeeRater.Rater.Id == UserId && a.IsDeleted == false)
-                .Select(a => new Employee
+                .Select(a => new Account
                 {
                     Id = a.Employee.Id,
                     FirstName = a.Employee.FirstName,
@@ -78,9 +78,9 @@ namespace Excellency.Services
             return name;
         }
 
-        public IEnumerable<Employee> Employees()
+        public IEnumerable<Account> Employees()
         {
-            return _dbContext.Employees.Where(a => a.IsDeleted == false);
+            return _dbContext.Accounts.Where(a => a.IsDeleted == false);
         }
 
         public IEnumerable<EvaluationLine> EvaluationLinesPerId(int headerid)
@@ -122,9 +122,9 @@ namespace Excellency.Services
             return items;
         }
 
-        public Employee GetEmployeePerId(int id)
+        public Account GetEmployeePerId(int id)
         {
-            return _dbContext.Employees
+            return _dbContext.Accounts
                 .Include(a => a.Company)
                 .Include(a => a.Branch)
                 .Include(a => a.Department)

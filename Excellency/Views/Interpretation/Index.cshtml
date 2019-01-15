@@ -1,0 +1,171 @@
+﻿@model Excellency.ViewModels.InterpretationIndexViewModel
+@{
+    ViewData["Title"] = "Index";
+}
+
+<div class="panel panel-headline">
+    <div class="panel-heading">
+        <h3 class="panel-title">Evaluation Score Interpretations</h3>
+        <div class="right">
+            <button type="button" data-toggle="modal" data-target="#addnew">Add New</button>
+        </div>
+    </div>
+    <div class="panel-body">
+        <div class="table-responsive">
+            <table class="table table-condensed">
+                <thead>
+                    <tr>
+                        <th class="hidden">Id</th>
+                        <th>Title</th>
+                        <th>Description</th>
+                        <th>Score From</th>
+                        <th>Score To</th>
+                        <th scope="col" class="col-md-1"></th>
+                        <th scope="col" class="col-md-1"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Interpretations)
+                    {
+                        <tr>
+                            <td class="hidden">@item.Id</td>
+                            <td>@item.Title</td>
+                            <td>@item.Description</td>
+                            <td>@item.ScoreFrom</td>
+                            <td>@item.ScoreTo</td>
+                            <td class="text-center"><a data-toggle="modal" data-target="#edit" data-id="@item.Id" data-title="@item.Title" data-description="@item.Description" data-scorefrom="@item.ScoreFrom" data-scoreto="@item.ScoreTo"><i class="fa fa-pencil text-success"></i></a></td>
+                            <td class="text-center"><a data-toggle="modal" data-target="#delete" data-id="@item.Id"><i class="fa fa-trash text-danger"></i></a></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!--Add New-->
+<div class="modal fade" id="addnew" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    @using (Html.BeginForm("Save", "Interpretation"))
+    {
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Interpretation</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="title">Title</label>
+                        <input type="text" id="title" name="Interpretation.Title" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label for="description">Description</label>
+                        <textarea id="description" name="Interpretation.Description" class="form-control"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="scorefrom">Score From</label>
+                        <input type="number" id="scorefrom" name="Interpretation.ScoreFrom" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label for="scoreto">Score To</label>
+                        <input type="number" id="scoreto" name="Interpretation.ScoreTo" class="form-control" />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+
+
+
+<!--Edit-->
+<div class="modal fade" id="edit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    @using (Html.BeginForm("Save", "Interpretation"))
+    {
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Interpretation</h4>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="Interpretation.Id" id="id" />
+                    <div class="form-group">
+                        <label for="title">Title</label>
+                        <input type="text" id="title" name="Interpretation.Title" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label for="description">Description</label>
+                        <textarea id="description" name="Interpretation.Description" class="form-control"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="scorefrom">Score From</label>
+                        <input type="number" id="scorefrom" name="Interpretation.ScoreFrom" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label for="scoreto">Score To</label>
+                        <input type="number" id="scoreto" name="Interpretation.ScoreTo" class="form-control" />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<!--Delete-->
+<div class="modal fade" id="delete" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    @using (Html.BeginForm("Delete", "Interpretation"))
+    {
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Confirmation</h4>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="id" id="id" />
+                    <p>Are you sure you want to delete the current record?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+
+@section Scripts{
+    <script type="text/javascript">
+        $('#edit').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget)
+            var id = button.data('id')
+            var title = button.data('title')
+            var description = button.data('description')
+            var scorefrom = button.data('scorefrom')
+            var scoreto = button.data('scoreto')
+            $(".modal-body #id").val(id)
+            $(".modal-body #title").val(title)
+            $(".modal-body #description").val(description)
+            $(".modal-body #scorefrom").val(scorefrom)
+            $(".modal-body #scoreto").val(scoreto)
+        })
+    </script>
+    <script type="text/javascript">
+        $('#delete').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget)
+            var id = button.data('id')
+            $(".modal-body #id").val(id)
+        })
+    </script>
+}

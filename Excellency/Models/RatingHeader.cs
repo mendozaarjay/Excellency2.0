@@ -7,7 +7,7 @@ namespace Excellency.Models
     {
         public int Id { get; set; }
         public string Type { get; set; }
-        public virtual Employee Ratee { get; set; }
+        public virtual Account Ratee { get; set; }
         public virtual Account Rater { get; set; }
         public DateTime PostedDate { get; set; }
         public virtual Account Approver { get; set; }

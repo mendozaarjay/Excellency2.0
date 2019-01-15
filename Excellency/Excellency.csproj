@@ -9,6 +9,8 @@
     <Compile Remove="Migrations\20180919132418_Added Evaluation and Status Tables.Designer.cs" />
     <Compile Remove="Migrations\20181006235807_added employee assignment tables.cs" />
     <Compile Remove="Migrations\20181006235807_added employee assignment tables.Designer.cs" />
+    <Compile Remove="Migrations\20190106024116_AddedInterpretations.cs" />
+    <Compile Remove="Migrations\20190106024116_AddedInterpretations.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

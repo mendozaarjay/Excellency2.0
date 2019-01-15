@@ -9,7 +9,7 @@ namespace Excellency.Models
     {
         public int Id { get; set; }
         public virtual EmployeeRaterHeader EmployeeRater { get; set; }
-        public virtual Employee Employee { get; set; }
+        public virtual Account Employee { get; set; }
         public bool IsDeleted { get; set; } = false;
     }
 }

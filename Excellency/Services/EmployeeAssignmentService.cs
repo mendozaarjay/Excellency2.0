@@ -47,9 +47,9 @@ namespace Excellency.Services
                 .Where(a => a.EmployeeAssignment.Id == id && a.IsDeleted == false);
         }
 
-        public Employee EmployeeById(int id)
+        public Account EmployeeById(int id)
         {
-            return _dbContext.Employees
+            return _dbContext.Accounts
                 .Include(a => a.Company)
                 .Include(a => a.Branch)
                 .Include(a => a.Department)
@@ -66,9 +66,9 @@ namespace Excellency.Services
                 .Where(a => a.EmployeeAssignment.Id == id && a.IsDeleted == false);
         }
 
-        public IEnumerable<Employee> Employees()
+        public IEnumerable<Account> Employees()
         {
-            return _dbContext.Employees
+            return _dbContext.Accounts
                 .Include(a => a.Company)
                 .Include(a => a.Branch)
                 .Include(a => a.Department)

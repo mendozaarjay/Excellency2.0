@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Excellency.Migrations
 {
     [DbContext(typeof(EASDbContext))]
-    [Migration("20180927011948_added ksi weight")]
-    partial class addedksiweight
+    [Migration("20190115073255_new database")]
+    partial class newdatabase
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -29,6 +29,8 @@ namespace Excellency.Migrations
 
                     b.Property<int?>("BranchId");
 
+                    b.Property<int?>("CategoryId");
+
                     b.Property<int?>("CompanyId");
 
                     b.Property<string>("CreatedBy");
@@ -40,6 +42,10 @@ namespace Excellency.Migrations
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasMaxLength(255);
+
+                    b.Property<string>("EmployeeNo")
+                        .IsRequired()
+                        .HasMaxLength(50);
 
                     b.Property<string>("FirstName")
                         .IsRequired()
@@ -58,6 +64,10 @@ namespace Excellency.Migrations
                     b.Property<bool>("IsVerified");
 
                     b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasMaxLength(50);
+
+                    b.Property<string>("MiddleName")
                         .IsRequired()
                         .HasMaxLength(50);
 
@@ -82,6 +92,8 @@ namespace Excellency.Migrations
 
                     b.HasIndex("BranchId");
 
+                    b.HasIndex("CategoryId");
+
                     b.HasIndex("CompanyId");
 
                     b.HasIndex("DepartmentId");
@@ -89,6 +101,139 @@ namespace Excellency.Migrations
                     b.HasIndex("PositionId");
 
                     b.ToTable("Accounts");
+                });
+
+            modelBuilder.Entity("Excellency.Models.AccountRole", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("CreatedBy");
+
+                    b.Property<DateTime>("CreationDate");
+
+                    b.Property<string>("Description");
+
+                    b.Property<bool>("IsDeleted");
+
+                    b.Property<string>("ModifiedBy");
+
+                    b.Property<DateTime>("ModifiedDate");
+
+                    b.Property<int>("Type");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AccountRoles");
+                });
+
+            modelBuilder.Entity("Excellency.Models.AccountRoleAssignment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("AccountId");
+
+                    b.Property<bool>("IsDeleted");
+
+                    b.Property<int?>("RoleId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AccountId");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("AccountRoleAssignments");
+                });
+
+            modelBuilder.Entity("Excellency.Models.ApproverAssignment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("ApproverId");
+
+                    b.Property<string>("CreatedBy");
+
+                    b.Property<DateTime>("CreationDate");
+
+                    b.Property<bool>("IsDeleted");
+
+                    b.Property<string>("ModifiedBy");
+
+                    b.Property<DateTime>("ModifiedDate");
+
+                    b.Property<int?>("UserId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApproverId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("ApproverAssignments");
+                });
+
+            modelBuilder.Entity("Excellency.Models.BehavioralFactor", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("CategoryId");
+
+                    b.Property<string>("CreatedBy");
+
+                    b.Property<DateTime>("CreationDate");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(500);
+
+                    b.Property<bool>("IsDeleted");
+
+                    b.Property<string>("ModifiedBy");
+
+                    b.Property<DateTime>("ModifiedDate");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(255);
+
+                    b.Property<int>("Weight");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CategoryId");
+
+                    b.ToTable("BehavioralFactors");
+                });
+
+            modelBuilder.Entity("Excellency.Models.BehavioralFactorItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("BehavioralFactorId");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(500);
+
+                    b.Property<bool>("IsDeleted");
+
+                    b.Property<int>("Weight");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BehavioralFactorId");
+
+                    b.ToTable("BehavioralFactorItems");
                 });
 
             modelBuilder.Entity("Excellency.Models.Branch", b =>
@@ -179,6 +324,33 @@ namespace Excellency.Migrations
                     b.ToTable("Companies");
                 });
 
+            modelBuilder.Entity("Excellency.Models.Criteria", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("CreatedBy");
+
+                    b.Property<DateTime>("CreationDate");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(255);
+
+                    b.Property<bool>("IsDeleted");
+
+                    b.Property<string>("ModifiedBy");
+
+                    b.Property<DateTime>("ModifiedDate");
+
+                    b.Property<int>("Weight");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Criterias");
+                });
+
             modelBuilder.Entity("Excellency.Models.Department", b =>
                 {
                     b.Property<int>("Id")
@@ -204,57 +376,96 @@ namespace Excellency.Migrations
                     b.ToTable("Departments");
                 });
 
-            modelBuilder.Entity("Excellency.Models.Employee", b =>
+            modelBuilder.Entity("Excellency.Models.EmployeeAssignment", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("BranchId");
-
-                    b.Property<int?>("CompanyId");
-
                     b.Property<string>("CreatedBy");
 
                     b.Property<DateTime>("CreationDate");
 
-                    b.Property<int?>("DepartmentId");
-
-                    b.Property<string>("EmployeeNo")
-                        .IsRequired()
-                        .HasMaxLength(10);
-
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasMaxLength(50);
+                    b.Property<int?>("EmployeeId");
 
                     b.Property<bool>("IsDeleted");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasMaxLength(50);
-
-                    b.Property<string>("MiddleName")
-                        .IsRequired()
-                        .HasMaxLength(50);
 
                     b.Property<string>("ModifiedBy");
 
                     b.Property<DateTime>("ModifiedDate");
 
-                    b.Property<int?>("PositionId");
+                    b.HasKey("Id");
+
+                    b.HasIndex("EmployeeId");
+
+                    b.ToTable("EmployeeAssignments");
+                });
+
+            modelBuilder.Entity("Excellency.Models.EmployeeBehavioralAssignment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("BehavioralFactorId");
+
+                    b.Property<int?>("EmployeeAssignmentId");
+
+                    b.Property<bool>("IsDeleted");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BranchId");
+                    b.HasIndex("BehavioralFactorId");
 
-                    b.HasIndex("CompanyId");
+                    b.HasIndex("EmployeeAssignmentId");
 
-                    b.HasIndex("DepartmentId");
+                    b.ToTable("EmployeeBehavioralAssignments");
+                });
 
-                    b.HasIndex("PositionId");
+            modelBuilder.Entity("Excellency.Models.EmployeeCategory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.ToTable("Employees");
+                    b.Property<string>("CreatedBy");
+
+                    b.Property<DateTime>("CreationDate");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(255);
+
+                    b.Property<bool>("IsDeleted");
+
+                    b.Property<string>("ModifiedBy");
+
+                    b.Property<DateTime>("ModifiedDate");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("EmployeeCategories");
+                });
+
+            modelBuilder.Entity("Excellency.Models.EmployeeKRAAssignment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("EmployeeAssignmentId");
+
+                    b.Property<bool>("IsDeleted");
+
+                    b.Property<int?>("KeyResultAreaId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EmployeeAssignmentId");
+
+                    b.HasIndex("KeyResultAreaId");
+
+                    b.ToTable("EmployeeKRAAssignments");
                 });
 
             modelBuilder.Entity("Excellency.Models.EmployeeRaterHeader", b =>
@@ -415,6 +626,37 @@ namespace Excellency.Migrations
                     b.ToTable("EvaluationSettings");
                 });
 
+            modelBuilder.Entity("Excellency.Models.Interpretation", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("CreatedBy");
+
+                    b.Property<DateTime>("CreationDate");
+
+                    b.Property<string>("Description");
+
+                    b.Property<bool>("IsDeleted");
+
+                    b.Property<string>("ModifiedBy");
+
+                    b.Property<DateTime>("ModifiedDate");
+
+                    b.Property<decimal>("ScoreFrom")
+                        .HasColumnType("decimal(18, 2)");
+
+                    b.Property<decimal>("ScoreTo")
+                        .HasColumnType("decimal(18, 2)");
+
+                    b.Property<string>("Title");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Interpretations");
+                });
+
             modelBuilder.Entity("Excellency.Models.KeyResultArea", b =>
                 {
                     b.Property<int>("Id")
@@ -470,6 +712,10 @@ namespace Excellency.Migrations
 
                     b.Property<int?>("RatingTableId");
 
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(255);
+
                     b.Property<int>("Weight");
 
                     b.HasKey("Id");
@@ -508,6 +754,54 @@ namespace Excellency.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Modules");
+                });
+
+            modelBuilder.Entity("Excellency.Models.PeerCriteriaHeader", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("CreatedBy");
+
+                    b.Property<DateTime>("CreationDate");
+
+                    b.Property<string>("Description");
+
+                    b.Property<bool>("IsDeleted");
+
+                    b.Property<string>("ModifiedBy");
+
+                    b.Property<DateTime>("ModifiedDate");
+
+                    b.Property<string>("Title");
+
+                    b.Property<int>("Weight");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("PeerCriteriaHeader");
+                });
+
+            modelBuilder.Entity("Excellency.Models.PeerCriteriaLine", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Description");
+
+                    b.Property<int?>("HeaderId");
+
+                    b.Property<bool>("IsDeleted");
+
+                    b.Property<int>("Weight");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("HeaderId");
+
+                    b.ToTable("PeerCriteriaLine");
                 });
 
             modelBuilder.Entity("Excellency.Models.Position", b =>
@@ -562,6 +856,110 @@ namespace Excellency.Migrations
                     b.ToTable("Ratings");
                 });
 
+            modelBuilder.Entity("Excellency.Models.RatingBehavioralFactor", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("BehavioralFactorId");
+
+                    b.Property<int?>("BehavioralFactorItemId");
+
+                    b.Property<string>("Comment");
+
+                    b.Property<int?>("RatingHeaderId");
+
+                    b.Property<int>("Score");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BehavioralFactorId");
+
+                    b.HasIndex("BehavioralFactorItemId");
+
+                    b.HasIndex("RatingHeaderId");
+
+                    b.ToTable("RatingBehavioralFactors");
+                });
+
+            modelBuilder.Entity("Excellency.Models.RatingHeader", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("ApprovedDate");
+
+                    b.Property<int?>("ApproverId");
+
+                    b.Property<string>("ApproverRemarks");
+
+                    b.Property<string>("CreatedBy");
+
+                    b.Property<DateTime>("CreationDate");
+
+                    b.Property<bool>("IsDeleted");
+
+                    b.Property<bool>("IsExpired");
+
+                    b.Property<string>("ModifiedBy");
+
+                    b.Property<DateTime>("ModifiedDate");
+
+                    b.Property<DateTime>("PostedDate");
+
+                    b.Property<int?>("RateeId");
+
+                    b.Property<int?>("RaterId");
+
+                    b.Property<string>("Remarks")
+                        .HasMaxLength(500);
+
+                    b.Property<int?>("StatusId");
+
+                    b.Property<string>("Type");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApproverId");
+
+                    b.HasIndex("RateeId");
+
+                    b.HasIndex("RaterId");
+
+                    b.HasIndex("StatusId");
+
+                    b.ToTable("RatingHeader");
+                });
+
+            modelBuilder.Entity("Excellency.Models.RatingKeySuccessArea", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Comment");
+
+                    b.Property<int?>("KeyResultAreaId");
+
+                    b.Property<int?>("KeySuccessIndicatorId");
+
+                    b.Property<int?>("RatingHeaderId");
+
+                    b.Property<int>("Score");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("KeyResultAreaId");
+
+                    b.HasIndex("KeySuccessIndicatorId");
+
+                    b.HasIndex("RatingHeaderId");
+
+                    b.ToTable("RatingKeySuccessAreas");
+                });
+
             modelBuilder.Entity("Excellency.Models.RatingTable", b =>
                 {
                     b.Property<int>("Id")
@@ -610,21 +1008,23 @@ namespace Excellency.Migrations
                     b.ToTable("RatingTableItems");
                 });
 
-            modelBuilder.Entity("Excellency.Models.Role", b =>
+            modelBuilder.Entity("Excellency.Models.Registration", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int?>("AccountId");
+
                     b.Property<string>("CreatedBy");
 
                     b.Property<DateTime>("CreationDate");
 
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasMaxLength(255);
+                    b.Property<int?>("EmployeeId");
 
                     b.Property<bool>("IsDeleted");
+
+                    b.Property<bool>("IsUser");
 
                     b.Property<string>("ModifiedBy");
 
@@ -632,71 +1032,11 @@ namespace Excellency.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Roles");
-                });
+                    b.HasIndex("AccountId");
 
-            modelBuilder.Entity("Excellency.Models.RoleModulesHeader", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                    b.HasIndex("EmployeeId");
 
-                    b.Property<string>("CreatedBy");
-
-                    b.Property<DateTime>("CreationDate");
-
-                    b.Property<bool>("IsDeleted");
-
-                    b.Property<string>("ModifiedBy");
-
-                    b.Property<DateTime>("ModifiedDate");
-
-                    b.Property<int?>("RoleId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RoleId");
-
-                    b.ToTable("RoleModulesHeader");
-                });
-
-            modelBuilder.Entity("Excellency.Models.RoleModulesLine", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<bool>("Approve");
-
-                    b.Property<bool>("Delete");
-
-                    b.Property<bool>("Export");
-
-                    b.Property<bool>("Import");
-
-                    b.Property<bool>("IsDeleted");
-
-                    b.Property<int?>("ModuleId");
-
-                    b.Property<bool>("New");
-
-                    b.Property<bool>("Post");
-
-                    b.Property<bool>("Print");
-
-                    b.Property<int?>("RoleModulesHeaderId");
-
-                    b.Property<bool>("Save");
-
-                    b.Property<bool>("Search");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ModuleId");
-
-                    b.HasIndex("RoleModulesHeaderId");
-
-                    b.ToTable("RoleModulesLine");
+                    b.ToTable("Registrations");
                 });
 
             modelBuilder.Entity("Excellency.Models.Status", b =>
@@ -714,61 +1054,15 @@ namespace Excellency.Migrations
                     b.ToTable("Statuses");
                 });
 
-            modelBuilder.Entity("Excellency.Models.UserRoleHeader", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int?>("AccountId");
-
-                    b.Property<string>("CreatedBy");
-
-                    b.Property<DateTime>("CreationDate");
-
-                    b.Property<bool>("IsDeleted");
-
-                    b.Property<string>("ModifiedBy");
-
-                    b.Property<DateTime>("ModifiedDate");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AccountId");
-
-                    b.ToTable("UserRoleHeader");
-                });
-
-            modelBuilder.Entity("Excellency.Models.UserRoleLine", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("ExpireDate");
-
-                    b.Property<bool>("IsDeleted");
-
-                    b.Property<int?>("RoleHeaderId");
-
-                    b.Property<int?>("RoleId");
-
-                    b.Property<DateTime>("StartDate");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RoleHeaderId");
-
-                    b.HasIndex("RoleId");
-
-                    b.ToTable("UserRoleLine");
-                });
-
             modelBuilder.Entity("Excellency.Models.Account", b =>
                 {
                     b.HasOne("Excellency.Models.Branch", "Branch")
                         .WithMany()
                         .HasForeignKey("BranchId");
+
+                    b.HasOne("Excellency.Models.EmployeeCategory", "Category")
+                        .WithMany()
+                        .HasForeignKey("CategoryId");
 
                     b.HasOne("Excellency.Models.Company", "Company")
                         .WithMany()
@@ -781,6 +1075,42 @@ namespace Excellency.Migrations
                     b.HasOne("Excellency.Models.Position", "Position")
                         .WithMany()
                         .HasForeignKey("PositionId");
+                });
+
+            modelBuilder.Entity("Excellency.Models.AccountRoleAssignment", b =>
+                {
+                    b.HasOne("Excellency.Models.Account", "Account")
+                        .WithMany()
+                        .HasForeignKey("AccountId");
+
+                    b.HasOne("Excellency.Models.AccountRole", "Role")
+                        .WithMany()
+                        .HasForeignKey("RoleId");
+                });
+
+            modelBuilder.Entity("Excellency.Models.ApproverAssignment", b =>
+                {
+                    b.HasOne("Excellency.Models.Account", "Approver")
+                        .WithMany()
+                        .HasForeignKey("ApproverId");
+
+                    b.HasOne("Excellency.Models.Account", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+                });
+
+            modelBuilder.Entity("Excellency.Models.BehavioralFactor", b =>
+                {
+                    b.HasOne("Excellency.Models.EmployeeCategory", "Category")
+                        .WithMany()
+                        .HasForeignKey("CategoryId");
+                });
+
+            modelBuilder.Entity("Excellency.Models.BehavioralFactorItem", b =>
+                {
+                    b.HasOne("Excellency.Models.BehavioralFactor", "BehavioralFactor")
+                        .WithMany()
+                        .HasForeignKey("BehavioralFactorId");
                 });
 
             modelBuilder.Entity("Excellency.Models.Branch", b =>
@@ -797,23 +1127,33 @@ namespace Excellency.Migrations
                         .HasForeignKey("SuccessIndicatorId");
                 });
 
-            modelBuilder.Entity("Excellency.Models.Employee", b =>
+            modelBuilder.Entity("Excellency.Models.EmployeeAssignment", b =>
                 {
-                    b.HasOne("Excellency.Models.Branch", "Branch")
+                    b.HasOne("Excellency.Models.Account", "Employee")
                         .WithMany()
-                        .HasForeignKey("BranchId");
+                        .HasForeignKey("EmployeeId");
+                });
 
-                    b.HasOne("Excellency.Models.Company", "Company")
+            modelBuilder.Entity("Excellency.Models.EmployeeBehavioralAssignment", b =>
+                {
+                    b.HasOne("Excellency.Models.BehavioralFactor", "BehavioralFactor")
                         .WithMany()
-                        .HasForeignKey("CompanyId");
+                        .HasForeignKey("BehavioralFactorId");
 
-                    b.HasOne("Excellency.Models.Department", "Department")
+                    b.HasOne("Excellency.Models.EmployeeAssignment", "EmployeeAssignment")
                         .WithMany()
-                        .HasForeignKey("DepartmentId");
+                        .HasForeignKey("EmployeeAssignmentId");
+                });
 
-                    b.HasOne("Excellency.Models.Position", "Position")
+            modelBuilder.Entity("Excellency.Models.EmployeeKRAAssignment", b =>
+                {
+                    b.HasOne("Excellency.Models.EmployeeAssignment", "EmployeeAssignment")
                         .WithMany()
-                        .HasForeignKey("PositionId");
+                        .HasForeignKey("EmployeeAssignmentId");
+
+                    b.HasOne("Excellency.Models.KeyResultArea", "KeyResultArea")
+                        .WithMany()
+                        .HasForeignKey("KeyResultAreaId");
                 });
 
             modelBuilder.Entity("Excellency.Models.EmployeeRaterHeader", b =>
@@ -825,7 +1165,7 @@ namespace Excellency.Migrations
 
             modelBuilder.Entity("Excellency.Models.EmployeeRaterLine", b =>
                 {
-                    b.HasOne("Excellency.Models.Employee", "Employee")
+                    b.HasOne("Excellency.Models.Account", "Employee")
                         .WithMany()
                         .HasForeignKey("EmployeeId");
 
@@ -844,7 +1184,7 @@ namespace Excellency.Migrations
                         .WithMany()
                         .HasForeignKey("KeyResultAreaId");
 
-                    b.HasOne("Excellency.Models.Employee", "Ratee")
+                    b.HasOne("Excellency.Models.Account", "Ratee")
                         .WithMany()
                         .HasForeignKey("RateeId");
 
@@ -883,6 +1223,62 @@ namespace Excellency.Migrations
                         .HasForeignKey("RatingTableId");
                 });
 
+            modelBuilder.Entity("Excellency.Models.PeerCriteriaLine", b =>
+                {
+                    b.HasOne("Excellency.Models.PeerCriteriaHeader", "Header")
+                        .WithMany()
+                        .HasForeignKey("HeaderId");
+                });
+
+            modelBuilder.Entity("Excellency.Models.RatingBehavioralFactor", b =>
+                {
+                    b.HasOne("Excellency.Models.BehavioralFactor", "BehavioralFactor")
+                        .WithMany()
+                        .HasForeignKey("BehavioralFactorId");
+
+                    b.HasOne("Excellency.Models.BehavioralFactorItem", "BehavioralFactorItem")
+                        .WithMany()
+                        .HasForeignKey("BehavioralFactorItemId");
+
+                    b.HasOne("Excellency.Models.RatingHeader", "RatingHeader")
+                        .WithMany()
+                        .HasForeignKey("RatingHeaderId");
+                });
+
+            modelBuilder.Entity("Excellency.Models.RatingHeader", b =>
+                {
+                    b.HasOne("Excellency.Models.Account", "Approver")
+                        .WithMany()
+                        .HasForeignKey("ApproverId");
+
+                    b.HasOne("Excellency.Models.Account", "Ratee")
+                        .WithMany()
+                        .HasForeignKey("RateeId");
+
+                    b.HasOne("Excellency.Models.Account", "Rater")
+                        .WithMany()
+                        .HasForeignKey("RaterId");
+
+                    b.HasOne("Excellency.Models.Status", "Status")
+                        .WithMany()
+                        .HasForeignKey("StatusId");
+                });
+
+            modelBuilder.Entity("Excellency.Models.RatingKeySuccessArea", b =>
+                {
+                    b.HasOne("Excellency.Models.KeyResultArea", "KeyResultArea")
+                        .WithMany()
+                        .HasForeignKey("KeyResultAreaId");
+
+                    b.HasOne("Excellency.Models.KeySuccessIndicator", "KeySuccessIndicator")
+                        .WithMany()
+                        .HasForeignKey("KeySuccessIndicatorId");
+
+                    b.HasOne("Excellency.Models.RatingHeader", "RatingHeader")
+                        .WithMany()
+                        .HasForeignKey("RatingHeaderId");
+                });
+
             modelBuilder.Entity("Excellency.Models.RatingTableItem", b =>
                 {
                     b.HasOne("Excellency.Models.RatingTable", "RatingTable")
@@ -890,40 +1286,15 @@ namespace Excellency.Migrations
                         .HasForeignKey("RatingTableId");
                 });
 
-            modelBuilder.Entity("Excellency.Models.RoleModulesHeader", b =>
-                {
-                    b.HasOne("Excellency.Models.Role", "Role")
-                        .WithMany()
-                        .HasForeignKey("RoleId");
-                });
-
-            modelBuilder.Entity("Excellency.Models.RoleModulesLine", b =>
-                {
-                    b.HasOne("Excellency.Models.Module", "Module")
-                        .WithMany()
-                        .HasForeignKey("ModuleId");
-
-                    b.HasOne("Excellency.Models.RoleModulesHeader", "RoleModulesHeader")
-                        .WithMany()
-                        .HasForeignKey("RoleModulesHeaderId");
-                });
-
-            modelBuilder.Entity("Excellency.Models.UserRoleHeader", b =>
+            modelBuilder.Entity("Excellency.Models.Registration", b =>
                 {
                     b.HasOne("Excellency.Models.Account", "Account")
                         .WithMany()
                         .HasForeignKey("AccountId");
-                });
 
-            modelBuilder.Entity("Excellency.Models.UserRoleLine", b =>
-                {
-                    b.HasOne("Excellency.Models.UserRoleHeader", "RoleHeader")
+                    b.HasOne("Excellency.Models.Account", "Employee")
                         .WithMany()
-                        .HasForeignKey("RoleHeaderId");
-
-                    b.HasOne("Excellency.Models.Role", "Role")
-                        .WithMany()
-                        .HasForeignKey("RoleId");
+                        .HasForeignKey("EmployeeId");
                 });
 #pragma warning restore 612, 618
         }

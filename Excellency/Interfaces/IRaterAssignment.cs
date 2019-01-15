@@ -9,14 +9,14 @@ namespace Excellency.Interfaces
     public interface IRaterAssignment
     {
         IEnumerable<Account> Raters();
-        IEnumerable<Employee> Employees(int RaterId);
-        IEnumerable<Employee> AssignedEmployees(int RaterId);
+        IEnumerable<Account> Employees(int RaterId);
+        IEnumerable<Account> AssignedEmployees(int RaterId);
         IEnumerable<Branch> Branches();
         IEnumerable<Company> Companies();
         IEnumerable<Department> Departments();
         IEnumerable<Position> Positions();
         Account GetAccountById(int id);
-        Employee GetEmployeeById(int id);
+        Account GetEmployeeById(int id);
         Company GetCompanyById(int id);
         Branch GetBranchById(int id);
         Department GetDepartmentById(int id);

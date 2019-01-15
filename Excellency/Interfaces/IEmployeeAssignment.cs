@@ -14,11 +14,11 @@ namespace Excellency.Interfaces
         void RemoveBehavioralPerId(int id);
 
         EmployeeAssignment EmployeeAssignmentByEmployeeId(int id);
-        Employee EmployeeById(int id);
+        Account EmployeeById(int id);
         BehavioralFactor BehavioralFactorById(int id);
         KeyResultArea KeyResultAreaById(int id);
 
-        IEnumerable<Employee> Employees();
+        IEnumerable<Account> Employees();
         IEnumerable<EmployeeAssignment> EmployeeAssignments();
         IEnumerable<EmployeeKRAAssignment> EmployeeKRAAssignmentByHeaderId(int id);
         IEnumerable<EmployeeBehavioralAssignment> EmployeeBehavioralAssignmentByHeaderId(int id);

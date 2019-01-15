@@ -30,7 +30,7 @@ namespace Excellency.Services
                 var lineItem = new EmployeeRaterLine
                 {
                     EmployeeRater = headerItem,
-                    Employee = _dbContext.Employees.FirstOrDefault(a => a.Id == Id),
+                    Employee = _dbContext.Accounts.FirstOrDefault(a => a.Id == Id),
                 };
                 _dbContext.Entry(Header).State = EntityState.Modified;
                 _dbContext.Add(lineItem);
@@ -42,7 +42,7 @@ namespace Excellency.Services
                 var lineItem = new EmployeeRaterLine
                 {
                     EmployeeRater = Header,
-                    Employee = _dbContext.Employees.FirstOrDefault(a => a.Id == Id),
+                    Employee = _dbContext.Accounts.FirstOrDefault(a => a.Id == Id),
                 };
                 _dbContext.Add(Header);
                 _dbContext.Add(lineItem);
@@ -74,19 +74,19 @@ namespace Excellency.Services
                 var lineItem = new EmployeeRaterLine
                 {
                     EmployeeRater = Header,
-                    Employee = _dbContext.Employees.FirstOrDefault(a => a.Id == item)
+                    Employee = _dbContext.Accounts.FirstOrDefault(a => a.Id == item)
                 };
                 _dbContext.Add(lineItem);
             }
             _dbContext.SaveChanges();
         }
 
-        public IEnumerable<Employee> AssignedEmployees(int RaterId)
+        public IEnumerable<Account> AssignedEmployees(int RaterId)
         {
             var id = GetRaterHeaderId(RaterId);
             var items = RaterAssignedEmployees(id)
                 .Select(
-                a => new Employee
+                a => new Account
                 {
                     Id = a.Employee.Id,
                     EmployeeNo = a.Employee.EmployeeNo,
@@ -124,16 +124,16 @@ namespace Excellency.Services
 
 
 
-        public IEnumerable<Employee> Employees(int RaterId)
+        public IEnumerable<Account> Employees(int RaterId)
         {
             if (GetRaterById(RaterId) == null)
             {
-                return _dbContext.Employees.Where(a => a.IsDeleted == false);
+                return _dbContext.Accounts.Where(a => a.IsDeleted == false);
             }
             else
             {
                 var items = AssignedEmployees(RaterId);
-                return _dbContext.Employees.Where(a => a.IsDeleted == false).Except(items);
+                return _dbContext.Accounts.Where(a => a.IsDeleted == false).Except(items);
             }
 
         }
@@ -162,9 +162,9 @@ namespace Excellency.Services
             return _dbContext.Departments.FirstOrDefault(a => a.Id == id);
         }
 
-        public Employee GetEmployeeById(int id)
+        public Account GetEmployeeById(int id)
         {
-            return _dbContext.Employees
+            return _dbContext.Accounts
                    .Include(a => a.Company)
                    .Include(a => a.Branch)
                    .Include(a => a.Department)

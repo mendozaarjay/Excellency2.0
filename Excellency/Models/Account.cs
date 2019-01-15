@@ -6,12 +6,20 @@ namespace Excellency.Models
     public class Account
     {
         public int Id { get; set; }
+
+        [Required]
+        [MaxLength(50)]
+        public string EmployeeNo { get; set; }
+
         [Required]
         [MaxLength(50)]
         public string FirstName { get; set; }
         [Required]
         [MaxLength(50)]
         public string LastName { get; set; }
+        [Required]
+        [MaxLength(50)]
+        public string MiddleName { get; set; }
         [Required]
         [MaxLength(50)]
         public string Mobile { get; set; }
@@ -24,6 +32,8 @@ namespace Excellency.Models
         [Required]
         [DataType(DataType.Password)]
         public string Password { get; set; }
+
+        public virtual EmployeeCategory Category { get; set; }
 
         public bool IsVerified { get; set; } = true;
         public bool IsLocked { get; set; } = false;
