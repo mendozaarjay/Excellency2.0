@@ -20,10 +20,10 @@ namespace Excellency.Models
         [Required]
         [MaxLength(50)]
         public string MiddleName { get; set; }
-        [Required]
+        
         [MaxLength(50)]
         public string Mobile { get; set; }
-        [Required]
+        
         [MaxLength(255)]
         public string Email { get; set; }
         [Required]

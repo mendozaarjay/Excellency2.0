@@ -28,7 +28,7 @@ namespace Excellency.Controllers
                 (a => new AccountListingViewModel
                 {
                     Id = a.Id,
-                    Name = a.FirstName + " " + a.LastName,
+                    Name = a.FirstName + " " + a.LastName + " " + a.MiddleName,
                     Branch = a.Branch.Description,
                     Company = a.Company.Description,
                     Department = a.Department.Description,
@@ -48,7 +48,8 @@ namespace Excellency.Controllers
                 Companies = this.Companies(),
                 Branches = this.Branches(),
                 Departments = this.Departments(),
-                Positions = this.Positions()
+                Positions = this.Positions(),
+                Categories = this.Categories(),
             };
 
             return View(model);
@@ -57,12 +58,16 @@ namespace Excellency.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Register(AccountRegisterViewModel account)
         {
+            var UserId = HttpContext.Session.GetString("UserId");
             if (ModelState.IsValid)
             {
-                var user = new Account
+                var UserAccount = new Account
                 {
+                    Id = account.Id,
+                    EmployeeNo = account.EmployeeNo,
                     FirstName = account.FirstName,
                     LastName = account.LastName,
+                    MiddleName = account.MiddleName,
                     Username = account.Username,
                     Mobile = account.Mobile,
                     Password = Security.Encrypt(account.Password),
@@ -71,10 +76,9 @@ namespace Excellency.Controllers
                     Branch = _UserAccount.GetBranchById(int.Parse(account.Branch.ToString())),
                     Position = _UserAccount.GetPositionById(int.Parse(account.Position.ToString())),
                     Department = _UserAccount.GetDepartmentById(int.Parse(account.Department.ToString())),
-                    CreatedBy = HttpContext.Session.GetString("UserId"),
-                    CreationDate = DateTime.Now,
+                    Category = _UserAccount.GetCategoryById(int.Parse(account.Category))
                 };
-                _UserAccount.Add(user);
+                _UserAccount.Save(UserAccount,UserId);
                 return RedirectToAction("Index");
             }
             else
@@ -83,6 +87,7 @@ namespace Excellency.Controllers
                 account.Branches = this.Branches();
                 account.Positions = this.Positions();
                 account.Departments = this.Departments();
+                account.Categories = this.Categories();
                 return View(account);
             }
         }
@@ -138,6 +143,16 @@ namespace Excellency.Controllers
 
             return result;
         } 
+        public IEnumerable<SelectListItem> Categories()
+        {
+            var items = _UserAccount.Categories()
+                .Select(a => new SelectListItem
+                {
+                    Value = a.Id.ToString(),
+                    Text = a.Description,
+                }).ToList();
+            return items;
+        }
         #endregion
         public IActionResult Login()
         {

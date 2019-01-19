@@ -1,12 +1,19 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Excellency.ViewModels
 {
     public class AccountRegisterViewModel
     {
-        public string Id { get; set; }
+        [NotMapped]
+        public int Id { get; set; }
+
+        [Required(ErrorMessage = "Employee number is required.")]
+        [MaxLength(50, ErrorMessage = "Employee number should be less than or equal to 50 characters.")]
+        public string EmployeeNo { get; set; }
+
         [Required(ErrorMessage = "First name is required.")]
         [MaxLength(50, ErrorMessage = "First name should be less than or equal to 50 characters.")]
         public string FirstName { get; set; }
@@ -15,14 +22,12 @@ namespace Excellency.ViewModels
         [MaxLength(50, ErrorMessage = "Last name should be less than or equal to 50 characters.")]
         public string LastName { get; set; }
 
-        [Required(ErrorMessage = "Mobile is required.")]
-        [MaxLength(50, ErrorMessage = "Mobile should be less than or equal to 50 characters.")]
-        public string Mobile { get; set; }
 
-        [Required(ErrorMessage = "Email is required.")]
-        [MaxLength(255, ErrorMessage = "Email should be less than or equal to 255 characters.")]
-        [DataType(DataType.EmailAddress)]
-        [RegularExpression("^[a-zA-Z0-9_.-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$", ErrorMessage = "Must be a valid email address.")]
+        [Required(ErrorMessage = "Middle name is required.")]
+        [MaxLength(50, ErrorMessage = "Middle name should be less than or equal to 50 characters.")]
+        public string MiddleName { get; set; }
+
+        public string Mobile { get; set; }
         public string Email { get; set; }
 
 
@@ -46,11 +51,14 @@ namespace Excellency.ViewModels
         public string Department { get; set; }
         [Required(ErrorMessage = "Position is required.")]
         public string Position { get; set; }
+        [Required(ErrorMessage = "Category is required.")]
+        public string Category { get; set; }
 
         public IEnumerable<SelectListItem> Companies { get; set; }
         public IEnumerable<SelectListItem> Branches { get; set; }
         public IEnumerable<SelectListItem> Departments { get; set; }
         public IEnumerable<SelectListItem> Positions { get; set; }   
+        public IEnumerable<SelectListItem> Categories { get; set; }
 
     }
 }

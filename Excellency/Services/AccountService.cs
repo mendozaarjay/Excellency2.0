@@ -24,6 +24,7 @@ namespace Excellency.Services
                 .Include(a => a.Company)
                 .Include(a => a.Department)
                 .Include(a => a.Position)
+                .Include(a => a.Category)
                 .Where(a => a.IsDeleted == false && a.IsDeactivated == false);
         }
 
@@ -36,6 +37,12 @@ namespace Excellency.Services
         public IEnumerable<Branch> Branches()
         {
             return _dbContext.Branches.Where(a => a.IsDeleted == false);
+        }
+
+        public IEnumerable<EmployeeCategory> Categories()
+        {
+            var items = _dbContext.EmployeeCategories.Where(a => a.IsDeleted == false);
+            return items;
         }
 
         public IEnumerable<Company> Companies()
@@ -55,12 +62,19 @@ namespace Excellency.Services
                    .Include(a => a.Branch)
                    .Include(a => a.Department)
                    .Include(a => a.Position)
+                   .Include(a => a.Category)
                    .FirstOrDefault(a => a.Id == id);
         }
 
         public Branch GetBranchById(int id)
         {
             return _dbContext.Branches.FirstOrDefault(a => a.Id == id);
+        }
+
+        public EmployeeCategory GetCategoryById(int id)
+        {
+            var item = _dbContext.EmployeeCategories.FirstOrDefault(a => a.Id == id);
+            return item;
         }
 
         public Company GetCompanyById(int id)
@@ -118,7 +132,28 @@ namespace Excellency.Services
 
         public void RemoveById(int Id)
         {
-            throw new NotImplementedException();
+            var item = _dbContext.Accounts.FirstOrDefault(a => a.Id == Id);
+            item.IsDeactivated = true;
+            item.IsDeleted = true;
+            _dbContext.Entry(item).State = EntityState.Modified;
+            _dbContext.SaveChanges();
+        }
+
+        public void Save(Account account, string UserId)
+        {
+            if(account.Id == 0)
+            {
+                account.CreatedBy = UserId;
+                account.CreationDate = DateTime.Now;
+                _dbContext.Add(account);
+            }
+            else
+            {
+                account.ModifiedBy = UserId;
+                account.ModifiedDate = DateTime.Now;
+                _dbContext.Entry(account).State = EntityState.Modified;
+            }
+            _dbContext.SaveChanges();
         }
 
         public void Update(Account Account)

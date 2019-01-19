@@ -21,29 +21,28 @@
                 </div>
             }
                 <div class="col-md-6">
-                    <div class="form-group " hidden="hidden">
-                        <label for="id">ID</label>
-                        <input type="text" class="form-control" id="sidebar-nav" name="Id">
+                    <div class="form-group">
+                        <label for="employeeno">Employee No</label>
+                        @Html.TextBoxFor(m => m.EmployeeNo, new { @class = "form-control" })
                     </div>
+
                     <div class="form-group">
                         <label for="firstname">Username</label>
-                        <input type="text" class="form-control" id="username" placeholder="Username" name="Username">
+                        @Html.TextBoxFor(m => m.Username, new { @class = "form-control" })
                     </div>
                     <div class="form-group">
                         <label for="firstname">First name</label>
-                        <input type="text" class="form-control" id="firstname" placeholder="First name" name="Firstname">
+                        @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control" })
                     </div>
+
+                    <div class="form-group">
+                        <label for="middlename">Middle name</label>
+                        @Html.TextBoxFor(m => m.MiddleName, new { @class = "form-control" })
+                    </div>
+
                     <div class="form-group">
                         <label for="lastname">Last name</label>
-                        <input type="text" class="form-control" id="lastname" placeholder="Last name" name="Lastname">
-                    </div>
-                    <div class="form-group">
-                        <label for="mobile">Mobile</label>
-                        <input type="text" class="form-control" id="mobile" placeholder="Mobile" name="Mobile">
-                    </div>
-                    <div class="form-group">
-                        <label for="email">Email</label>
-                        <input type="text" class="form-control" id="email" placeholder="Email" name="Email">
+                        @Html.TextBoxFor(m => m.LastName, new { @class = "form-control" })
                     </div>
                     <div class="form-group">
                         <label for="password">Password</label>
@@ -74,7 +73,10 @@
                         @Html.LabelFor(m => m.Position)
                         @Html.DropDownListFor(m => m.Position, Model.Positions, "- Select Position -", new { @class = "form-control" })
                     </div>
-
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Category)
+                        @Html.DropDownListFor(m => m.Category, Model.Categories, "- Select Category -", new { @class = "form-control" })
+                    </div>
                 </div>
         </div>
             <div class="form-group">

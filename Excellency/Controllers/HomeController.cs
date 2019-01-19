@@ -116,6 +116,7 @@ namespace Excellency.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Login(LoginViewModel model)
         {
+
             if (ModelState.IsValid)
             {
                 var account = new Account

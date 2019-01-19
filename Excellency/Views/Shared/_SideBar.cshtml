@@ -99,10 +99,10 @@
                     <a href="#employees" data-toggle="collapse" class="collapsed"><i class="lnr lnr-users"></i> <span>Employees</span> <i class="icon-submenu lnr lnr-chevron-left"></i></a>
                     <div id="employees" class="collapse ">
                         <ul class="nav">
-                            @if (Model.UserAccess.Employee)
+                            @*@if (Model.UserAccess.Employee)
                             {
                                 <li><a asp-controller="Employee" asp-action="Index" class="">Employee</a></li>
-                            }
+                            }*@
                             @if (Model.UserAccess.RaterAssignment)
                             {
                                 <li><a asp-controller="RaterAssignment" asp-action="RaterList" class="">Rater Assignment</a></li>
