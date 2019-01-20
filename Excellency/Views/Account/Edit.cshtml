@@ -1,0 +1,89 @@
+﻿@model Excellency.ViewModels.AccountRegisterViewModel
+@{
+    ViewData["Title"] = "Edit Account";
+}
+
+<div class="panel panel-headline">
+    <div class="panel-heading">
+        <h3>Edit User Account</h3>
+    </div>
+    <div class="panel-body">
+
+        @using (Html.BeginForm("Register", "Account"))
+        {
+
+            <div class="row">
+                @if (Html.ViewData.ModelState.ErrorCount > 0)
+                {
+                    <div class="alert alert-danger alert-dismissible" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+                    </div>
+                }
+                <div class="col-md-6">
+                    @Html.HiddenFor(m => m.Id)
+                    <div class="form-group">
+                        <label for="employeeno">Employee No</label>
+                        @Html.TextBoxFor(m => m.EmployeeNo, new { @class = "form-control" })
+                    </div>
+
+                    <div class="form-group">
+                        <label for="firstname">Username</label>
+                        @Html.TextBoxFor(m => m.Username, new { @class = "form-control" })
+                    </div>
+                    <div class="form-group">
+                        <label for="firstname">First name</label>
+                        @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control" })
+                    </div>
+
+                    <div class="form-group">
+                        <label for="middlename">Middle name</label>
+                        @Html.TextBoxFor(m => m.MiddleName, new { @class = "form-control" })
+                    </div>
+
+                    <div class="form-group">
+                        <label for="lastname">Last name</label>
+                        @Html.TextBoxFor(m => m.LastName, new { @class = "form-control" })
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" class="form-control" id="password" placeholder="Password" name="Password">
+                    </div>
+                    <div class="form-group">
+                        <label for="confirmpassword">Confirm Password</label>
+                        <input type="password" class="form-control" id="confirmpassword" placeholder="Confirm Password" name="ConfirmPassword">
+                    </div>
+
+
+
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Company)
+                        @Html.DropDownListFor(m => m.Company, Model.Companies, "- Select Company -", new { @class = "form-control" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Branch)
+                        @Html.DropDownListFor(m => m.Branch, Model.Branches, "- Select Branch -", new { @class = "form-control" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Department)
+                        @Html.DropDownListFor(m => m.Department, Model.Departments, "- Select Department -", new { @class = "form-control" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Position)
+                        @Html.DropDownListFor(m => m.Position, Model.Positions, "- Select Position -", new { @class = "form-control" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Category)
+                        @Html.DropDownListFor(m => m.Category, Model.Categories, "- Select Category -", new { @class = "form-control" })
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <button type="button" class="btn btn-default">Cancel</button>
+                <button type="submit" class="btn btn-primary">Register Account</button>
+            </div>
+        }
+    </div>
+</div>

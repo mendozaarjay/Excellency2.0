@@ -39,6 +39,40 @@ namespace Excellency.Controllers
             return View(model);
         }
 
+
+        public IActionResult Edit(int id)
+        {
+            var item = _UserAccount.GetAccountById(id);
+            var model = new AccountRegisterViewModel
+            {
+                Id = item.Id,
+                FirstName = item.FirstName,
+                MiddleName = item.MiddleName,
+                LastName = item.LastName,
+                EmployeeNo = item.EmployeeNo,
+                Company = item.Company.Id.ToString(),
+                Branch = item.Branch.Id.ToString(),
+                Department = item.Department.Id.ToString(),
+                Position = item.Position.Id.ToString(),
+                Category = item.Category.Id.ToString(),
+                Companies = this.Companies(),
+                Branches = this.Branches(),
+                Departments = this.Departments(),
+                Positions = this.Positions(),
+                Username = item.Username,
+                Categories = this.Categories()
+            };
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Delete(int id)
+        {
+            _UserAccount.RemoveById(id);
+            return RedirectToAction("Index");   
+        }
+
         #region User Registration
         [SessionAuthorized]
         public IActionResult Register()

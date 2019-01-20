@@ -36,8 +36,8 @@
                             <td>@item.Company</td>
                             <td>@item.Branch</td>
                             <td>@item.Department</td>
-                            <td></td>
-                            <td></td>
+                            <td class="text-center"><a asp-controller="Account" asp-action="Edit" asp-route-id="@item.Id"><i class="fa fa-pencil text-success"></i></a></td>
+                            <td class="text-center"><a data-toggle="modal" data-target="#delete" data-id="@item.Id"><i class="fa fa-trash text-danger"></i></a></td>
                         </tr>
 
                     }
@@ -47,3 +47,38 @@
     </div>
 </div>
 
+
+<div class="modal fade" id="delete" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        @using (Html.BeginForm("Delete", "Account"))
+        {
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Confirmation</h4>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="id" />
+                    <p>Are you sure you want to delete the current record?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+
+@section Scripts{
+    
+    <script type="text/javascript">
+        $('#delete').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget)
+            var id = button.data('id')
+            var modal = $(this)
+            modal.find('.modal-body input').val(id)
+        })
+    </script>
+}
