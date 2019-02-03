@@ -1,0 +1,46 @@
+﻿@model Excellency.ViewModels.EvaluationResultViewModel
+@{
+    ViewData["Title"] = "Result";
+}
+
+<div class="panel panel-headline">
+    <div class="panel-heading">
+        <h3 class="panel-title">Evaluation Result for : @Model.InterpretationPerEmployee.Name </h3>
+    </div>
+    <div class="panel-body">
+        <strong>Total Score : </strong> <p>@Model.InterpretationPerEmployee.Score</p>
+        <strong>Interpretation : </strong> <p>@Model.InterpretationPerEmployee.Title</p>
+        <strong>Description : </strong> <p>@Model.InterpretationPerEmployee.Description</p>
+        <strong>Score From : </strong> <p><i>@Model.InterpretationPerEmployee.ScoreFrom</i></p>
+        <strong>Score To : </strong> <p><i>@Model.InterpretationPerEmployee.ScoreTo</i></p>
+        <hr />
+        <h3>Evaluation Summary</h3>
+        <div class="table-responsive">
+            <table class="table table-condensed">
+                <thead>
+                    <tr>
+                        <th>Type</th>
+                        <th>Name</th>
+                        <th>Weight</th>
+                        <th>Percentage</th>
+                        <th>Score</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach(var item in Model.EvaluationResultItems)
+                    {
+                        <tr>
+                            <td>@item.Type</td>
+                            <td>@item.Name</td>
+                            <td>@item.Weight</td>
+                            <td>@item.Percentage</td>
+                            <td>@item.Score</td>
+                            <td>@item.Total</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

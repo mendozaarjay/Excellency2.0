@@ -1,0 +1,33 @@
+﻿@model Excellency.ViewModels.EvaluationResultIndexViewModel
+@{
+    ViewData["Title"] = "Index";
+}
+
+<div class="panel panel-headline">
+    <div class="panel-heading">
+        <h3 class="panel-title">Evaluation Results</h3>
+    </div>
+    <div class="panel-body">
+        <div class="table-responsive">
+            <table class="table table-condensed">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Total Score</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach(var item in Model.EmployeeEvaluations)
+                    {
+                        <tr>
+                            <td>@item.Name</td>
+                            <td>@item.Score</td>
+                            <td><a class="fa fa-clone" asp-controller="EvaluationResult" asp-action="Result" asp-route-id="@item.Id"></a></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
