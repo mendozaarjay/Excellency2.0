@@ -18,14 +18,16 @@
             int count = 0;
             @foreach (var item in Model.EvaluationSuccessIndicators)
             {
-                <div class="form-group">
-                    @Html.HiddenFor(m => m.EvaluationSuccessIndicators[count].Id)
-                    <strong>@item.Title</strong>
-                    <p>@item.Description <i>Weight - @item.Weight</i></p>
-                    @Html.EditorFor(m => m.EvaluationSuccessIndicators[count].Score, new { htmlAttributes = new { @type = "number", @min = "1", @step = "1", @value = "1", @max = item.Weight, @class = "form-control" } })
-                    @Html.LabelFor(m => m.EvaluationSuccessIndicators[count].Comment)
-                    @Html.TextAreaFor(m => m.EvaluationSuccessIndicators[count].Comment, new { @class = "form-control" })
-                </div>
+            <div class="form-group">
+                @Html.HiddenFor(m => m.EvaluationSuccessIndicators[count].Id)
+                <p><strong>Title : </strong> @item.Title</p>
+                <p><strong>Description : </strong> @item.Description</p>
+                <p><strong>Weight : </strong> @item.Weight</p>
+                <p><i>Note : 1 is the lowest score and @item.Weight is the highest score.</i></p>
+                @Html.DropDownListFor(m => m.EvaluationSuccessIndicators[count].Score, Enumerable.Range(1, item.Weight).Select(x => new SelectListItem { Text = x.ToString(), Value = x.ToString() }), new { @class = "form-control" })
+                @Html.LabelFor(m => m.EvaluationSuccessIndicators[count].Comment)
+                @Html.TextAreaFor(m => m.EvaluationSuccessIndicators[count].Comment, new { @class = "form-control" })
+            </div>
                 count++;
                 <hr />
             }

@@ -16,14 +16,16 @@
             <input type="hidden" name="EmployeeId" value="@Model.EmployeeId" />
             @foreach (var item in Model.BehavioralItems)
             {
-                <div class="form-group form-horizontal">
-                    @Html.HiddenFor(m => m.BehavioralItems[count].Id)
-                    <p><strong>@item.Description</strong> - <i>Weight : @item.Weight</i></p>
-                    @Html.ValidationMessageFor(m => item.Score)
-                    @Html.EditorFor(m => m.BehavioralItems[count].Score, new { htmlAttributes = new { @type = "number", @min = "1", @step = "1", @value = "1", @max = item.Weight, @class = "form-control" } })
-                    @Html.LabelFor(m => m.BehavioralItems[count].Comment)
-                    @Html.TextAreaFor(m => m.BehavioralItems[count].Comment, new { @class = "form-control" })
-                </div>
+            <div class="form-group form-horizontal">
+                @Html.HiddenFor(m => m.BehavioralItems[count].Id)
+                <p><strong>Description : </strong> @item.Description</p>
+                <p><strong>Weight : </strong> @item.Weight</p>
+                <p><i>Note : 1 is the lowest score and @item.Weight is the highest score.</i></p>
+                @Html.ValidationMessageFor(m => item.Score)
+                @Html.EditorFor(m => m.BehavioralItems[count].Score, new { htmlAttributes = new { @type = "number", @min = "1", @step = "1", @value = "1", @max = item.Weight, @class = "form-control" } })
+                @Html.LabelFor(m => m.BehavioralItems[count].Comment)
+                @Html.TextAreaFor(m => m.BehavioralItems[count].Comment, new { @class = "form-control" })
+            </div>
                 <hr />
                 count++;
             }
