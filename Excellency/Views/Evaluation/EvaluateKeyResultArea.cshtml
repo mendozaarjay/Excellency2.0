@@ -22,7 +22,7 @@
                     @Html.HiddenFor(m => m.EvaluationSuccessIndicators[count].Id)
                     <strong>@item.Title</strong>
                     <p>@item.Description <i>Weight - @item.Weight</i></p>
-                    @Html.DropDownListFor(m => m.EvaluationSuccessIndicators[count].Score, item.RatingTableItems.Select(a => new SelectListItem { Value = a.Id.ToString(), Text = "(" + a.Weight.ToString() + ") " + a.Description }), new { @class = "form-control" })
+                    @Html.EditorFor(m => m.EvaluationSuccessIndicators[count].Score, new { htmlAttributes = new { @type = "number", @min = "1", @step = "1", @value = "1", @max = item.Weight, @class = "form-control" } })
                     @Html.LabelFor(m => m.EvaluationSuccessIndicators[count].Comment)
                     @Html.TextAreaFor(m => m.EvaluationSuccessIndicators[count].Comment, new { @class = "form-control" })
                 </div>
