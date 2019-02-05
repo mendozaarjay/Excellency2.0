@@ -32,7 +32,11 @@ namespace Excellency.Services
                     {
                         Id = int.Parse(dr["Id"].ToString()),
                         Name = dr["EmployeeName"].ToString(),
-                        Score = decimal.Parse(dr["Total"].ToString()),
+                        TotalScore = decimal.Parse(dr["TotalScore"].ToString()),
+                        TotalWeight = decimal.Parse(dr["TotalWeight"].ToString()),
+                        ConvertedScore = decimal.Parse(dr["ConvertedScore"].ToString()),
+                        WeightedScore = decimal.Parse(dr["WeightedScore"].ToString()),
+                        Percentage = decimal.Parse(dr["Percentage"].ToString()),
                     };
                     employeeEvaluations.Add(item);
                 }
@@ -54,10 +58,11 @@ namespace Excellency.Services
                         Id = int.Parse(dr["Id"].ToString()),
                         Type = dr["Type"].ToString(),
                         Name = dr["EmployeeName"].ToString(),
-                        Weight = decimal.Parse(dr["Weight"].ToString()),
-                        Percentage = dr["Percentage"].ToString(),
-                        Score = decimal.Parse(dr["Score"].ToString()),
-                        Total = decimal.Parse(dr["Total"].ToString())
+                        TotalScore = decimal.Parse(dr["TotalScore"].ToString()),
+                        TotalWeight = decimal.Parse(dr["TotalWeight"].ToString()),
+                        ConvertedScore = decimal.Parse(dr["ConvertedScore"].ToString()),
+                        WeightedScore = decimal.Parse(dr["WeightedScore"].ToString()),
+                        Percentage = decimal.Parse(dr["Percentage"].ToString()),
                     };
                     items.Add(item);
                 }
@@ -77,7 +82,7 @@ namespace Excellency.Services
             {
                 item.Id = int.Parse(dt.Rows[0]["Id"].ToString());
                 item.Name = dt.Rows[0]["Name"].ToString();
-                item.Score = decimal.Parse(dt.Rows[0]["Id"].ToString());
+                item.Score = decimal.Parse(dt.Rows[0]["Score"].ToString());
                 item.Title = dt.Rows[0]["Title"].ToString();
                 item.Description = dt.Rows[0]["Description"].ToString();
                 item.ScoreFrom = decimal.Parse(dt.Rows[0]["ScoreFrom"].ToString());

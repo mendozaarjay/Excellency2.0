@@ -14,17 +14,25 @@
                     <tr>
                         <th>Name</th>
                         <th>Total Score</th>
+                        <th>Total Weight</th>
+                        <th>Converted Score</th>
+                        <th>Weighted Score</th>
+                        <th>Percentage</th>
                         <th></th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach(var item in Model.EmployeeEvaluations)
                     {
-                        <tr>
-                            <td>@item.Name</td>
-                            <td>@item.Score</td>
-                            <td><a class="fa fa-clone" asp-controller="EvaluationResult" asp-action="Result" asp-route-id="@item.Id"></a></td>
-                        </tr>
+                    <tr>
+                        <td>@item.Name</td>
+                        <td>@item.TotalScore.ToString("N2")</td>
+                        <td>@item.TotalWeight.ToString("N2")</td>
+                        <td>@item.ConvertedScore.ToString("N2")</td>
+                        <td>@item.WeightedScore.ToString("N2")</td>
+                        <td>@item.Percentage.ToString("N2")</td>
+                        <td><a class="fa fa-clone" asp-controller="EvaluationResult" asp-action="Result" asp-route-id="@item.Id"></a></td>
+                    </tr>
                     }
                 </tbody>
             </table>

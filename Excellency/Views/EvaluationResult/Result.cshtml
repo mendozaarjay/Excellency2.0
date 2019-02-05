@@ -8,7 +8,7 @@
         <h3 class="panel-title">Evaluation Result for : @Model.InterpretationPerEmployee.Name </h3>
     </div>
     <div class="panel-body">
-        <strong>Total Score : </strong> <p>@Model.InterpretationPerEmployee.Score</p>
+        <strong>Total Score : </strong> <p>@Model.InterpretationPerEmployee.Score.ToString("N2")</p>
         <strong>Interpretation : </strong> <p>@Model.InterpretationPerEmployee.Title</p>
         <strong>Description : </strong> <p>@Model.InterpretationPerEmployee.Description</p>
         <strong>Score From : </strong> <p><i>@Model.InterpretationPerEmployee.ScoreFrom</i></p>
@@ -21,23 +21,25 @@
                     <tr>
                         <th>Type</th>
                         <th>Name</th>
-                        <th>Weight</th>
+                        <th>Total Score</th>
+                        <th>Total Weight</th>
+                        <th>Converted Score</th>
+                        <th>Weighted Score</th>
                         <th>Percentage</th>
-                        <th>Score</th>
-                        <th>Total</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach(var item in Model.EvaluationResultItems)
                     {
-                        <tr>
-                            <td>@item.Type</td>
-                            <td>@item.Name</td>
-                            <td>@item.Weight</td>
-                            <td>@item.Percentage</td>
-                            <td>@item.Score</td>
-                            <td>@item.Total</td>
-                        </tr>
+                    <tr>
+                        <td>@item.Type</td>
+                        <td>@item.Name</td>
+                        <td>@item.TotalScore.ToString("N2")</td>
+                        <td>@item.TotalWeight.ToString("N2")</td>
+                        <td>@item.ConvertedScore.ToString("N2")</td>
+                        <td>@item.WeightedScore.ToString("N2")</td>
+                        <td>@item.Percentage.ToString("N2")</td>
+                    </tr>
                     }
                 </tbody>
             </table>

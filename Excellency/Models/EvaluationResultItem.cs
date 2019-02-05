@@ -10,9 +10,10 @@ namespace Excellency.Models
         public int Id { get; set; }
         public string Type { get; set; }
         public string Name { get; set; }
-        public decimal Weight { get; set; }
-        public string Percentage { get; set; }
-        public decimal Score { get; set; }
-        public decimal Total { get; set; }
+        public decimal TotalScore { get; set; }
+        public decimal TotalWeight { get; set; }
+        public decimal ConvertedScore { get; set; }
+        public decimal WeightedScore { get; set; }
+        public decimal Percentage { get; set; }
     }
 }
