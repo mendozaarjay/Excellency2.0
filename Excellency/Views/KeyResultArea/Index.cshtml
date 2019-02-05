@@ -7,7 +7,7 @@
     <div class="panel-heading">
         <h3 class="panel-title">Key Result Area</h3>
         <div class="right">
-            <button type="button" data-toggle="modal" data-target="#addnew">Add New</button>
+            <button type="button" data-toggle="modal" data-target="#addnew"><i class="fa fa-plus"></i></button>
         </div>
     </div>
     <div class="panel-body">
@@ -150,6 +150,13 @@
             $(".modal-body #title").val(title)
             $(".modal-body #description").val(description)
             $(".modal-body #weight").val(weight)
+
+        })
+        $('#addnew').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget)
+            $(".modal-body #title").val("")
+            $(".modal-body #description").val("")
+            $(".modal-body #weight").val("")
 
         })
     </script>

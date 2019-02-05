@@ -12,6 +12,7 @@ namespace Excellency.Interfaces
         void RemoveById(int Id);
 
         void Save(Account account, string UserId);
+        string NextEmployeeNo();
 
         IEnumerable<Company> Companies();
         IEnumerable<Branch> Branches();

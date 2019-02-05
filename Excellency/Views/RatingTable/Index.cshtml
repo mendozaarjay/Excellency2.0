@@ -127,6 +127,11 @@
             $(".modal-body #description").val(description)
 
         })
+        
+        $('#addnew').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget)
+            $(".modal-body #description").val("")
+        })
     </script>
 
     <script type="text/javascript">

@@ -79,6 +79,7 @@ namespace Excellency.Controllers
         {
             var model = new AccountRegisterViewModel
             {
+                EmployeeNo = _UserAccount.NextEmployeeNo(),
                 Companies = this.Companies(),
                 Branches = this.Branches(),
                 Departments = this.Departments(),

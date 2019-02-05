@@ -89,7 +89,6 @@ namespace Excellency.Controllers
                     Id = a.Id,
                     Title = a.Title,
                     Description = a.Description,
-                    RatingTableId = a.RatingTable.Id,
                     Weight = a.Weight
                 }
                 ).ToList();
@@ -122,7 +121,6 @@ namespace Excellency.Controllers
                     Title = model.KSITitle,
                     Description = model.KSIDescription,
                     KeyResultArea = _KeyResultArea.GetKeyResultAreaById(model.KRAId),
-                    RatingTable = _KeyResultArea.GetRatingTablePerId(model.RatingTableId),
                     Weight = model.KSIWeight
                 };
                 _KeyResultArea.SaveKeySuccessIndicator(item,UserId);

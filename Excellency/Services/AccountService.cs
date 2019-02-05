@@ -160,5 +160,11 @@ namespace Excellency.Services
         {
             throw new NotImplementedException();
         }
+        public string NextEmployeeNo()
+        {
+            var UserConnectionString = _dbContext.Database.GetDbConnection().ConnectionString;
+            var item = SCObjects.ReturnText("SELECT REPLICATE('0',4 - LEN(COUNT([a].[EmployeeNo]) + 1)) + CAST((COUNT([a].[EmployeeNo]) + 1) AS VARCHAR) FROM [dbo].[Accounts] [a]", UserConnectionString);
+            return item;
+        }
     }
 }

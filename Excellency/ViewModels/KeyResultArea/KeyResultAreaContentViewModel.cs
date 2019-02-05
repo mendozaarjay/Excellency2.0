@@ -20,8 +20,6 @@ namespace Excellency.ViewModels
         [MaxLength(255,ErrorMessage = "Description should be less than or equal to 255 characters.")]
         public string KSIDescription { get; set; }
         public IEnumerable<RatingTableViewModel> RatingTables { get; set; }
-        [Required(ErrorMessage = "Rating table is required.")]
-        public int RatingTableId { get; set; }
         public int KSIWeight { get; set; }
         public string KSITitle { get; set; }
 

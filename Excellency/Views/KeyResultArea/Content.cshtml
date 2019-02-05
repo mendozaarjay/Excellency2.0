@@ -38,7 +38,7 @@
                                     <td><strong>@item.Title</strong></td>
                                     <td>@item.Description</td>
                                     <td>@item.Weight</td>
-                                    <td class="text-center"><a data-toggle="modal" data-target="#edit" data-id="@item.Id" data-title="@item.Title" data-weight="@item.Weight" data-description="@item.Description" data-kraid="@Model.KeyResultAreaId" data-ratingtableid="@item.RatingTableId"><i class="fa fa-pencil text-success"></i></a></td>
+                                    <td class="text-center"><a data-toggle="modal" data-target="#edit" data-id="@item.Id" data-title="@item.Title" data-weight="@item.Weight" data-description="@item.Description" data-kraid="@Model.KeyResultAreaId"><i class="fa fa-pencil text-success"></i></a></td>
                                     <td class="text-center"><a data-toggle="modal" data-target="#delete" data-id="@item.Id" data-kraid="@Model.KeyResultAreaId"><i class="fa fa-trash text-danger"></i></a></td>
                                 </tr>
                             }
@@ -74,15 +74,6 @@
                     <div class="form-group">
                         <label for="ksiweight">Weight</label>
                         <input type="number" class="form-control" name="ksiweight" id="ksiweight" placeholder="Weight" />
-                    </div>
-                    <div class="form-group">
-                        <label for="ratingtableid">Rating Table</label>
-                        <select class="form-control" name="ratingtableid" id="ratingtableid">
-                            @foreach (var item in Model.RatingTables)
-                            {
-                                <option value="@item.Id">@item.Description</option>
-                            }
-                        </select>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -120,15 +111,6 @@
                     <div class="form-group">
                         <label for="ksiweight">Weight</label>
                         <input type="number" class="form-control" name="ksiweight" id="ksiweight" placeholder="Weight" />
-                    </div>
-                    <div class="form-group">
-                        <label for="ratingtableid">Rating Table</label>
-                        <select class="form-control" name="ratingtableid" id="ratingtableid">
-                            @foreach (var item in Model.RatingTables)
-                            {
-                                <option value="@item.Id">@item.Description</option>
-                            }
-                        </select>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -183,7 +165,6 @@
             var id = button.data('id')
             var title = button.data('title')
             var description = button.data('description')
-            var ratingtableid = button.data('ratingtableid')
             var weight = button.data('weight')
             var modal = $(this)
             $(".modal-body #kraid").val(kraid)
@@ -191,7 +172,6 @@
             $(".modal-body #ksititle").val(title)
             $(".modal-body #ksidescription").val(description)
             $(".modal-body #ksiweight").val(weight)
-            $(".modal-body #ratingtableid").val(ratingtableid)
 
         })
     </script>

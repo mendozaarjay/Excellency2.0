@@ -52,6 +52,7 @@
                                     <td>@item.Title</td>
                                     <td>@item.Description</td>
                                     <td>@item.Weight</td>
+                                    <td><a class="fa fa-trash text-danger" data-toggle="modal" data-target="#removebehavioral" data-id="@item.Id" data-employeeid="@Model.Employee.Id"  ></a></td>
                                 </tr>
                             }
                         </tbody>
@@ -97,12 +98,13 @@
                         <tbody>
                             @foreach (var item in Model.AssignedKeyResultsItems)
                             {
-                                <tr>
-                                    <td hidden="hidden">@item.Id</td>
-                                    <td>@item.Title</td>
-                                    <td>@item.Description</td>
-                                    <td>@item.Weight</td>
-                                </tr>
+                            <tr>
+                                <td hidden="hidden">@item.Id</td>
+                                <td>@item.Title</td>
+                                <td>@item.Description</td>
+                                <td>@item.Weight</td>
+                                <td><a class="fa fa-trash text-danger" data-toggle="modal" data-target="#removekra" data-id="@item.Id" data-employeeid="@Model.Employee.Id"></a></td>
+                            </tr>
                             }
                         </tbody>
                     </table>
@@ -112,6 +114,52 @@
     </div>
 </div>
 
+<div class="modal fade" id="removebehavioral" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        @using (Html.BeginForm("RemoveBehavioralById", "EmployeeAssignment"))
+        {
+            @Html.AntiForgeryToken()
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Confirmation</h4>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="employeeid" id="employeeid" />
+                    <input type="hidden" name="id" id="id" />
+                    <p>Are you sure you want to delete the current record?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+<div class="modal fade" id="removekra" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        @using (Html.BeginForm("RemoveKRAById", "EmployeeAssignment"))
+        {
+            @Html.AntiForgeryToken()
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Confirmation</h4>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="employeeid" id="employeeid" />
+                    <input type="hidden" name="id" id="id" />
+                    <p>Are you sure you want to delete the current record?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </div>
+            </div>
+        }
+    </div>
+</div>
 @section Scripts{
     <script type="text/javascript">
         $(function () {
@@ -121,11 +169,21 @@
         });
     </script>   
     <script type="text/javascript">
-        $('#delete').on('show.bs.modal', function (event) {
+        $('#removekra').on('show.bs.modal', function (event) {
             var button = $(event.relatedTarget)
-            var id = button.data('whatever')
+            var id = button.data('id')
+            var empployeeid = button.data('employeeid')
             var modal = $(this)
-            modal.find('.modal-body input').val(id)
+            $(".modal-body #id").val(id)
+            $(".modal-body #employeeid").val(id)
+        })
+        $('#removebehavioral').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget)
+            var id = button.data('id')
+            var empployeeid = button.data('employeeid')
+            var modal = $(this)
+            $(".modal-body #id").val(id)
+            $(".modal-body #employeeid").val(id)
         })
     </script>
 }

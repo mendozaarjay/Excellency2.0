@@ -130,5 +130,17 @@ namespace Excellency.Controllers
             }
             return RedirectToAction("Assignment", new { id = model.Employee.Id });
         }
+        [HttpPost]
+        public IActionResult RemoveKRAById(int id,int employeeid)
+        {
+            _EmployeeAssignment.RemoveKRAById(id);
+            return RedirectToAction("Assignment", new { id = employeeid });
+        }
+        [HttpPost]
+        public IActionResult RemoveBehavioralById(int id, int employeeid)
+        {
+            _EmployeeAssignment.RemoveBehavioralPerId(id);
+            return RedirectToAction("Assignment", new { id = employeeid });
+        }
     }
 }
