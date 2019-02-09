@@ -17,14 +17,14 @@ namespace Excellency.Services
             _dbContext = dbContext;
         }
 
-        public PeerCriteriaHeader GetPeerCriteriaHeaderById(int id)
+        public PeerCriteria GetPeerCriteriaHeaderById(int id)
         {
-            return _dbContext.PeerCriteriaHeader.FirstOrDefault(a => a.Id == id);
+            return _dbContext.PeerCriterias.FirstOrDefault(a => a.Id == id);
         }
 
-        public IEnumerable<PeerCriteriaHeader> PeerCriteriaHeaders()
+        public IEnumerable<PeerCriteria> PeerCriteriaHeaders()
         {
-            return _dbContext.PeerCriteriaHeader.Where(a => a.IsDeleted == false);
+            return _dbContext.PeerCriterias.Where(a => a.IsDeleted == false);
         }
 
         public IEnumerable<PeerCriteriaLine> PeerCriteriaLinesByHeaderId(int HeaderId)
@@ -36,7 +36,7 @@ namespace Excellency.Services
 
         public void RemoveHeaderById(int id)
         {
-            var item = _dbContext.PeerCriteriaHeader.FirstOrDefault(a => a.Id == id);
+            var item = _dbContext.PeerCriterias.FirstOrDefault(a => a.Id == id);
             item.IsDeleted = true;
             _dbContext.Entry(item).State = EntityState.Modified;
             _dbContext.SaveChanges();
@@ -83,7 +83,7 @@ namespace Excellency.Services
             _dbContext.SaveChanges();
         }
 
-        public void SavePeerCriteria(PeerCriteriaHeader header, int UserId)
+        public void SavePeerCriteria(PeerCriteria header, int UserId)
         {
             if (header.Id == 0)
             {

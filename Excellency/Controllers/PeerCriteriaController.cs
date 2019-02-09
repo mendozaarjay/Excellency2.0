@@ -42,7 +42,7 @@ namespace Excellency.Controllers
             var UserId = int.Parse(HttpContext.Session.GetString("UserId"));
             if (ModelState.IsValid)
             {
-                var item = new PeerCriteriaHeader
+                var item = new PeerCriteria
                 {
                     Id = model.PeerCriteria.Id,
                     Title = model.PeerCriteria.Title,

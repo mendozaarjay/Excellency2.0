@@ -2,7 +2,7 @@
 
 namespace Excellency.Models
 {
-    public class PeerCriteriaHeader
+    public class PeerCriteria
     {
         public int Id { get; set; }
         public string Title { get; set; }

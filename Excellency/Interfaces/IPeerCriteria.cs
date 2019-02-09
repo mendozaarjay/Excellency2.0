@@ -5,11 +5,11 @@ namespace Excellency.Interfaces
 {
     public interface IPeerCriteria
     {
-        void SavePeerCriteria(PeerCriteriaHeader header, int UserId);
+        void SavePeerCriteria(PeerCriteria header, int UserId);
 
-        PeerCriteriaHeader GetPeerCriteriaHeaderById(int id);
+        PeerCriteria GetPeerCriteriaHeaderById(int id);
 
-        IEnumerable<PeerCriteriaHeader> PeerCriteriaHeaders();
+        IEnumerable<PeerCriteria> PeerCriteriaHeaders();
 
         void SaveCriteriaLine(int HeaderId, List<PeerCriteriaLine> items);
         void SaveCriteriaLine(int HeaderId, PeerCriteriaLine item);

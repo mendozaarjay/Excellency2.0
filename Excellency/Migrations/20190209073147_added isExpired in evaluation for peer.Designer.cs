@@ -4,14 +4,16 @@ using Excellency.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Excellency.Migrations
 {
     [DbContext(typeof(EASDbContext))]
-    partial class EASDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190209073147_added isExpired in evaluation for peer")]
+    partial class addedisExpiredinevaluationforpeer
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

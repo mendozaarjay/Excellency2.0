@@ -45,9 +45,11 @@ namespace Excellency.Persistence
         public DbSet<AccountRoleAssignment> AccountRoleAssignments { get; set; }
 
         public DbSet<Criteria> Criterias { get; set; }
-        public DbSet<PeerCriteriaHeader> PeerCriteriaHeader { get; set; }
+        public DbSet<PeerCriteria> PeerCriterias { get; set; }
         public DbSet<PeerCriteriaLine> PeerCriteriaLine { get; set; }
         public DbSet<Registration> Registrations { get; set; } 
         public DbSet<Interpretation> Interpretations { get; set; }
+        public DbSet<PeerEvaluationHeader> PeerEvaluationHeader { get; set; }
+        public DbSet<PeerEvaluationLine> PeerEvaluationLine { get; set; }
     }
 }

@@ -21,7 +21,6 @@
                         <th>Weight</th>
                         <th></th>
                         <th></th>
-                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -32,7 +31,6 @@
                             <td>@item.Title</td>
                             <td>@item.Description</td>
                             <td>@item.Weight</td>
-                            <td><a class="fa fa-clone text-primary" asp-controller="PeerCriteria" asp-action="PeerLineItem" asp-route-id="@item.Id"></a></td>
                             <td><a class="fa fa-pencil text-success" data-toggle="modal" data-target="#edit" data-id="@item.Id" data-title="@item.Title" data-description="@item.Description" data-weight="@item.Weight" ></a></td>
                             <td><a class="fa fa-trash text-danger" data-toggle="modal" data-target="#delete" data-id="@item.Id"></a></td>
                         </tr>

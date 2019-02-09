@@ -4,14 +4,16 @@ using Excellency.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Excellency.Migrations
 {
     [DbContext(typeof(EASDbContext))]
-    partial class EASDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190209065621_Change Peer Evaluation Header")]
+    partial class ChangePeerEvaluationHeader
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -806,21 +808,13 @@ namespace Excellency.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("CreatedById");
+                    b.Property<int>("CreatedBy");
 
                     b.Property<DateTime>("DateCreated");
 
-                    b.Property<int?>("EmployeeId");
-
-                    b.Property<bool>("IsDeleted");
-
-                    b.Property<bool>("IsExpired");
+                    b.Property<int>("Employee");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CreatedById");
-
-                    b.HasIndex("EmployeeId");
 
                     b.ToTable("PeerEvaluationHeader");
                 });
@@ -1272,17 +1266,6 @@ namespace Excellency.Migrations
                     b.HasOne("Excellency.Models.PeerCriteria", "Header")
                         .WithMany()
                         .HasForeignKey("HeaderId");
-                });
-
-            modelBuilder.Entity("Excellency.Models.PeerEvaluationHeader", b =>
-                {
-                    b.HasOne("Excellency.Models.Account", "CreatedBy")
-                        .WithMany()
-                        .HasForeignKey("CreatedById");
-
-                    b.HasOne("Excellency.Models.Account", "Employee")
-                        .WithMany()
-                        .HasForeignKey("EmployeeId");
                 });
 
             modelBuilder.Entity("Excellency.Models.PeerEvaluationLine", b =>
