@@ -5,5 +5,6 @@
         public bool IsAdministrator { get; set; }
         public bool IsRater { get; set; }
         public bool IsApprover { get; set; }
+        public bool IsEmployee { get; set; }
     }
 }

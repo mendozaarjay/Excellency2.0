@@ -61,5 +61,7 @@ namespace Excellency.Models
         //Evaluation sub module.
         public bool CreateEvaluation { get; set; }
         public bool Approval { get; set; }
+        //Employee
+        public bool IsWithEvaluation { get; set; }
     }
 }

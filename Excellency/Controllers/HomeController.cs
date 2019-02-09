@@ -65,6 +65,36 @@ namespace Excellency.Controllers
             model.PendingEvaluation = _Home.PendingForApproval(userid);
             model.UserPerApprovers = _Home.ApproverAssignedUser(userid);
 
+            var behavioralheaderitems = _Home.GetBehavioralEvaluations(userid);
+            var kraheaderitems = _Home.GetKRAEvaluations(userid);
+
+            List<EvaluationLineItem> bitems = new List<EvaluationLineItem>();
+            List<EvaluationLineItem> kitems = new List<EvaluationLineItem>();
+
+            foreach (var item in behavioralheaderitems)
+            {
+                var x = _Home.GetBehavioralLineItems(item.Id);
+
+                foreach (var aa in x)
+                {
+                    bitems.Add(aa);
+                }
+            }
+
+            foreach (var item in kraheaderitems)
+            {
+                var x = _Home.GetKRAEvaluationLineItems(item.Id);
+                foreach (var aa in x)
+                {
+                    kitems.Add(aa);
+                }
+            }
+
+            model.BehavioralHeaderItems = behavioralheaderitems;
+            model.KRAHeaderItems = kraheaderitems;
+
+            model.BehavioralLineItems = bitems;
+            model.KRALineItems = kitems;
 
             return View(model);
         }
@@ -84,7 +114,7 @@ namespace Excellency.Controllers
                 Name = name,
                 UserAccess = _Home.UserAccess(int.Parse(user)),
             };
-            return PartialView("_SideBar",model);
+            return PartialView("_SideBar", model);
         }
         public IActionResult _Header()
         {

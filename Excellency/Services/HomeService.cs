@@ -3,9 +3,11 @@ using Excellency.Interfaces;
 using Excellency.Models;
 using Excellency.Persistence;
 using Excellency.Secured;
+using Excellency.ViewModels;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -15,9 +17,12 @@ namespace Excellency.Services
     {
         private EASDbContext _dbContext;
 
+        private string UserConnectionString { get; }
+
         public HomeService(EASDbContext dbContext)
         {
             _dbContext = dbContext;
+           UserConnectionString = _dbContext.Database.GetDbConnection().ConnectionString;
         }
 
         public Account GetAccountById(int id)
@@ -146,6 +151,8 @@ namespace Excellency.Services
             {
                 access.Evaluation = true;
             }
+            var isWithEvaluation = SCObjects.ReturnText(string.Format("SELECT [dbo].[fnIsWithEvaluation]({0})", UserId.ToString()), UserConnectionString);
+            access.IsWithEvaluation = isWithEvaluation.Length > 0;
 
             return access;
         }
@@ -163,7 +170,8 @@ namespace Excellency.Services
                 IsRater = _isRater,
                 IsApprover = _isApprover
             };
-
+            var isWithEvaluation = SCObjects.ReturnText(string.Format("SELECT [dbo].[fnIsWithEvaluation]({0})", userid.ToString()), UserConnectionString);
+            item.IsEmployee = isWithEvaluation.Length > 0;
             return item;
         }
         #region Administrator Dashboard
@@ -587,6 +595,133 @@ namespace Excellency.Services
                   Name = a.User.FirstName + " " + a.User.LastName
               }).ToList();
             return AssignedUser;
+        }
+        #endregion
+
+
+        #region Employee Evaluation
+
+
+        public IEnumerable<EvaluationHeaderItem> GetBehavioralEvaluations(int id)
+        {
+            List<EvaluationHeaderItem> items = new List<EvaluationHeaderItem>();
+
+            string sql = string.Format("SELECT * FROM  [dbo].[fnGetBehavioralEvaluation]({0}) [x]", id.ToString());
+            DataTable dt = SCObjects.LoadDataTable(sql, UserConnectionString);
+            if(dt != null)
+            {
+                if(dt.Rows.Count > 0)
+                {
+                    foreach(DataRow dr in dt.Rows)
+                    {
+                        var item = new EvaluationHeaderItem
+                        {
+                            Id = int.Parse(dr["Id"].ToString()),
+                            Type = dr["Type"].ToString(),
+                            Name = dr["EmployeeName"].ToString(),
+                            Rater = dr["Rater"].ToString(),
+                            DateRated = dr["DateRated"].ToString(),
+                            Status = dr["Status"].ToString(),
+                            Approver = dr["Approver"].ToString(),
+                            ApprovalDate = dr["ApprovedDate"].ToString(),
+                            ApproverRemarks = dr["ApproverRemarks"].ToString(),
+                            Title = dr["Title"].ToString(),
+                            Description = dr["Description"].ToString(),
+                            Weight = decimal.Parse(dr["Weight"].ToString()),
+                        };
+                        items.Add(item);
+                    }
+                }
+            }
+
+            return items;
+        }
+        public IEnumerable<EvaluationHeaderItem> GetKRAEvaluations(int id)
+        {
+            List<EvaluationHeaderItem> items = new List<EvaluationHeaderItem>();
+            string sql = string.Format("SELECT * FROM  [dbo].[fnGetKRAEvaluation]({0}) [x]", id.ToString());
+            DataTable dt = SCObjects.LoadDataTable(sql, UserConnectionString);
+            if (dt != null)
+            {
+                if (dt.Rows.Count > 0)
+                {
+                    foreach (DataRow dr in dt.Rows)
+                    {
+                        var item = new EvaluationHeaderItem
+                        {
+                            Id = int.Parse(dr["Id"].ToString()),
+                            Type = dr["Type"].ToString(),
+                            Name = dr["EmployeeName"].ToString(),
+                            Rater = dr["Rater"].ToString(),
+                            DateRated = dr["DateRated"].ToString(),
+                            Status = dr["Status"].ToString(),
+                            Approver = dr["Approver"].ToString(),
+                            ApprovalDate = dr["ApprovedDate"].ToString(),
+                            ApproverRemarks = dr["ApproverRemarks"].ToString(),
+                            Title = dr["Title"].ToString(),
+                            Description = dr["Description"].ToString(),
+                            Weight = decimal.Parse(dr["Weight"].ToString()),
+                        };
+                        items.Add(item);
+                    }
+                }
+            }
+
+            return items;
+        }
+        public List<EvaluationLineItem> GetBehavioralLineItems(int headerid)
+        {
+            List<EvaluationLineItem> items = new List<EvaluationLineItem>();
+            string sql = string.Format("SELECT * FROM [dbo].[fnBehavioralSummaryPerRating]({0}) [x]", headerid.ToString());
+            DataTable dt = SCObjects.LoadDataTable(sql, UserConnectionString);
+            if(dt != null)
+            {
+                if(dt.Rows.Count > 0)
+                {
+                    foreach(DataRow dr in dt.Rows)
+                    {
+                        var item = new EvaluationLineItem
+                        {
+                            Id = int.Parse(dr["Id"].ToString()),
+                            HeaderId = int.Parse(dr["RatingHeaderId"].ToString()),
+                            Title = dr["Title"].ToString(),
+                            Description = dr["Description"].ToString(),
+                            Weight = decimal.Parse(dr["Weight"].ToString()),
+                            Score = decimal.Parse(dr["Score"].ToString()),
+                            Comment = dr["Comment"].ToString()
+                        };
+                        items.Add(item);
+                    }
+                }
+            }
+            return items;
+        }
+        public List<EvaluationLineItem> GetKRAEvaluationLineItems(int headerid)
+        {
+            List<EvaluationLineItem> items = new List<EvaluationLineItem>();
+            string sql = string.Format("SELECT * FROM [dbo].[fnKRASummaryPerRating]({0}) [x]", headerid.ToString());
+            DataTable dt = SCObjects.LoadDataTable(sql, UserConnectionString);
+            if (dt != null)
+            {
+                if (dt.Rows.Count > 0)
+                {
+                    foreach (DataRow dr in dt.Rows)
+                    {
+                        var item = new EvaluationLineItem
+                        {
+                            Id = int.Parse(dr["Id"].ToString()),
+                            HeaderId = int.Parse(dr["RatingHeaderId"].ToString()),
+                            Title = dr["Title"].ToString(),
+                            Description = dr["Description"].ToString(),
+                            Weight = decimal.Parse(dr["Weight"].ToString()),
+                            Score = decimal.Parse(dr["Score"].ToString()),
+                            Comment = dr["Comment"].ToString()
+                        };
+                        items.Add(item);
+                    }
+                }
+            }
+            return items;
         }
         #endregion
         #endregion

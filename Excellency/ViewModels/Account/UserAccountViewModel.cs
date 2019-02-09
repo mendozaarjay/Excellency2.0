@@ -32,7 +32,11 @@ namespace Excellency.ViewModels
         public int PendingEvaluation { get; set; }
         public IEnumerable<UserPerApprover> UserPerApprovers { get; set; }
 
+        public IEnumerable<EvaluationHeaderItem> BehavioralHeaderItems { get; set; }
+        public IEnumerable<EvaluationHeaderItem> KRAHeaderItems { get; set; }
 
+        public IEnumerable<EvaluationLineItem> BehavioralLineItems { get; set; }
+        public IEnumerable<EvaluationLineItem> KRALineItems { get; set; }
 
 
     }

@@ -22,7 +22,7 @@
                 <p><strong>Weight : </strong> @item.Weight</p>
                 <p><i>Note : 1 is the lowest score and @item.Weight is the highest score.</i></p>
                 @Html.ValidationMessageFor(m => item.Score)
-                @Html.EditorFor(m => m.BehavioralItems[count].Score, new { htmlAttributes = new { @type = "number", @min = "1", @step = "1", @value = "1", @max = item.Weight, @class = "form-control" } })
+                @Html.DropDownListFor(m => m.BehavioralItems[count].Score, Enumerable.Range(1, int.Parse(item.Weight)).Select(x => new SelectListItem { Text = x.ToString(), Value = x.ToString() }), new { @class = "form-control" })
                 @Html.LabelFor(m => m.BehavioralItems[count].Comment)
                 @Html.TextAreaFor(m => m.BehavioralItems[count].Comment, new { @class = "form-control" })
             </div>

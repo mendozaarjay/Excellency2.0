@@ -1,5 +1,6 @@
 ﻿using Excellency.Dashboard;
 using Excellency.Models;
+using Excellency.ViewModels;
 using System.Collections.Generic;
 
 namespace Excellency.Interfaces
@@ -59,6 +60,12 @@ namespace Excellency.Interfaces
         int ApprovedEvaluation(int userid);
         int PendingForApproval(int userid);
         IEnumerable<UserPerApprover> ApproverAssignedUser(int userid);
+
+        IEnumerable<EvaluationHeaderItem> GetBehavioralEvaluations(int id);
+        IEnumerable<EvaluationHeaderItem> GetKRAEvaluations(int id);
+        List<EvaluationLineItem> GetBehavioralLineItems(int headerid);
+        List<EvaluationLineItem> GetKRAEvaluationLineItems(int headerid);
+
 
     }
 }
