@@ -12,5 +12,10 @@ namespace Excellency.Interfaces
         IEnumerable<PeerEvaluationLine> GetLineItems(int headerid);
         IEnumerable<PeerEvaluationHeader> EvaluationHeaders(int userid);
         IEnumerable<PeerCriteria> GetCriterias();
+        IEnumerable<PeerEvaluationListingItem> Evaluations(int userid);
+        void PostEvaluation(int id);
+        string GetNameById(int id);
+        Account GetAccountById(int id);
+        PeerCriteria GetPeerCriteriaById(int id);
     }
 }

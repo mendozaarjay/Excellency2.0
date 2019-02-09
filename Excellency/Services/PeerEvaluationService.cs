@@ -30,7 +30,8 @@ namespace Excellency.Services
                                                                   SELECT [peh].[EmployeeId]
                                                                   FROM [dbo].[PeerEvaluationHeader] [peh]
                                                                   WHERE [peh].[CreatedById] = {0}
-                                                              )", userid.ToString());
+                                                              )
+															  AND [a].[Id] <> {0}", userid.ToString());
             DataTable dt = SCObjects.LoadDataTable(sql, UserConnectionString);
             List<EmployeeItem> items = new List<EmployeeItem>();
             if(dt != null)
@@ -74,6 +75,14 @@ namespace Excellency.Services
                 .Where(a => a.CreatedBy.Id == userid && a.IsDeleted == false && a.IsExpired == false);
             return items;
         }
+        public void PostEvaluation(int id)
+        {
+            var item = _dbContext.PeerEvaluationHeader.FirstOrDefault(a => a.Id == id);
+            item.Status = _dbContext.Statuses.FirstOrDefault(a => a.Id == TransactionStatus.Posted.ToInt());
+            _dbContext.Entry(item).State = EntityState.Modified;
+            _dbContext.SaveChanges();
+
+        }
         public void SavePeerEvaluation(PeerEvaluationHeader header, IEnumerable<PeerEvaluationLine> items, int userid)
         {
 
@@ -81,6 +90,7 @@ namespace Excellency.Services
             {
                 header.CreatedBy = _dbContext.Accounts.FirstOrDefault(a => a.Id == userid);
                 header.DateCreated = DateTime.Now;
+                header.Status = _dbContext.Statuses.FirstOrDefault(a => a.Id == TransactionStatus.Save.ToInt());
                 _dbContext.Add(header);
             }
             else
@@ -105,6 +115,52 @@ namespace Excellency.Services
         public IEnumerable<PeerCriteria> GetCriterias()
         {
             return _dbContext.PeerCriterias.Where(a => a.IsDeleted == false);
+        }
+
+        public IEnumerable<PeerEvaluationListingItem> Evaluations(int userid)
+        {
+            List<PeerEvaluationListingItem> items = new List<PeerEvaluationListingItem>();
+
+            DataTable dt = SCObjects.LoadDataTable(string.Format("EXEC [dbo].[spPeerEvaluationSummaryPerEmployee] @Id = {0}", userid.ToString()), UserConnectionString);
+            if(dt != null)
+            {
+                if(dt.Rows.Count > 0)
+                {
+                    foreach(DataRow dr in dt.Rows)
+                    {
+                        var item = new PeerEvaluationListingItem
+                        {
+                            EvaluationId = int.Parse(dr["EvaluationId"].ToString()),
+                            Id = int.Parse(dr["Id"].ToString()),
+                            Name = dr["Name"].ToString(),
+                            Position = dr["Position"].ToString(),
+                            Company = dr["Company"].ToString(),
+                            Branch = dr["Branch"].ToString(),
+                            Department = dr["Department"].ToString(),
+                            EvaluationDate = dr["DateEvaluated"].ToString(),
+                            TotalScore = int.Parse(dr["TotalScore"].ToString()),
+                            Status = dr["Status"].ToString()
+                        };
+                        items.Add(item);
+                    }
+                }
+            }
+
+            return items;
+        }
+        public PeerCriteria GetPeerCriteriaById(int id)
+        {
+            return _dbContext.PeerCriterias.FirstOrDefault(a => a.Id == id);
+        }
+        public Account GetAccountById(int id)
+        {
+            return _dbContext.Accounts.FirstOrDefault(a => a.Id == id);
+        }
+        public string GetNameById(int id)
+        {
+            var item = _dbContext.Accounts.FirstOrDefault(a => a.Id == id);
+            var name = item.FirstName + " " + item.MiddleName + " " + item.LastName;
+            return name;
         }
     }
 }

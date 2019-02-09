@@ -13,5 +13,6 @@ namespace Excellency.Models
         public DateTime DateCreated { get; set; }
         public bool IsDeleted { get; set; } = false;
         public bool IsExpired { get; set; } = false;
+        public virtual Status Status { get; set; }
     }
 }
