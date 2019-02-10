@@ -23,8 +23,8 @@ namespace Excellency.Services
             var approver = _dbContext.Accounts.FirstOrDefault(a => a.Id == UserId);
             var status = _dbContext.Statuses.FirstOrDefault(a => a.Id == TransactionStatus.Approved.ToInt());
 
-            header.Approver = approver;
-            header.ApprovedDate = DateTime.Now;
+            //header.Approver = approver;
+            //header.ApprovedDate = DateTime.Now;
             header.Remarks = Remarks;
             header.Status = status;
 
@@ -38,8 +38,8 @@ namespace Excellency.Services
             var approver = _dbContext.Accounts.FirstOrDefault(a => a.Id == UserId);
             var status = _dbContext.Statuses.FirstOrDefault(a => a.Id == TransactionStatus.Disapproved.ToInt());
 
-            header.Approver = approver;
-            header.ApprovedDate = DateTime.Now;
+            //header.Approver = approver;
+            //header.ApprovedDate = DateTime.Now;
             header.Remarks = Remarks;
             header.Status = status;
 

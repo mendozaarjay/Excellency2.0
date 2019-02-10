@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Excellency.Controllers
 {
+    [SessionAuthorized]
     public class PeerEvaluationController : Controller
     {
         private IPeerEvaluation _Services;
@@ -51,6 +52,8 @@ namespace Excellency.Controllers
 
             return View(model);
         }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Save(PeerEvaluationViewModel model)
         {
             var UserId = int.Parse(HttpContext.Session.GetString("UserId"));
@@ -83,7 +86,73 @@ namespace Excellency.Controllers
 
         public IActionResult Edit(int id)
         {
-            return View();
+            var _header = _Services.GetHeader(id);
+            var header = new PeerEvaluationHeaderViewModel
+            {
+                Id = _header.Id,
+                EmployeeId = _header.Employee.Id,
+                Name = _Services.GetNameById(_header.Employee.Id),
+            };
+            var line = _Services.GetLineItems(_header.Id)
+                .Select(a => new PeerEvaluationLineItemViewModel
+                {
+                    Id = a.Id,
+                    CriteriaId = a.PeerCriteria.Id,
+                    HeaderId = _header.Id,
+                    Comment = a.Comment,
+                    Description = a.PeerCriteria.Description,
+                    Score = a.Score,
+                    Title = a.PeerCriteria.Title,
+                    Weight = a.PeerCriteria.Weight
+                }).ToList();
+            var model = new PeerEvaluationViewModel
+            {
+                Header = header,
+                LineItems = line,
+                Id = _header.Employee.Id,
+                Name = _Services.GetNameById(_header.Employee.Id)
+            };
+            return View(model);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Update(PeerEvaluationViewModel model)
+        {
+            var UserId = int.Parse(HttpContext.Session.GetString("UserId"));
+            if (ModelState.IsValid)
+            {
+
+                var header = new PeerEvaluationHeader
+                {
+                    Id = model.Header.Id,
+                    Employee = _Services.GetAccountById(model.Header.EmployeeId)
+                };
+                List<PeerEvaluationLine> items = new List<PeerEvaluationLine>();
+                foreach (var item in model.LineItems)
+                {
+                    var lineitem = new PeerEvaluationLine
+                    {
+                        Id = item.Id,
+                        PeerCriteria = _Services.GetPeerCriteriaById(item.CriteriaId),
+                        Score = item.Score,
+                        Comment = item.Comment
+                    };
+                    items.Add(lineitem);
+                }
+                _Services.SavePeerEvaluation(header, items, UserId);
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                return RedirectToAction("Index");
+            }
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Post(int id)
+        {
+            _Services.PostEvaluation(id);
+            return RedirectToAction("Index");
         }
     }
 }

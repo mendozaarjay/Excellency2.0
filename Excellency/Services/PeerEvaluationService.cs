@@ -55,7 +55,10 @@ namespace Excellency.Services
 
         public PeerEvaluationHeader GetHeader(int id)
         {
-            var item = _dbContext.PeerEvaluationHeader.FirstOrDefault(a => a.Id == id);
+            var item = _dbContext.PeerEvaluationHeader
+                .Include(a => a.Employee)
+                .Include(a => a.CreatedBy)
+                .FirstOrDefault(a => a.Id == id);
             return item;
         }
 

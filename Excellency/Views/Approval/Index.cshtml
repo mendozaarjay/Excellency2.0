@@ -1,0 +1,261 @@
+﻿@model Excellency.ViewModels.ApprovalIndexViewModel
+@{
+    ViewData["Title"] = "Index";
+}
+
+@if (Model.IsWithFirstApproval)
+{
+
+    <div class="panel panel-headline">
+        <div class="panel-heading">
+            <h3 class="panel-title">Evaluation For First Approval</h3>
+        </div>
+        <div class="panel-body">
+            <div class="table-responsive">
+                <table class="table table-condensed small">
+                    <thead>
+                        <tr>
+                            <th>Type</th>
+                            <th>Name</th>
+                            <th>Title</th>
+                            <th>Description</th>
+                            <th>Weight</th>
+                            <th>Status</th>
+                            <th>Rated By</th>
+                            <th>Date Rated</th>
+                            <th>Posted Date</th>
+                            <th>First Approver Remarks</th>
+                            <th>Second Approver Remarks</th>
+                            <th></th>
+                            <th></th>
+                            @*<th></th>*@
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.FirstApprovalItems)
+                        {
+                            <tr>
+                                <td>@item.Type</td>
+                                <td>@item.Name</td>
+                                <td>@item.Title</td>
+                                <td>@item.Description</td>
+                                <td>@item.Weight</td>
+                                <td>@item.Status</td>
+                                <td>@item.RatedBy</td>
+                                <td>@item.RatedDate</td>
+                                <td>@item.PostedDate</td>
+                                <td>@item.FirstApproverRemarks</td>
+                                <td>@item.SecondApproverRemarks</td>
+                                <td><a class="fa fa-thumbs-up text-success" data-toggle="modal" data-target="#approvefirstapproval" data-id="@item.Id"></a></td>
+                                <td><a class="fa fa-thumbs-down text-danger" data-toggle="modal" data-target="#disapprovefirstapproval" data-id="@item.Id"></a></td>
+                                @*<td><a class="fa fa-clone text-primary"></a></td>*@
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+}
+
+@if (Model.IsWithSecondApproval)
+{
+
+    <div class="panel panel-headline">
+        <div class="panel-heading">
+            <h3 class="panel-title">Evaluation For Second Approval</h3>
+        </div>
+        <div class="panel-body">
+            <div class="table-responsive">
+                <table class="table table-condensed small">
+                    <thead>
+                        <tr>
+                            <th>Type</th>
+                            <th>Name</th>
+                            <th>Title</th>
+                            <th>Description</th>
+                            <th>Weight</th>
+                            <th>Status</th>
+                            <th>Rated By</th>
+                            <th>Date Rated</th>
+                            <th>Posted Date</th>
+                            <th>First Approver Remarks</th>
+                            <th>Second Approver Remarks</th>
+                            <th>First Approver</th>
+                            <th>First Approver Date</th>
+                            <th></th>
+                            <th></th>
+                            @*<th></th>*@
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.SecondApprovalItems)
+                        {
+                            <tr>
+                                <td>@item.Type</td>
+                                <td>@item.Name</td>
+                                <td>@item.Title</td>
+                                <td>@item.Description</td>
+                                <td>@item.Weight</td>
+                                <td>@item.Status</td>
+                                <td>@item.RatedBy</td>
+                                <td>@item.RatedDate</td>
+                                <td>@item.PostedDate</td>
+                                <td>@item.FirstApproverRemarks</td>
+                                <td>@item.SecondApproverRemarks</td>
+                                <td>@item.FirstApproval</td>
+                                <td>@item.FirstApprovalDate</td>
+                                <td><a class="fa fa-thumbs-up text-success" data-toggle="modal" data-target="#approvesecondapproval" data-id="@item.Id"></a></td>
+                                <td><a class="fa fa-thumbs-down text-danger" data-toggle="modal" data-target="#disapprovesecondapproval" data-id="@item.Id"></a></td>
+                                @*<td><a class="fa fa-clone text-primary"></a></td>*@
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+}
+
+
+<div class="modal fade" id="approvefirstapproval" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    @using (Html.BeginForm("ApproveFirstApproval", "Approval"))
+    {
+        @Html.AntiForgeryToken()
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Approve</h4>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="id" id="id" />
+                    <p>Are you sure you want to approve the current evaluation?</p>
+                    <div class="form-group">
+                        <label for="remarks">Remarks</label>
+                        <textarea name="remarks" class="form-control" id="remarks" placeholder="Remarks"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-success">Approve</button>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<div class="modal fade" id="approvesecondapproval" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    @using (Html.BeginForm("ApproveSecondApproval", "Approval"))
+    {
+        @Html.AntiForgeryToken()
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Approve</h4>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="id" id="id" />
+                    <p>Are you sure you want to approve the current evaluation?</p>
+                    <div class="form-group">
+                        <label for="remarks">Remarks</label>
+                        <textarea name="remarks" class="form-control" id="remarks" placeholder="Remarks"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-success">Approve</button>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+
+<div class="modal fade" id="disapprovefirstapproval" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    @using (Html.BeginForm("DisapproveFirstApproval", "Approval"))
+    {
+        @Html.AntiForgeryToken()
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Disapprove</h4>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="id" id="id" />
+                    <p>Are you sure you want to disapprove the current evaluation?</p>
+                    <div class="form-group">
+                        <label for="remarks">Remarks</label>
+                        <textarea name="remarks" class="form-control" id="remarks" placeholder="Remarks"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-danger">Disapprove</button>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<div class="modal fade" id="disapprovesecondapproval" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    @using (Html.BeginForm("DisapproveSecondApproval", "Approval"))
+    {
+        @Html.AntiForgeryToken()
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Disapprove</h4>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="id" id="id" />
+                    <p>Are you sure you want to  disapprove the current evaluation?</p>
+                    <div class="form-group">
+                        <label for="remarks">Remarks</label>
+                        <textarea name="remarks" class="form-control" id="remarks" placeholder="Remarks"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-danger">Disapprove</button>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@section Scripts{
+
+
+    <script type="text/javascript">
+        $('#approvefirstapproval').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget)
+            var id = button.data('id')
+            var modal = $(this)
+            modal.find('.modal-body input').val(id)
+        })
+        $('#disapprovefirstapproval').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget)
+            var id = button.data('id')
+            var modal = $(this)
+            modal.find('.modal-body input').val(id)
+        })
+        $('#approvesecondapproval').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget)
+            var id = button.data('id')
+            var modal = $(this)
+            modal.find('.modal-body input').val(id)
+        })
+        $('#disapprovesecondapproval').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget)
+            var id = button.data('id')
+            var modal = $(this)
+            modal.find('.modal-body input').val(id)
+        })
+    </script>
+}

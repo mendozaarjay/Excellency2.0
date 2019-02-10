@@ -89,7 +89,8 @@
                             }
                             @if (Model.UserAccess.ApproverAssignment)
                             {
-                                <li><a asp-controller="ApproverAssignment" asp-action="Index" class="">Approver Assignment</a></li>
+                                @*<li><a asp-controller="ApproverAssignment" asp-action="Index" class="">Approver Assignment</a></li>*@
+                                <li><a asp-controller="ApprovalLevel" asp-action="Index" class="">Approver Level</a></li>
                             }
                         </ul>
                     </div>
@@ -125,7 +126,7 @@
                             }
                             @if (Model.UserAccess.Approval)
                             {
-                                <li><a asp-controller="EvaluationApproval" asp-action="Index" class="">Approval</a></li>
+                                <li><a asp-controller="Approval" asp-action="Index" class="">Approval</a></li>
                             }
                             <li><a asp-controller="EvaluationResult" asp-action="Index" class="">Evaluation Result</a></li>
 

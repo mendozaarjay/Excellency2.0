@@ -6,6 +6,7 @@
         ForApproval = 2,
         Approved = 3,
         Disapproved = 4,
-        Posted = 5
+        Posted = 5,
+        ForSecondApproval = 6
     }
 }

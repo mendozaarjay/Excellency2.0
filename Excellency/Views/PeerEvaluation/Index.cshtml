@@ -55,37 +55,68 @@
                 <tbody>
                     @foreach (var item in Model.Evaluations)
                     {
-                    <tr>
-                        <td>@item.Name</td>
-                        <td>@item.Position</td>
-                        <td>@item.Company</td>
-                        <td>@item.Branch</td>
-                        <td>@item.Department</td>
-                        <td>@item.EvaluationDate</td>
-                        <td>@item.TotalScore</td>
-                        @if (item.Status.ToLower().Equals("posted"))
-                        {
-                            <td><span class="label label-success">@item.Status</span></td>
-                        }
-                        else
-                        {
-                            <td><span class="label label-warning">@item.Status</span></td>
-                        }
-                        <td><a class="text-primary" data-toggle="modal" data-target="#post" data-id="@item.EvaluationId"><i class="fa fa-flag"></i></a></td>
-                        <td><a class="text-success" asp-controller="PeerEvaluation" asp-action="Edit" asp-route-id="@item.EvaluationId"><i class="fa fa-pencil"></i></a></td>
-                    </tr>
+                        <tr>
+                            <td>@item.Name</td>
+                            <td>@item.Position</td>
+                            <td>@item.Company</td>
+                            <td>@item.Branch</td>
+                            <td>@item.Department</td>
+                            <td>@item.EvaluationDate</td>
+                            <td>@item.TotalScore</td>
+                            @if (item.Status.ToLower().Equals("posted"))
+                            {
+                                <td><span class="label label-success">@item.Status</span></td>
+                            }
+                            else
+                            {
+                                <td><span class="label label-warning">@item.Status</span></td>
+                            }
+                            <td><a class="text-primary" data-toggle="modal" data-target="#post" data-id="@item.EvaluationId"><i class="fa fa-flag"></i></a></td>
+                            <td><a class="text-success" asp-controller="PeerEvaluation" asp-action="Edit" asp-route-id="@item.EvaluationId"><i class="fa fa-pencil"></i></a></td>
+                        </tr>
                     }
                 </tbody>
             </table>
         </div>
     </div>
 </div>
+
+
+<div class="modal fade" id="post" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        @using (Html.BeginForm("Post", "PeerEvaluation"))
+        {
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Confirmation</h4>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="id" />
+                    <p>Are you sure you want to post the current record?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-success">Post</button>
+                </div>
+            </div>
+        }
+    </div>
+</div>
 @section Scripts{
     <script type="text/javascript">
         $(function () {
             $(".chosen-select").chosen(
- 
+
             );
         });
     </script>
+    <script type="text/javascript">
+        $('#post').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget)
+            var id = button.data('id')
+            var modal = $(this)
+            modal.find('.modal-body input').val(id)
+        })
+    </script>B
 }

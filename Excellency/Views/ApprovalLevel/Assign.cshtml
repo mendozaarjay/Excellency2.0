@@ -1,0 +1,26 @@
+﻿@model Excellency.ViewModels.ApprovalLevelAssignViewModel
+@{
+    ViewData["Title"] = "Assign";
+}
+<div class="panel panel-headline">
+    <div class="panel-heading">
+        <h3 class="panel-title">Approval Level for : @Model.Name</h3>
+    </div>
+
+    <div class="panel-body">
+        @using (Html.BeginForm("Save", "ApprovalLevel"))
+        {
+            @Html.HiddenFor(m => m.ApprovalLevel.Id)
+            <input type="hidden" name="ApprovalLevel.EmployeeId" value="@Model.EmployeeId" />
+            <div class="form-group">
+                <label for="firstapproval">First Approval</label>
+                @Html.DropDownListFor(m => m.ApprovalLevel.FirstApprovalId, Model.FirstApprovers, new { @class = "form-control" })
+            </div>
+            <div class="form-group">
+                <label for="secondapproval">Second Approval</label>
+                @Html.DropDownListFor(m => m.ApprovalLevel.SecondApprovalId, Model.SecondApprovers, new { @class = "form-control" })
+            </div>
+            <button type="submit" class="btn btn-primary">Save</button>
+        }
+    </div>
+</div>
