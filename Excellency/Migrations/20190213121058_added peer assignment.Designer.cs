@@ -4,14 +4,16 @@ using Excellency.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Excellency.Migrations
 {
     [DbContext(typeof(EASDbContext))]
-    partial class EASDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190213121058_added peer assignment")]
+    partial class addedpeerassignment
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -160,8 +162,6 @@ namespace Excellency.Migrations
                     b.Property<int?>("FirstApprovalId");
 
                     b.Property<bool>("IsDeleted");
-
-                    b.Property<bool>("IsWithSecondApproval");
 
                     b.Property<string>("ModifiedBy");
 

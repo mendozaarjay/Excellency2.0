@@ -43,10 +43,6 @@
                     <a href="#settings" data-toggle="collapse" class="collapsed"><i class="lnr lnr-cog"></i> <span>Settings</span> <i class="icon-submenu lnr lnr-chevron-left"></i></a>
                     <div id="settings" class="collapse ">
                         <ul class="nav">
-                            @if (Model.UserAccess.Ratings)
-                            {
-                                <li><a asp-controller="Rating" asp-action="Index" class="">Ratings</a></li>
-                            }
                             @if (Model.UserAccess.RatingTable)
                             {
                                 <li><a asp-controller="RatingTable" asp-action="Index" class="">Rating Table</a></li>
@@ -62,6 +58,7 @@
                             @if (Model.UserAccess.PeerCriteria)
                             {
                                 <li><a asp-controller="PeerCriteria" asp-action="Index" class="">Peer Evaluation Criteria</a></li>
+                                <li><a asp-controller="PeerAssignment" asp-action="Index" class="">Peer Assignment</a></li>
                             }
                             @if (Model.UserAccess.EmployeeKRAAssignment)
                             {

@@ -1,0 +1,41 @@
+﻿@model Excellency.ViewModels.PeerAssignmentIndexViewModel
+@{
+    ViewData["Title"] = "Index";
+}
+
+
+<div class="panel panel-headline">
+    <div class="panel-heading">
+        <h3 class="panel-title">Peer Evaluation Assingment Per Employee</h3>
+        <p class="panel-subtitle">Assign employee to evaluate their co-assosiate.</p>
+    </div>
+    <div class="panel-body">
+        <div class="table-responsive">
+            <table class="table table-condensed">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Company</th>
+                        <th>Branch</th>
+                        <th>Department</th>
+                        <th>Positiion</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach(var item in Model.Accounts)
+                    {
+                        <tr>
+                            <td>@item.Name</td>
+                            <td>@item.Company</td>
+                            <td>@item.Branch</td>
+                            <td>@item.Department</td>
+                            <td>@item.Position</td>
+                            <td><a asp-controller="PeerAssignment" asp-action="Assign" asp-route-id="@item.Id" class="fa fa-clone"></a></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

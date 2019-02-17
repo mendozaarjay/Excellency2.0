@@ -4,6 +4,7 @@ using Excellency.Persistence;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 
 namespace Excellency.Services
@@ -12,9 +13,12 @@ namespace Excellency.Services
     {
         private EASDbContext _dbContext;
 
+        public string UserConnectionString { get; }
+
         public RaterAssignmentService(EASDbContext dbContext)
         {
             _dbContext = dbContext;
+            UserConnectionString = _dbContext.Database.GetDbConnection().ConnectionString;
         }
 
         public void AddEmployee(int Id, int RaterId)
@@ -122,20 +126,38 @@ namespace Excellency.Services
             return _dbContext.Departments.Where(a => a.IsDeleted == false);
         }
 
-
-
         public IEnumerable<Account> Employees(int RaterId)
         {
-            if (GetRaterById(RaterId) == null)
-            {
-                return _dbContext.Accounts.Where(a => a.IsDeleted == false);
-            }
-            else
-            {
-                var items = AssignedEmployees(RaterId);
-                return _dbContext.Accounts.Where(a => a.IsDeleted == false).Except(items);
-            }
+            List<Account> items = new List<Account>();
 
+            string sql = string.Format(@"SELECT *
+                                        FROM [dbo].[Accounts] [a]
+                                        WHERE [a].[Id] NOT IN (
+                                                                  SELECT [rl].[EmployeeId]
+                                                                  FROM [dbo].[RaterHeader] [rh]
+                                                                      INNER JOIN [dbo].[RaterLine] [rl]
+                                                                          ON [rh].[Id] = [rl].[EmployeeRaterId]
+                                                                  WHERE [rh].[RaterId] = {0}
+                                                                        AND [rh].[IsDeleted] = 0
+                                                                        AND [rl].[IsDeleted] = 0
+                                                              )
+                                              AND [a].[Id] <> {0}", RaterId.ToString());
+            DataTable dt = SCObjects.LoadDataTable(sql, UserConnectionString);
+            if(dt != null)
+            {
+                foreach(DataRow dr in dt.Rows)
+                {
+                    var item = new Account
+                    {
+                        Id = int.Parse(dr["Id"].ToString()),
+                        FirstName = dr["Firstname"].ToString(),
+                        MiddleName = dr["Middlename"].ToString(),
+                        LastName = dr["Lastname"].ToString(),
+                    };
+                    items.Add(item);
+                }
+            }
+            return items;
         }
 
         public Account GetAccountById(int id)

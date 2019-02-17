@@ -1,0 +1,99 @@
+﻿@model Excellency.ViewModels.PeerAssignViewModel
+@{
+    ViewData["Title"] = "Assign";
+}
+<div class="panel panel-headline">
+    <div class="panel-heading">
+        <h3 class="panel-title">Assigned Employee for : @Model.RaterName</h3>
+    </div>
+    <div class="panel-body">
+        <div>
+            @using (Html.BeginForm("Add", "PeerAssignment"))
+            {
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="raterid" id="raterid" value="@Model.RaterId" />
+                <div class="form-group">
+                    <label for="id">Select employee to add.</label>
+                    <select id="id" name="id" class="chosen-select form-control" data-placeholder="Select Employee">
+                        @foreach (var item in Model.Accounts)
+                        {
+                            <option value="@item.Id">@item.Name</option>
+                        }
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Add</button>
+            }
+        </div>
+    </div>
+</div>
+<hr />
+<div class="panel">
+    <div class="panel-heading">
+        <h3 class="panel-title">Assigned Employees</h3>
+    </div>
+    <div class="panel-body">
+        <div class="table-responsive">
+            <div>
+                <table class="table table-condensed">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Assigned)
+                        {
+                            <tr>
+                                <td>@item.Name</td>
+                                <td><i class="fa fa-trash text-danger" data-toggle="modal" data-target="#delete" data-id="@item.Id" data-raterid="@Model.RaterId"></i></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Delete-->
+<div class="modal fade" id="delete" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        @using (Html.BeginForm("Remove", "PeerAssignment"))
+        {
+            @Html.AntiForgeryToken()
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Confirmation</h4>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="id" id="id" />
+                    <input type="hidden" name="raterid" id="raterid" />
+
+                    <p>Are you sure you want to remove the current record?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+<!--End of Delete-->
+@section Scripts{
+
+    <script type="text/javascript">
+        $(".chosen-select").chosen(
+
+        );
+        $('#delete').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget)
+            var id = button.data('id')
+            var raterid = button.data('raterid')
+            $(".modal-body #id").val(id)
+            $(".modal-body #raterid").val(raterid)
+        })
+    </script>
+
+}

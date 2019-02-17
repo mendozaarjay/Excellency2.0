@@ -79,6 +79,7 @@ namespace Excellency.Controllers
                     Employee = _Services.GetAccountById(model.ApprovalLevel.EmployeeId),
                     FirstApproval = _Services.GetAccountById(model.ApprovalLevel.FirstApprovalId),
                     SecondApproval = _Services.GetAccountById(model.ApprovalLevel.SecondApprovalId),
+                    IsWithSecondApproval = model.ApprovalLevel.IsWithSecondApproval
                 };
                 _Services.Save(approvalLevel,userId);
                 return RedirectToAction("Index");

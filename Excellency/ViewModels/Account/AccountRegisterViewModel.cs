@@ -23,8 +23,7 @@ namespace Excellency.ViewModels
         public string LastName { get; set; }
 
 
-        [Required(ErrorMessage = "Middle name is required.")]
-        [MaxLength(50, ErrorMessage = "Middle name should be less than or equal to 50 characters.")]
+        [NotMapped]
         public string MiddleName { get; set; }
 
         public string Mobile { get; set; }

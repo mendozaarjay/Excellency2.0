@@ -24,14 +24,22 @@ namespace Excellency.Services
         }
         public IEnumerable<EmployeeItem> GetAccounts(int userid)
         {
-            string sql = string.Format(@"SELECT a.[Id],[a].[FirstName] + ' ' + a.[MiddleName] + ' ' + a.[LastName] AS [Name]
+            string sql = string.Format(@"SELECT a.[Id],
+                                               [a].[FirstName] + ' ' + a.[MiddleName] + ' ' + a.[LastName] AS [Name]
                                         FROM [dbo].[Accounts] [a]
                                         WHERE [a].[Id] NOT IN (
                                                                   SELECT [peh].[EmployeeId]
                                                                   FROM [dbo].[PeerEvaluationHeader] [peh]
                                                                   WHERE [peh].[CreatedById] = {0}
                                                               )
-															  AND [a].[Id] <> {0}", userid.ToString());
+                                              AND [a].[Id] <> {0}
+                                              AND [a].[Id] IN (
+                                                                  SELECT [pa].[RateeId]
+                                                                  FROM [dbo].[PeerAssignment] [pa]
+                                                                  WHERE [pa].[RaterId] = {0}
+                                                                        AND [pa].[IsExpired] = 0
+                                                                        AND [pa].[IsDeleted] = 0
+                                                              )", userid.ToString());
             DataTable dt = SCObjects.LoadDataTable(sql, UserConnectionString);
             List<EmployeeItem> items = new List<EmployeeItem>();
             if(dt != null)
