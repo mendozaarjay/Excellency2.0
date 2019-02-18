@@ -52,6 +52,7 @@ namespace Excellency
             services.AddScoped<IApprovalLevel, ApprovalLevelService>();
             services.AddScoped<IApproval, ApprovalService>();
             services.AddScoped<IPeerAssignment, PeerAssignmentService>();
+            services.AddScoped<IRecommendation, RecommendationService>();
             services.AddDbContext<EASDbContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("ExcellencyConnection")));
 

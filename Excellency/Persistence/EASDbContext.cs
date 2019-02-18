@@ -53,5 +53,6 @@ namespace Excellency.Persistence
         public DbSet<PeerEvaluationLine> PeerEvaluationLine { get; set; }
         public DbSet<ApprovalLevelAssignment> ApprovalLevelAssignment { get; set; }
         public DbSet<PeerAssignment> PeerAssignment { get; set; }
+        public DbSet<Recommendation> Recommendations { get; set; }
     }
 }

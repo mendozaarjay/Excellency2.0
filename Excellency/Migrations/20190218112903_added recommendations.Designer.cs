@@ -4,14 +4,16 @@ using Excellency.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Excellency.Migrations
 {
     [DbContext(typeof(EASDbContext))]
-    partial class EASDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190218112903_added recommendations")]
+    partial class addedrecommendations
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1142,7 +1144,7 @@ namespace Excellency.Migrations
 
                     b.Property<DateTime>("CreationDate");
 
-                    b.Property<int?>("EmployeeId");
+                    b.Property<int?>("EmlployeeId");
 
                     b.Property<bool>("IsDeleted");
 
@@ -1154,7 +1156,7 @@ namespace Excellency.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("EmployeeId");
+                    b.HasIndex("EmlployeeId");
 
                     b.ToTable("Recommendations");
                 });
@@ -1495,9 +1497,9 @@ namespace Excellency.Migrations
 
             modelBuilder.Entity("Excellency.Models.Recommendation", b =>
                 {
-                    b.HasOne("Excellency.Models.Account", "Employee")
+                    b.HasOne("Excellency.Models.Account", "Emlployee")
                         .WithMany()
-                        .HasForeignKey("EmployeeId");
+                        .HasForeignKey("EmlployeeId");
                 });
 
             modelBuilder.Entity("Excellency.Models.Registration", b =>
