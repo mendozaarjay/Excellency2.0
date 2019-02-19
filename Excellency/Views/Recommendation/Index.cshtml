@@ -1,0 +1,43 @@
+﻿@model Excellency.ViewModels.RecommendationIndexViewModel
+@{
+    ViewData["Title"] = "Index";
+}
+
+<div class="panel panel-headline">
+    <div class="panel-heading">
+        <h3 class="panel-title">Recommendations</h3>
+    </div>
+    <div class="panel-body">
+        <div class="table-responsive">
+            <table class="table table-condensed">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach(var item in Model.Accounts)
+                    {
+                    <tr>
+                        <td>@item.Name</td>
+                        @if (item.IsWithRecommendation)
+                        {
+                            <td><span><label class="label label-success">With Recommendation</label></span></td>
+                        }
+                        else
+                        {
+                            <td><span><label class="label label-warning">Without Recommendation</label></span></td>
+                        }
+                        <td><a class="fa fa-clone text-primary" asp-controller="Recommendation" asp-action="Assign" asp-route-id="@item.Id"></a></td>
+                        <td><a class="fa fa-trash text-danger" data-toggle="modal" data-target="#delete" data-id="@item.Id"></a></td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+

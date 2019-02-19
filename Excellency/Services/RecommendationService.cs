@@ -108,5 +108,23 @@ namespace Excellency.Services
                 .Include(a => a.Status)
                 .FirstOrDefault(a => a.Ratee.Id == id && a.IsExpired == false && a.IsDeleted == false && a.Type == "kra");
         }
+        public bool IsWithRecommendation(int id)
+        {
+            string sql = string.Format("SELECT 1 FROM [dbo].[Recommendations] [r] WHERE [r].[EmployeeId] = {0} AND [r].[IsExpired] = 0 AND [r].[IsDeleted] = 0", id.ToString());
+            string CheckThis = SCObjects.ReturnText(sql, UserConnectionString);
+            return CheckThis.Length > 0;
+        }
+
+        public Recommendation RecommendationByEmployeeId(int id)
+        {
+            return _dbContext.Recommendations
+                .Include(a => a.Employee)
+                .FirstOrDefault(a => a.Employee.Id == id && a.IsDeleted == false && a.IsExpired == false);
+        }
+
+        public Account GetAccountById(int id)
+        {
+            return _dbContext.Accounts.FirstOrDefault(a => a.Id == id);
+        }
     }
 }

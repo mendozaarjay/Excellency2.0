@@ -1,0 +1,26 @@
+﻿@model Excellency.ViewModels.RecommendationItem
+@{
+    ViewData["Title"] = "Assign";
+}
+
+<div class="panel panel-headline">
+    <div class="panel-heading">
+        <h3 class="panel-title">Recommendations for : @Model.EmployeeName</h3>
+    </div>
+    <div class="panel-body">
+        <div class="clearfix"></div>
+        @using (Html.BeginForm("Save", "Recommendation"))
+        {
+            
+            <div class="form-group">
+                <input type="hidden" name="Id" id="Id" value="@Model.Id" />
+                <input type="hidden" name="EmployeeId" id="EmployeeId" value="@Model.EmployeeId" />
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.Recommendation)
+                @Html.TextAreaFor(m => m.Recommendation, new {@class="form-control" })
+            </div>
+            <button type="submit" class="btn btn-success">Submit Recommendation</button>
+        }
+    </div>
+</div>

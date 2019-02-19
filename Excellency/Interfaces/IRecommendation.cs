@@ -7,6 +7,7 @@ namespace Excellency.Interfaces
     {
         void Save(Recommendation item, int userid);
         IEnumerable<Account> Accounts(int userid);
+        Account GetAccountById(int id);
         RatingHeader RatingById(int id);
         RatingHeader BehavioralEvaluationByEmployee(int id);
         RatingHeader KRAEvaluationByEmployee(int id);
@@ -14,7 +15,9 @@ namespace Excellency.Interfaces
         IEnumerable<RatingKeySuccessArea> KRARatingById(int id);
         IEnumerable<Recommendation> GetAllRecommendations(int id);
         Recommendation RecommendationById(int id);
+        Recommendation RecommendationByEmployeeId(int id);
         string GetNameById(int id);
         void RemoveById(int id);
+        bool IsWithRecommendation(int id);
     }
 }
