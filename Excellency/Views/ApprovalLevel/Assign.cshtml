@@ -12,7 +12,17 @@
         {
             @Html.HiddenFor(m => m.ApprovalLevel.Id)
             <input type="hidden" name="ApprovalLevel.EmployeeId" value="@Model.EmployeeId" />
- 
+            <div class="form-group">
+                @if (Model.ApprovalLevel.IsWithSecondApproval == "on")
+                {
+                    <input type="checkbox" id="iswithsecondapproval" name="ApprovalLevel.IsWithSecondApproval" checked><span><label for="iswithsecondapproval"> Second Approval</label></span>
+                }
+                else
+                {
+                    <input type="checkbox" id="iswithsecondapproval" name="ApprovalLevel.IsWithSecondApproval"><span><label for="iswithsecondapproval"> Second Approval</label></span>
+                }
+            </div>
+            <div class="clearfix"></div>
             <div class="form-group">
                 <label for="firstapproval">First Approval</label>
                 @Html.DropDownListFor(m => m.ApprovalLevel.FirstApprovalId, Model.FirstApprovers, new { @class = "form-control" })
@@ -25,3 +35,24 @@
         }
     </div>
 </div>
+
+@section Scripts{
+    <script type="text/javascript">
+        const checkbox = document.getElementById('iswithsecondapproval')
+
+        checkbox.addEventListener('change', (event) => {
+            if (event.target.checked) {
+
+                $('#ApprovalLevel_SecondApprovalId').attr("disabled", false);
+                $('#ApprovalLevel_SecondApprovalId').val('');
+
+
+            } else {
+
+                $('#ApprovalLevel_SecondApprovalId').attr("disabled", true);
+                $('#ApprovalLevel_SecondApprovalId').val('');
+            }
+
+        })
+    </script>
+}

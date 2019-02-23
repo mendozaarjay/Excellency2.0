@@ -11,7 +11,8 @@
         <div class="clearfix"></div>
         @using (Html.BeginForm("Save", "Recommendation"))
         {
-            
+            @Html.HiddenFor(m => m.CreatedBy)
+            @Html.HiddenFor(m => m.CreationDate)
             <div class="form-group">
                 <input type="hidden" name="Id" id="Id" value="@Model.Id" />
                 <input type="hidden" name="EmployeeId" id="EmployeeId" value="@Model.EmployeeId" />

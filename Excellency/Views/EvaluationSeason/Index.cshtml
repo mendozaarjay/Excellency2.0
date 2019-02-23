@@ -1,0 +1,50 @@
+﻿@model Excellency.ViewModels.EvaluationSeasonIndexViewModel
+@{
+    ViewData["Title"] = "Index";
+}
+
+<div class="panel panel-headline">
+    <div class="panel-heading">
+        <h3 class="panel-title">Evaluation Seasons</h3>
+        <div class="right">
+            <button type="button" data-toggle="modal" data-target="#addnew"><i class="fa fa-plus"></i></button>
+        </div>
+    </div>
+    <div class="panel-body">
+        <div class="table-responsive">
+            <table class="table table-condensed">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Remarks</th>
+                        <th>Start</th>
+                        <th>End</th>
+                        <th>Active</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach(var item in Model.Seasons)
+                    {
+                    <tr>
+                        <td>@item.Title</td>
+                        <td>@item.Remarks</td>
+                        <td>@item.StartDate</td>
+                        <td>@item.EndDate</td>
+                        @if (item.IsActive)
+                        {
+                            <td><span><label class="label label-success">Active</label></span></td>
+                        }
+                        else
+                        {
+                            <td><span><label class="label label-warning">Not Active</label></span></td>
+                        }
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+

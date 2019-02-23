@@ -59,7 +59,8 @@ namespace Excellency.Controllers
                     Id = _item.Id,
                     EmployeeId = _item.Id,
                     FirstApprovalId = _item.FirstApproval.Id,
-                    SecondApprovalId = _item.SecondApproval.Id
+                    SecondApprovalId = _item.SecondApproval.Id,
+                    IsWithSecondApproval = _item.IsWithSecondApproval ? "on" : "off"
                 };
                 model.ApprovalLevel = item;
             }
@@ -78,8 +79,8 @@ namespace Excellency.Controllers
                     Id = model.ApprovalLevel.Id,
                     Employee = _Services.GetAccountById(model.ApprovalLevel.EmployeeId),
                     FirstApproval = _Services.GetAccountById(model.ApprovalLevel.FirstApprovalId),
-                    SecondApproval = _Services.GetAccountById(model.ApprovalLevel.SecondApprovalId),
-                    IsWithSecondApproval = model.ApprovalLevel.IsWithSecondApproval
+                    SecondApproval = model.ApprovalLevel.IsWithSecondApproval == "on" ? _Services.GetAccountById(model.ApprovalLevel.SecondApprovalId) : null,
+                    IsWithSecondApproval = model.ApprovalLevel.IsWithSecondApproval == "on" ? true : false
                 };
                 _Services.Save(approvalLevel,userId);
                 return RedirectToAction("Index");

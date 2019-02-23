@@ -54,5 +54,6 @@ namespace Excellency.Persistence
         public DbSet<ApprovalLevelAssignment> ApprovalLevelAssignment { get; set; }
         public DbSet<PeerAssignment> PeerAssignment { get; set; }
         public DbSet<Recommendation> Recommendations { get; set; }
+        public DbSet<EvaluationSeason> EvaluationSeasons { get; set; }
     }
 }

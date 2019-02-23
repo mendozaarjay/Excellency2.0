@@ -51,6 +51,8 @@ namespace Excellency.Controllers
                 item.EmployeeId = id;
                 item.EmployeeName = _Services.GetNameById(id);
                 item.Recommendation = result.Comment;
+                item.CreatedBy = result.CreatedBy;
+                item.CreationDate = result.CreationDate;
             }
             return View(item);
         }
@@ -66,6 +68,8 @@ namespace Excellency.Controllers
                     Id = model.Id,
                     Employee = _Services.GetAccountById(model.EmployeeId),
                     Comment = model.Recommendation,
+                    CreatedBy = model.CreatedBy,
+                    CreationDate = model.CreationDate,
                 };
                 _Services.Save(item, UserId);
             }

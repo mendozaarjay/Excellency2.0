@@ -4,6 +4,7 @@ using Excellency.Persistence;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -13,9 +14,12 @@ namespace Excellency.Services
     {
         private EASDbContext _dbContext;
 
+        public string UserConnectionString { get; }
+
         public ApprovalLevelService(EASDbContext dbContext)
         {
             _dbContext = dbContext;
+            UserConnectionString = _dbContext.Database.GetDbConnection().ConnectionString;
         }
         public ApprovalLevelAssignment ApprovalLevelById(int id)
         {
@@ -63,21 +67,34 @@ namespace Excellency.Services
             var name = item.FirstName + " " + item.MiddleName + " " + item.LastName;
             return name;
         }
-        public void Save(ApprovalLevelAssignment approval,int userid)
+        public void Save(ApprovalLevelAssignment approval, int userid)
         {
-            if(approval.Id == 0)
-            {
-                approval.CreatedBy = userid.ToString();
-                approval.CreationDate = DateTime.Now;
-                _dbContext.Add(approval);
-            }
-            else
-            {
-                approval.ModifiedBy = userid.ToString();
-                approval.ModifiedDate = DateTime.Now;
-                _dbContext.Entry(approval).State = EntityState.Modified;
-            }
-            _dbContext.SaveChanges();
+            //if(approval.Id == 0)
+            //{
+            //    approval.CreatedBy = userid.ToString();
+            //    approval.CreationDate = DateTime.Now;
+            //    _dbContext.Add(approval);
+            //}
+            //else
+            //{
+            //    approval.ModifiedBy = userid.ToString();
+            //    approval.ModifiedDate = DateTime.Now;
+            //    _dbContext.Entry(approval).State = EntityState.Modified;
+            //}
+            //_dbContext.SaveChanges();
+
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandText = "[dbo].[spApprovalLevelAssignment]";
+            cmd.Parameters.Clear();
+            cmd.Parameters.AddWithValue("@Id", approval.Id);
+            cmd.Parameters.AddWithValue("@EmployeeId", approval.Employee.Id);
+            cmd.Parameters.AddWithValue("@FirstApproval", approval.FirstApproval.Id);
+            cmd.Parameters.AddWithValue("@SecondApproval", approval.SecondApproval.Id);
+            cmd.Parameters.AddWithValue("@CreatedBy", userid);
+            cmd.Parameters.AddWithValue("@ModifiedBy", userid);
+            cmd.Parameters.AddWithValue("@IsWithSecondApproval", approval.IsWithSecondApproval ? 1 : 0);
+            cmd.Parameters.AddWithValue("@QueryType", approval.Id == 0 ? 1 : 2);
+            var result = SCObjects.ExecuteNonQuery(cmd, UserConnectionString);
         }
         public void RemoveById(int id)
         {
