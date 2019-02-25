@@ -17,6 +17,12 @@ namespace Excellency.Services
         {
             _dbContext = dbContext;
         }
+
+        public EvaluationSeason ActiveSeason()
+        {
+            return _dbContext.EvaluationSeasons.FirstOrDefault(a => a.IsActive == true);
+        }
+
         public void AddItem(RatingTableItem item)
         {
             if(item.Id == 0)
@@ -38,6 +44,11 @@ namespace Excellency.Services
         public RatingTableItem GetTableItemPerId(int id)
         {
             return _dbContext.RatingTableItems.Include(a => a.RatingTable).FirstOrDefault(a => a.Id == id);
+        }
+
+        public bool IsWithActiveSeason()
+        {
+            return _dbContext.EvaluationSeasons.Any(a => a.IsActive == true);
         }
 
         public IEnumerable<RatingTable> RatingTables()

@@ -48,7 +48,8 @@ namespace Excellency.Services
                     Company = a.Employee.Company,
                     Department = a.Employee.Department,
                     Position = a.Employee.Position,
-                    Category = a.Employee.Category
+                    Category = a.Employee.Category,
+                    EmployeeNo = a.Employee.EmployeeNo,
                 }).ToList();
             return result;
         }
@@ -473,6 +474,14 @@ namespace Excellency.Services
                 _dbContext.Entry(item).State = EntityState.Modified;
             }
             _dbContext.SaveChanges();
+        }
+        public EvaluationSeason ActiveSeason()
+        {
+            return _dbContext.EvaluationSeasons.FirstOrDefault(a => a.IsActive == true);
+        }
+        public bool IsWithActiveSeason()
+        {
+            return _dbContext.EvaluationSeasons.Any(a => a.IsActive == true);
         }
     }
 }

@@ -13,5 +13,7 @@ namespace Excellency.Interfaces
         void RemoveItemPerId(int id);
         RatingTableItem GetTableItemPerId(int id);
         IEnumerable<RatingTableItem> TableItemsPerId(int RatingTableId);
+        bool IsWithActiveSeason();
+        EvaluationSeason ActiveSeason();
     }
 }

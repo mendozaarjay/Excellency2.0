@@ -14,5 +14,6 @@ namespace Excellency.Models
         public bool IsDeleted { get; set; } = false;
         public bool IsExpired { get; set; } = false;
         public virtual Status Status { get; set; }
+        public virtual EvaluationSeason EvaluationSeason { get; set; }
     }
 }

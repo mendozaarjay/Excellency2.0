@@ -22,16 +22,17 @@
                         <th>Active</th>
                         <th></th>
                         <th></th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach(var item in Model.Seasons)
+                    @foreach (var item in Model.Seasons)
                     {
                     <tr>
                         <td>@item.Title</td>
                         <td>@item.Remarks</td>
-                        <td>@item.StartDate</td>
-                        <td>@item.EndDate</td>
+                        <td>@item.StartDate.ToShortDateString()</td>
+                        <td>@item.EndDate.ToShortDateString()</td>
                         @if (item.IsActive)
                         {
                             <td><span><label class="label label-success">Active</label></span></td>
@@ -40,6 +41,9 @@
                         {
                             <td><span><label class="label label-warning">Not Active</label></span></td>
                         }
+                        <td class="text-center"><a class="fa fa-trash text-danger" data-toggle="modal" data-target="#delete" data-id="@item.Id"></a></td>
+                        <td class="text-center"><a class="fa fa-pencil text-primary" data-toggle="modal" data-target="#edit" data-id="@item.Id" data-title="@item.Title" data-remarks="@item.Remarks" data-startdate="@item.StartDate.ToString("yyyy-MM-dd")" data-enddate="@item.EndDate.ToString("yyyy-MM-dd")" data-createdby="@item.CreatedBy" data-creationdate="@item.CreationDate"> </a></td>
+                        <td class="text-center"><a class="fa fa-check-circle text-success" data-toggle="modal" data-target="#setactive" data-id="@item.Id"></a></td>
                     </tr>
                     }
                 </tbody>
@@ -48,3 +52,172 @@
     </div>
 </div>
 
+<div class="modal fade" id="addnew" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    @using (Html.BeginForm("Save", "EvaluationSeason"))
+    {
+        @Html.AntiForgeryToken()
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Add Evaluation Season</h4>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="Evaluation.Id" id="id" />
+                    <div class="form-group">
+                        <label for="title">Title</label>
+                        <input type="text" class="form-control" id="title" name="Evaluation.Title" />
+                    </div>
+                    <div class="form-group">
+                        <label for="remarks">Remarks</label>
+                        <textarea class="form-control" name="Evaluation.Remarks" id="remarks"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="startdate">Start Date</label>
+                        <input type="date" name="Evaluation.StartDate" id="startdate" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label for="enddate">End Date</label>
+                        <input type="date" name="Evaluation.EndDate" id="enddate" class="form-control" />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<div class="modal fade" id="edit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    @using (Html.BeginForm("Save", "EvaluationSeason"))
+    {
+        @Html.AntiForgeryToken()
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Edit Evaluation Season</h4>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="Evaluation.Id" id="id" />
+                    <input type="hidden" name="Evaluation.CreatedBy" id="createdby" />
+                    <input type="hidden" name="Evaluation.CreationDate" id="creationdate" />
+                    <div class="form-group">
+                        <label for="title">Title</label>
+                        <input type="text" class="form-control" id="title" name="Evaluation.Title" />
+                    </div>
+                    <div class="form-group">
+                        <label for="remarks">Remarks</label>
+                        <textarea class="form-control" name="Evaluation.Remarks" id="remarks"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="startdate">Start Date</label>
+                        <input type="date" name="Evaluation.StartDate" id="startdate" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label for="enddate">End Date</label>
+                        <input type="date" name="Evaluation.EndDate" id="enddate" class="form-control" />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<div class="modal fade" id="delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    @using (Html.BeginForm("Remove", "EvaluationSeason"))
+    {
+        @Html.AntiForgeryToken()
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Confirmation</h4>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="id" id="id" />
+                    <p>Are you sure you want to delete this current record?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<div class="modal fade" id="setactive" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    @using (Html.BeginForm("SetActive", "EvaluationSeason"))
+    {
+        @Html.AntiForgeryToken()
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Confirmation</h4>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="id" id="id" />
+                    <p>Are you sure you want to set this season as active?</p>
+                    <p><i>Note : There can only one active season.</i></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-success">Set Active</button>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@section Scripts{
+    <script type="text/javascript">
+        $('#addnew').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget)
+            $(".modal-body #id").val(0)
+            $(".modal-body #title").val('')
+            $(".modal-body #remarks").val('')
+            $(".modal-body #startdate").val('')
+            $(".modal-body #enddate").val('')
+        })
+
+        $('#edit').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget)
+            var id = button.data('id')
+            var title = button.data('title')
+            var remarks = button.data('remarks')
+            var startdate = button.data('startdate')
+            var enddate = button.data('enddate')
+            var createdby = button.data('createdby')
+            var creationdate = button.data('creationdate')
+
+            $(".modal-body #id").val(id)
+            $(".modal-body #title").val(title)
+            $(".modal-body #remarks").val(remarks)
+            $(".modal-body #startdate").val(startdate)
+            $(".modal-body #enddate").val(enddate)
+            $(".modal-body #createdby").val(createdby)
+            $(".modal-body #creationdate").val(creationdate)
+        })
+
+        $('#delete').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget)
+            var id = button.data('id')
+            $(".modal-body #id").val(id)
+        })
+        $('#setactive').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget)
+            var id = button.data('id')
+            $(".modal-body #id").val(id)
+        })
+    </script>
+
+   
+}

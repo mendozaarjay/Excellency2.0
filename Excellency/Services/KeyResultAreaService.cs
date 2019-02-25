@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Excellency.Services
 {
@@ -143,6 +142,15 @@ namespace Excellency.Services
                 .Where(a => a.IsDeleted == false && a.RatingTable.Id == RatingTableId);
         }
         #endregion
+
+        public EvaluationSeason ActiveSeason()
+        {
+            return _dbContext.EvaluationSeasons.FirstOrDefault(a => a.IsActive == true);
+        }
+        public bool IsWithActiveSeason()
+        {
+            return _dbContext.EvaluationSeasons.Any(a => a.IsActive == true);
+        }
 
     }
 }

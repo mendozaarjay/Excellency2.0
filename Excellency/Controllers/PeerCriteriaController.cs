@@ -29,9 +29,21 @@ namespace Excellency.Controllers
                     Description = a.Description,
                     Weight = a.Weight
                 }).ToList();
+            var aes = _PeerCriteria.ActiveSeason();
+            var season = new EvaluationSeasonItem();
+            if (aes != null)
+            {
+                season.Id = aes.Id;
+                season.Title = aes.Title;
+                season.Remarks = aes.Remarks;
+                season.StartDate = aes.StartDate;
+                season.EndDate = aes.EndDate;
+            };
             var model = new PeerCriteriaIndexViewModel
             {
-                Criterias = result
+                Criterias = result,
+                IsWithActiveSeason = _PeerCriteria.IsWithActiveSeason(),
+                ActiveSeason = season,
             };
             return View(model);
         }

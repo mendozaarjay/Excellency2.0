@@ -12,5 +12,7 @@ namespace Excellency.Interfaces
         IEnumerable<Account> GetAllAccounts();
         PeerAssignment PeerAssignmentById(int id);
         void RemoveById(int id);
+        bool IsWithActiveSeason();
+        EvaluationSeason ActiveSeason();
     }
 }

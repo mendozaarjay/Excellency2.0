@@ -9,5 +9,7 @@ namespace Excellency.ViewModels
     {
         public IEnumerable<RatingTableViewModel> RatingTables { get; set; }
         public RatingTableViewModel RatingTable { get; set; }
+        public bool IsWithActiveSeason { get; set; }
+        public EvaluationSeasonItem ActiveSeason { get; set; }
     }
 }

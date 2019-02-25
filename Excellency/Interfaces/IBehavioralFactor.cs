@@ -17,5 +17,8 @@ namespace Excellency.Interfaces
 
         IEnumerable<EmployeeCategory> EmployeeCategories();
         EmployeeCategory GetEmployeeCategoryById(int id);
+        bool IsWithActiveSeason();
+        EvaluationSeason ActiveSeason();
+
     }
 }

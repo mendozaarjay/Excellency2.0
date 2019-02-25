@@ -61,5 +61,8 @@ namespace Excellency.Interfaces
         void PostBehavioral(int behavioralid, int employeeid);
         void PostKeyResultArea(int kraid, int employeeid);
 
+        bool IsWithActiveSeason();
+        EvaluationSeason ActiveSeason();
+
     }
 }

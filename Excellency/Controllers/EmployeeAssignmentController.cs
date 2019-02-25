@@ -30,9 +30,21 @@ namespace Excellency.Controllers
                 Department = a.Department.Description,
                 Position = a.Position.Description,
             }).ToList();
+            var aes = _EmployeeAssignment.ActiveSeason();
+            var season = new EvaluationSeasonItem();
+            if (aes != null)
+            {
+                season.Id = aes.Id;
+                season.Title = aes.Title;
+                season.Remarks = aes.Remarks;
+                season.StartDate = aes.StartDate;
+                season.EndDate = aes.EndDate;
+            };
             var model = new EmployeeAssignmentViewModel
             {
                 Employees = result,
+                IsWithActiveSeason = _EmployeeAssignment.IsWithActiveSeason(),
+                ActiveSeason = season,
             };
             return View(model);
         }

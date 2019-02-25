@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Excellency.Controllers
 {
+    [SessionAuthorized]
     public class EvaluationController : Controller
     {
         private IEvaluation _Evaluation;
@@ -35,9 +36,21 @@ namespace Excellency.Controllers
                     Position = a.Position.Description,
                     Category = a.Category.Description,
                 }).ToList();
+            var aes = _Evaluation.ActiveSeason();
+            var season = new EvaluationSeasonItem();
+            if (aes != null)
+            {
+                season.Id = aes.Id;
+                season.Title = aes.Title;
+                season.Remarks = aes.Remarks;
+                season.StartDate = aes.StartDate;
+                season.EndDate = aes.EndDate;
+            };
             var model = new EmployeeEvaluationIndexViewModel
             {
                 Employees = result,
+                IsWithActiveSeason = _Evaluation.IsWithActiveSeason(),
+                ActiveSeason = season,
             };
             return View(model);
         }
@@ -162,6 +175,7 @@ namespace Excellency.Controllers
         public IActionResult EmployeeEvaluation(int id)
         {
             var model = new EmployeeEvaluationViewModel();
+            model.IsWithActiveSeason = _Evaluation.IsWithActiveSeason();
             model.EmployeeId = id;
             model.Name = _Evaluation.EmployeeNameById(id);
 

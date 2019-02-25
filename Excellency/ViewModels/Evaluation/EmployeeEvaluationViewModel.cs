@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Excellency.ViewModels
 {
@@ -11,5 +9,7 @@ namespace Excellency.ViewModels
         public string Name { get; set; }
         public IEnumerable<EvaluationCategoryViewModel> BehavioralCategories { get; set; }
         public IEnumerable<EvaluationCategoryViewModel> KRACategories { get; set; }
+        [NotMapped]
+        public bool IsWithActiveSeason { get; set; }
     }
 }

@@ -31,11 +31,22 @@ namespace Excellency.Controllers
                     Weight = a.Weight,
                     Category = a.Category.Id
                 }).ToList();
-
+            var aes = _BehavioralFactor.ActiveSeason();
+            var season = new EvaluationSeasonItem();
+            if (aes != null)
+            {
+                season.Id = aes.Id;
+                season.Title = aes.Title;
+                season.Remarks = aes.Remarks;
+                season.StartDate = aes.StartDate;
+                season.EndDate = aes.EndDate;
+            };
             var model = new BehavioralFactorIndexViewModel
             {
                 BehavioralFactors = result,
-                EmployeeCategories = this.Categories()
+                EmployeeCategories = this.Categories(),
+                IsWithActiveSeason = _BehavioralFactor.IsWithActiveSeason(),
+                ActiveSeason = season,
             };
             return View(model);
         }

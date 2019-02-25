@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Excellency.Interfaces;
+using Excellency.Models;
 using Excellency.ViewModels;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Excellency.Controllers
@@ -25,14 +27,61 @@ namespace Excellency.Controllers
                 Title = a.Title,
                 Remarks = a.Remarks,
                 StartDate = a.StartDate,
-                EndDate = a.StartDate,
-                IsActive = a.IsActive
+                EndDate = a.EndDate,
+                IsActive = a.IsActive,
+                CreatedBy = a.CreatedBy,
+                CreationDate = a.CreationDate
             }).ToList();
             var model = new EvaluationSeasonIndexViewModel
             {
                 Seasons = items,
             };
-            return View();
+            return View(model);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Save(EvaluationSeasonIndexViewModel model)
+        {
+            var userId = int.Parse(HttpContext.Session.GetString("UserId"));
+            if(ModelState.IsValid)
+            {
+                var item = new EvaluationSeason();
+                if(model.Evaluation.Id == 0)
+                {
+                    item.Id = 0;
+                    item.Title = model.Evaluation.Title;
+                    item.Remarks = model.Evaluation.Remarks;
+                    item.StartDate = model.Evaluation.StartDate;
+                    item.EndDate = model.Evaluation.EndDate;
+                }
+                else
+                {
+                    item.Id = model.Evaluation.Id;
+                    item.Title = model.Evaluation.Title;
+                    item.Remarks = model.Evaluation.Remarks;
+                    item.StartDate = model.Evaluation.StartDate;
+                    item.EndDate = model.Evaluation.EndDate;
+                    item.CreatedBy = model.Evaluation.CreatedBy;
+                    item.CreationDate = model.Evaluation.CreationDate;
+                }
+                _Services.Save(item, userId);
+            }
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Remove(int id)
+        {
+            _Services.RemoveById(id);
+            return RedirectToAction("Index");
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult SetActive(int id)
+        {
+            _Services.SetActive(id);
+            return RedirectToAction("Index");
         }
     }
 }

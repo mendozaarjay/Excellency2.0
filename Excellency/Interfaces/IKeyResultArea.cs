@@ -1,8 +1,5 @@
 ﻿using Excellency.Models;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Excellency.Interfaces
 {
@@ -30,8 +27,11 @@ namespace Excellency.Interfaces
         void SaveCategory(Category category,string UserId);
         void RemoveCategoryPerId(int id);
         Category GetCategoryById(int id);
-        IEnumerable<Category> CategoriesPerKSIId(int KSIId); 
+        IEnumerable<Category> CategoriesPerKSIId(int KSIId);
         #endregion
+
+        bool IsWithActiveSeason();
+        EvaluationSeason ActiveSeason();
 
 
     }

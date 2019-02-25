@@ -18,6 +18,8 @@ namespace Excellency.Interfaces
 
         IEnumerable<PeerCriteriaLine> PeerCriteriaLinesByHeaderId(int HeaderId);
 
+        bool IsWithActiveSeason();
+        EvaluationSeason ActiveSeason();
 
     }
 }

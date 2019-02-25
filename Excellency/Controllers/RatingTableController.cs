@@ -26,9 +26,23 @@ namespace Excellency.Controllers
                 Id = a.Id,
                 Description = a.Description
             }).ToList();
+
+            var aes = _RatingTable.ActiveSeason();
+            var season = new EvaluationSeasonItem();
+            if(aes != null)
+            {
+                season.Id = aes.Id;
+                season.Title = aes.Title;
+                season.Remarks = aes.Remarks;
+                season.StartDate = aes.StartDate;
+                season.EndDate = aes.EndDate;
+            }
+
             var model = new RatingTableIndexViewModel
             {
-                RatingTables = result
+                RatingTables = result,
+                IsWithActiveSeason = _RatingTable.IsWithActiveSeason(),
+                ActiveSeason = season,
             };
             return View(model);
         }

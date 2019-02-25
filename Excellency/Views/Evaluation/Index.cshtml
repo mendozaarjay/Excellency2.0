@@ -3,6 +3,14 @@
     ViewData["Title"] = "Evaluation";
 }
 
+@if (!Model.IsWithActiveSeason)
+{
+
+    <div class="alert alert-danger alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+        <i class="fa fa-times-circle"></i> There's no active evaluation season. Please inform your administrator.
+    </div>
+}
 <div class="panel panel-headline">
     <div class="panel-heading">
         <h3 class="panel-title">Assigned Employees</h3>
@@ -26,17 +34,17 @@
                 <tbody>
                     @foreach (var item in Model.Employees)
                     {
-                        <tr>
-                            <td>@item.Id</td>
-                            <td>@item.EmployeeNo</td>
-                            <td>@item.Name</td>
-                            <td>@item.Company</td>
-                            <td>@item.Branch</td>
-                            <td>@item.Department</td>
-                            <td>@item.Position</td>
-                            <td>@item.Category</td>
-                            <td class="text-center"><a asp-controller="Evaluation" asp-action="EmployeeEvaluation" asp-route-id="@item.Id"><i class="fa fa-clone text-primary"></i></a></td>
-                        </tr>
+                    <tr>
+                        <td>@item.Id</td>
+                        <td>@item.EmployeeNo</td>
+                        <td>@item.Name</td>
+                        <td>@item.Company</td>
+                        <td>@item.Branch</td>
+                        <td>@item.Department</td>
+                        <td>@item.Position</td>
+                        <td>@item.Category</td>
+                        <td class="text-center"><a asp-controller="Evaluation" asp-action="EmployeeEvaluation" asp-route-id="@item.Id"><i class="fa fa-clone text-primary"></i></a></td>
+                    </tr>
                     }
                 </tbody>
             </table>

@@ -23,6 +23,7 @@ namespace Excellency.Models
         [MaxLength(500)]
         public string Remarks { get; set; }
 
+        public virtual EvaluationSeason EvaluationSeason { get; set; }
 
         public bool IsExpired { get; set; } = false;
         public bool IsDeleted { get; set; } = false;

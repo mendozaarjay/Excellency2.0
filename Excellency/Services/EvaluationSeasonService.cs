@@ -51,6 +51,7 @@ namespace Excellency.Services
             {
                 season.ModifiedBy = userid.ToString();
                 season.ModifiedDate = DateTime.Now;
+                _dbContext.Entry(season).State = EntityState.Modified;
             }
             _dbContext.SaveChanges();
         }
@@ -62,6 +63,11 @@ namespace Excellency.Services
 
         public void SetActive(int id)
         {
+            foreach(var i in _dbContext.EvaluationSeasons.Where(a => a.Id != id))
+            {
+                i.IsActive = false;
+                _dbContext.Entry(i).State = EntityState.Modified;
+            }
             var item = EvaluationSeasonById(id);
             item.IsActive = true;
             _dbContext.Entry(item).State = EntityState.Modified;

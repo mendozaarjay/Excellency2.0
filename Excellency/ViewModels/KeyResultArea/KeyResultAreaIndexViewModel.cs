@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -18,5 +19,9 @@ namespace Excellency.ViewModels
         public string Description { get; set; }
         [Required(ErrorMessage = "Weight is required.")]
         public int Weight { get; set; }
+        [NotMapped]
+        public bool IsWithActiveSeason { get; set; }
+        [NotMapped]
+        public EvaluationSeasonItem ActiveSeason { get; set; }
     }
 }

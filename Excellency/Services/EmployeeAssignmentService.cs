@@ -177,5 +177,13 @@ namespace Excellency.Services
             }
             _dbContext.SaveChanges();
         }
+        public EvaluationSeason ActiveSeason()
+        {
+            return _dbContext.EvaluationSeasons.FirstOrDefault(a => a.IsActive == true);
+        }
+        public bool IsWithActiveSeason()
+        {
+            return _dbContext.EvaluationSeasons.Any(a => a.IsActive == true);
+        }
     }
 }

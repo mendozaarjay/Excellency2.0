@@ -3,6 +3,14 @@
     ViewData["Title"] = "KRA Settings";
 }
 
+@if (!Model.IsWithActiveSeason)
+{
+
+    <div class="alert alert-danger alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+        <i class="fa fa-times-circle"></i> There's no active evaluation season. Please inform your administrator.
+    </div>
+}
 <div class="panel panel-headline">
     <div class="panel-heading">
         <h3 class="panel-title">Key Result Area</h3>
@@ -25,17 +33,17 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach(var item in Model.KeyResultAreas)
+                    @foreach (var item in Model.KeyResultAreas)
                     {
-                    <tr>
-                        <td>@item.Id</td>
-                        <td>@item.Title</td>
-                        <td>@item.Description</td>
-                        <td>@item.Weight</td>
-                        <td class="text-center"><a data-toggle="modal" data-target="#edit" data-id="@item.Id" data-title="@item.Title" data-description="@item.Description" data-weight="@item.Weight"><i class="fa fa-pencil text-success"></i></a></td>
-                        <td class="text-center"><a data-toggle="modal" data-target="#delete" data-id="@item.Id"><i class="fa fa-trash text-danger"></i></a></td>
-                        <td class="text-center"><a asp-controller="KeyResultArea" asp-action="Content" asp-route-id="@item.Id"><i class="fa fa-clone text-primary"></i></a></td>
-                    </tr>
+                        <tr>
+                            <td>@item.Id</td>
+                            <td>@item.Title</td>
+                            <td>@item.Description</td>
+                            <td>@item.Weight</td>
+                            <td class="text-center"><a data-toggle="modal" data-target="#edit" data-id="@item.Id" data-title="@item.Title" data-description="@item.Description" data-weight="@item.Weight"><i class="fa fa-pencil text-success"></i></a></td>
+                            <td class="text-center"><a data-toggle="modal" data-target="#delete" data-id="@item.Id"><i class="fa fa-trash text-danger"></i></a></td>
+                            <td class="text-center"><a asp-controller="KeyResultArea" asp-action="Content" asp-route-id="@item.Id"><i class="fa fa-clone text-primary"></i></a></td>
+                        </tr>
                     }
                 </tbody>
             </table>
@@ -57,11 +65,11 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <label for="title">Title</label>
-                        <input class="form-control" name="title" id="title" placeholder="Title"/>
+                        <input class="form-control" name="title" id="title" placeholder="Title" />
                     </div>
                     <div class="form-group">
                         <label for="description">Description</label>
-                        <input class="form-control" name="description" id="description" placeholder="Description"/>
+                        <input class="form-control" name="description" id="description" placeholder="Description" />
                     </div>
                     <div class="form-group">
                         <label for="weight">Weight</label>

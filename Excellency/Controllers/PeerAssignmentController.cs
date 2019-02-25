@@ -33,9 +33,21 @@ namespace Excellency.Controllers
                     Branch = a.Branch.Description,
                     Position = a.Position.Description
                 }).ToList();
+            var aes = _Services.ActiveSeason();
+            var season = new EvaluationSeasonItem();
+            if (aes != null)
+            {
+                season.Id = aes.Id;
+                season.Title = aes.Title;
+                season.Remarks = aes.Remarks;
+                season.StartDate = aes.StartDate;
+                season.EndDate = aes.EndDate;
+            };
             var model = new PeerAssignmentIndexViewModel
             {
-                Accounts = result
+                Accounts = result,
+                IsWithActiveSeason = _Services.IsWithActiveSeason(),
+                ActiveSeason = season,
             };
             return View(model);
         }

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace Excellency.ViewModels
+﻿namespace Excellency.ViewModels
 {
     public class KeyResultAreaViewModel
     {
@@ -11,5 +6,6 @@ namespace Excellency.ViewModels
         public string Title { get; set; }
         public string Description { get; set; }
         public int Weight { get; set; }
+ 
     }
 }

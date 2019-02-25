@@ -26,6 +26,8 @@ namespace Excellency.Interfaces
         IEnumerable<BehavioralFactor> BehavioralFactors();
 
 
-        
+        bool IsWithActiveSeason();
+        EvaluationSeason ActiveSeason();
+
     }
 }

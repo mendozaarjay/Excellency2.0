@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Excellency.Interfaces;
+﻿using Excellency.Interfaces;
 using Excellency.Models;
 using Excellency.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
+using System.Linq;
 
 namespace Excellency.Controllers
 {
@@ -32,9 +29,22 @@ namespace Excellency.Controllers
                     Weight = a.Weight
                 }
                 ).ToList();
+            var aes = _KeyResultArea.ActiveSeason();
+            var season = new EvaluationSeasonItem();
+            if(aes != null)
+            {
+                season.Id = aes.Id;
+                season.Title = aes.Title;
+                season.Remarks = aes.Remarks;
+                season.StartDate = aes.StartDate;
+                season.EndDate = aes.EndDate;
+            };
             var model = new KeyResultAreaIndexViewModel
             {
-                KeyResultAreas = result
+                KeyResultAreas = result,
+                IsWithActiveSeason = _KeyResultArea.IsWithActiveSeason(),
+                ActiveSeason = season,
+                
             };
             return View(model);
         }
