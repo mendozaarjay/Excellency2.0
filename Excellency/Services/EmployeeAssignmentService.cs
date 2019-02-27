@@ -44,7 +44,8 @@ namespace Excellency.Services
             return _dbContext.EmployeeBehavioralAssignments
                 .Include(a => a.EmployeeAssignment)
                 .Include(a => a.BehavioralFactor)
-                .Where(a => a.EmployeeAssignment.Id == id && a.IsDeleted == false);
+                .Include(a => a.EvaluationSeason)
+                .Where(a => a.EmployeeAssignment.Id == id && a.IsDeleted == false && a.EvaluationSeason.Id == ActiveSeason().Id);
         }
 
         public Account EmployeeById(int id)
@@ -63,7 +64,8 @@ namespace Excellency.Services
             return _dbContext.EmployeeKRAAssignments
                 .Include(a => a.EmployeeAssignment)
                 .Include(a => a.KeyResultArea)
-                .Where(a => a.EmployeeAssignment.Id == id && a.IsDeleted == false);
+                .Include(a => a.EvaluationSeason)
+                .Where(a => a.EmployeeAssignment.Id == id && a.IsDeleted == false && a.EvaluationSeason.Id == ActiveSeason().Id);
         }
 
         public IEnumerable<Account> Employees()
@@ -143,6 +145,7 @@ namespace Excellency.Services
                     EmployeeAssignment = Header,
                     BehavioralFactor = BehavioralFactorById(item),
                     IsDeleted = false,
+                    EvaluationSeason = ActiveSeason()
                 };
                 _dbContext.Add(lineItem);
             }
@@ -172,11 +175,13 @@ namespace Excellency.Services
                     EmployeeAssignment = Header,
                     KeyResultArea = KeyResultAreaById(item),
                     IsDeleted = false,
+                    EvaluationSeason = ActiveSeason()
                 };
                 _dbContext.Add(lineItem);
             }
             _dbContext.SaveChanges();
         }
+
         public EvaluationSeason ActiveSeason()
         {
             return _dbContext.EvaluationSeasons.FirstOrDefault(a => a.IsActive == true);
@@ -184,6 +189,10 @@ namespace Excellency.Services
         public bool IsWithActiveSeason()
         {
             return _dbContext.EvaluationSeasons.Any(a => a.IsActive == true);
+        }
+        public EvaluationSeason EvaluationSeasonById(int id)
+        {
+            return _dbContext.EvaluationSeasons.FirstOrDefault(a => a.Id == id);
         }
     }
 }

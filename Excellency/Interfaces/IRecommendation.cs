@@ -19,5 +19,7 @@ namespace Excellency.Interfaces
         string GetNameById(int id);
         void RemoveById(int id);
         bool IsWithRecommendation(int id);
+        bool IsWithActiveSeason();
+        EvaluationSeason ActiveSeason();
     }
 }

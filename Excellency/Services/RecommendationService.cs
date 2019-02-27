@@ -78,12 +78,14 @@ namespace Excellency.Services
         {
             if(item.Id == 0)
             {
+                item.EvaluationSeason = ActiveSeason();
                 item.CreatedBy = userid.ToString();
                 item.CreationDate = DateTime.Now;
                 _dbContext.Add(item);
             }
             else
             {
+                item.EvaluationSeason = ActiveSeason();
                 item.ModifiedBy = userid.ToString();
                 item.ModifiedDate = DateTime.Now;
                 _dbContext.Entry(item).State = EntityState.Modified;
@@ -125,6 +127,14 @@ namespace Excellency.Services
         public Account GetAccountById(int id)
         {
             return _dbContext.Accounts.FirstOrDefault(a => a.Id == id);
+        }
+        public EvaluationSeason ActiveSeason()
+        {
+            return _dbContext.EvaluationSeasons.FirstOrDefault(a => a.IsActive == true);
+        }
+        public bool IsWithActiveSeason()
+        {
+            return _dbContext.EvaluationSeasons.Any(a => a.IsActive == true);
         }
     }
 }

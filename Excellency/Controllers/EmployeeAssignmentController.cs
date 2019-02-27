@@ -100,6 +100,19 @@ namespace Excellency.Controllers
                     Id = a.Id,
                     Title = a.Title,
                 }).ToList();
+
+            var aes = _EmployeeAssignment.ActiveSeason();
+            var season = new EvaluationSeasonItem();
+            if (aes != null)
+            {
+                season.Id = aes.Id;
+                season.Title = aes.Title;
+                season.Remarks = aes.Remarks;
+                season.StartDate = aes.StartDate;
+                season.EndDate = aes.EndDate;
+            };
+
+
             var model = new EmployeeAssignViewModel
             {
                 Employee = employee,
@@ -107,6 +120,8 @@ namespace Excellency.Controllers
                 AssignedKeyResultsItems = kralist,
                 BehavioralFactors = bfitems,
                 KeyResultAreas = kraitems,
+                IsWithActiveSeason = _EmployeeAssignment.IsWithActiveSeason(),
+                ActiveSeason = season,
             };
             return View(model);
         }

@@ -29,9 +29,22 @@ namespace Excellency.Controllers
                     Name = a.FirstName + " " + a.MiddleName + " " + a.LastName,
                     IsWithRecommendation = _Services.IsWithRecommendation(a.Id)
                 }).ToList();
+
+            var aes = _Services.ActiveSeason();
+            var season = new EvaluationSeasonItem();
+            if (aes != null)
+            {
+                season.Id = aes.Id;
+                season.Title = aes.Title;
+                season.Remarks = aes.Remarks;
+                season.StartDate = aes.StartDate;
+                season.EndDate = aes.EndDate;
+            };
             var model = new RecommendationIndexViewModel
             {
                 Accounts = result,
+                IsWithActiveSeason = _Services.IsWithActiveSeason(),
+                ActiveSeason = season,
             };
             return View(model);
         }
@@ -39,11 +52,23 @@ namespace Excellency.Controllers
         {
             var result = _Services.RecommendationByEmployeeId(id);
             var item = new RecommendationItem();
-            if(result == null)
+            var aes = _Services.ActiveSeason();
+            var season = new EvaluationSeasonItem();
+            if (aes != null)
+            {
+                season.Id = aes.Id;
+                season.Title = aes.Title;
+                season.Remarks = aes.Remarks;
+                season.StartDate = aes.StartDate;
+                season.EndDate = aes.EndDate;
+            };
+
+            if (result == null)
             {
                 item.Id = 0;
                 item.EmployeeId = id;
                 item.EmployeeName = _Services.GetNameById(id);
+
             }
             else
             {
@@ -54,6 +79,8 @@ namespace Excellency.Controllers
                 item.CreatedBy = result.CreatedBy;
                 item.CreationDate = result.CreationDate;
             }
+            item.IsWithActiveSeason = _Services.IsWithActiveSeason();
+            item.ActiveSeason = season;
             return View(item);
         }
         [HttpPost]

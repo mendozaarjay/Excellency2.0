@@ -28,6 +28,7 @@ namespace Excellency.Interfaces
 
         bool IsWithActiveSeason();
         EvaluationSeason ActiveSeason();
+        EvaluationSeason EvaluationSeasonById(int id);
 
     }
 }

@@ -3,6 +3,21 @@
     ViewData["Title"] = "Employee Assignment";
 }
 
+@if (!Model.IsWithActiveSeason)
+{
+
+    <div class="alert alert-danger alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+        <i class="fa fa-times-circle"></i> There's no active evaluation season. Please inform your administrator.
+    </div>
+}
+else
+{
+    <div class="alert alert-info alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+        <i class="fa fa-info-circle"></i> @Model.ActiveSeason.Title is now open. From : @Model.ActiveSeason.StartDate.ToString("MM/dd/yyyy") To : @Model.ActiveSeason.EndDate.ToString("MM/dd/yyyy")
+    </div>
+}
 <div class="panel panel-headline">
     <div class="panel-heading">
         <h3 class="panel-title">@Model.Employee.Name</h3>
@@ -18,7 +33,7 @@
                     @using (Html.BeginForm("SaveBehavioralFactor", "EmployeeAssignment"))
                     {
                         @Html.AntiForgeryToken()
-                        <input type="hidden" id="employeeid" name="employee.id" value="@Model.Employee.Id"/>
+                        <input type="hidden" id="employeeid" name="employee.id" value="@Model.Employee.Id" />
                         <div class="form-group">
                             <label for="SelectedBehavioralFactors">Select Behavioral Factor to Add</label>
                             <select multiple class="chosen-select form-control" data-placeholder="Select Behavioral Factor" name="SelectedBehavioralFactors" id="SelectedBehavioralFactors">
@@ -29,7 +44,10 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <button type="submit" class="btn btn-primary">Add To List</button>
+                            @if (Model.IsWithActiveSeason)
+                            {
+                                <button type="submit" class="btn btn-primary">Add To List</button>
+                            }
                         </div>
                     }
                 </div>
@@ -45,14 +63,14 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach(var item in Model.AssignedBehavioralItems)
+                            @foreach (var item in Model.AssignedBehavioralItems)
                             {
                                 <tr>
                                     <td hidden="hidden">@item.Id</td>
                                     <td>@item.Title</td>
                                     <td>@item.Description</td>
                                     <td>@item.Weight</td>
-                                    <td><a class="fa fa-trash text-danger" data-toggle="modal" data-target="#removebehavioral" data-id="@item.Id" data-employeeid="@Model.Employee.Id"  ></a></td>
+                                    <td><a class="fa fa-trash text-danger" data-toggle="modal" data-target="#removebehavioral" data-id="@item.Id" data-employeeid="@Model.Employee.Id"></a></td>
                                 </tr>
                             }
                         </tbody>
@@ -69,7 +87,7 @@
                     @using (Html.BeginForm("SaveKRAItems", "EmployeeAssignment"))
                     {
                         @Html.AntiForgeryToken()
-                        <input type="hidden" id="employeeid" name="employee.id" value="@Model.Employee.Id"/>
+                        <input type="hidden" id="employeeid" name="employee.id" value="@Model.Employee.Id" />
                         <div class="form-group">
                             <label for="SelectedKeyResultAreas">Select Key Result Area to Add</label>
                             <select multiple class="chosen-select form-control" data-placeholder="Select Key Result Area" name="SelectedKeyResultAreas" id="SelectedKeyResultAreas">
@@ -80,7 +98,10 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <button type="submit" class="btn btn-primary">Add To List</button>
+                            @if (Model.IsWithActiveSeason)
+                            {
+                                <button type="submit" class="btn btn-primary">Add To List</button>
+                            }
                         </div>
                     }
                 </div>
@@ -98,13 +119,13 @@
                         <tbody>
                             @foreach (var item in Model.AssignedKeyResultsItems)
                             {
-                            <tr>
-                                <td hidden="hidden">@item.Id</td>
-                                <td>@item.Title</td>
-                                <td>@item.Description</td>
-                                <td>@item.Weight</td>
-                                <td><a class="fa fa-trash text-danger" data-toggle="modal" data-target="#removekra" data-id="@item.Id" data-employeeid="@Model.Employee.Id"></a></td>
-                            </tr>
+                                <tr>
+                                    <td hidden="hidden">@item.Id</td>
+                                    <td>@item.Title</td>
+                                    <td>@item.Description</td>
+                                    <td>@item.Weight</td>
+                                    <td><a class="fa fa-trash text-danger" data-toggle="modal" data-target="#removekra" data-id="@item.Id" data-employeeid="@Model.Employee.Id"></a></td>
+                                </tr>
                             }
                         </tbody>
                     </table>
@@ -167,7 +188,7 @@
                 { width: "100%" }
             );
         });
-    </script>   
+    </script>
     <script type="text/javascript">
         $('#removekra').on('show.bs.modal', function (event) {
             var button = $(event.relatedTarget)

@@ -60,7 +60,8 @@ namespace Excellency.Services
                 .Include(a => a.EmployeeAssignment)
                 .Include(a => a.BehavioralFactor)
                 .Include(a => a.EmployeeAssignment.Employee)
-                .Where(a => a.EmployeeAssignment.Employee.Id == id && a.EmployeeAssignment.IsDeleted == false)
+                .Include(a => a.EvaluationSeason)
+                .Where(a => a.EmployeeAssignment.Employee.Id == id && a.EmployeeAssignment.IsDeleted == false && a.EvaluationSeason.Id == ActiveSeason().Id)
                 .Select(a => new BehavioralFactor
                 {
                     Id = a.BehavioralFactor.Id,
@@ -266,7 +267,8 @@ namespace Excellency.Services
                 .Include(a => a.EmployeeAssignment)
                 .Include(a => a.KeyResultArea)
                 .Include(a => a.EmployeeAssignment.Employee)
-                .Where(a => a.EmployeeAssignment.Employee.Id == id && a.EmployeeAssignment.IsDeleted == false && a.KeyResultArea.IsDeleted == false)
+                .Include(a => a.EvaluationSeason)
+                .Where(a => a.EmployeeAssignment.Employee.Id == id && a.IsDeleted == false && a.EmployeeAssignment.IsDeleted == false && a.KeyResultArea.IsDeleted == false && a.EvaluationSeason.Id == ActiveSeason().Id)
                 .Select(a => new KeyResultArea
                 {
                     Id = a.KeyResultArea.Id,
@@ -365,10 +367,12 @@ namespace Excellency.Services
         {
             if (header.Id == 0)
             {
+                header.EvaluationSeason = ActiveSeason();
                 _dbContext.Add(header);
             }
             else
             {
+                header.EvaluationSeason = ActiveSeason();
                 _dbContext.Entry(header).State = EntityState.Modified;
             }
             foreach (var item in ratings)
@@ -390,10 +394,12 @@ namespace Excellency.Services
         {
             if (header.Id == 0)
             {
+                header.EvaluationSeason = ActiveSeason();
                 _dbContext.Add(header);
             }
             else
             {
+                header.EvaluationSeason = ActiveSeason();
                 _dbContext.Entry(header).State = EntityState.Modified;
             }
             foreach (var item in ratings)
@@ -453,6 +459,7 @@ namespace Excellency.Services
             var header = _dbContext.RatingHeader.FirstOrDefault(a => a.Id == HeaderId);
             header.ModifiedBy = UserId.ToString();
             header.ModifiedDate = DateTime.Now;
+            header.EvaluationSeason = ActiveSeason();
             _dbContext.Entry(header).State = EntityState.Modified;
             foreach(var item in ratings)
             {
@@ -467,6 +474,7 @@ namespace Excellency.Services
             var header = _dbContext.RatingHeader.FirstOrDefault(a => a.Id == HeaderId);
             header.ModifiedBy = UserId.ToString();
             header.ModifiedDate = DateTime.Now;
+            header.EvaluationSeason = ActiveSeason();
             _dbContext.Entry(header).State = EntityState.Modified;
             foreach(var item in ratings)
             {
