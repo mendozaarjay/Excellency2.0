@@ -32,7 +32,7 @@
                             {
                                 <li><a asp-controller="EmployeeCategory" asp-action="Index" class="">Employee Category</a></li>
                             }
-                            <li><a asp-controller="EvaluationSeason" asp-action="Index" class="">Evaluation Season</a></li>
+                            <li><a asp-controller="EvaluationSeason" asp-action="Index" class="">Evaluation Period</a></li>
                         </ul>
                     </div>
                 </li>
@@ -90,20 +90,6 @@
                                 @*<li><a asp-controller="ApproverAssignment" asp-action="Index" class="">Approver Assignment</a></li>*@
                                 <li><a asp-controller="ApprovalLevel" asp-action="Index" class="">Approver Level</a></li>
                             }
-                        </ul>
-                    </div>
-                </li>
-            }
-            @if (Model.UserAccess.Employees)
-            {
-                <li>
-                    <a href="#employees" data-toggle="collapse" class="collapsed"><i class="lnr lnr-users"></i> <span>Employees</span> <i class="icon-submenu lnr lnr-chevron-left"></i></a>
-                    <div id="employees" class="collapse ">
-                        <ul class="nav">
-                            @*@if (Model.UserAccess.Employee)
-                        {
-                            <li><a asp-controller="Employee" asp-action="Index" class="">Employee</a></li>
-                        }*@
                             @if (Model.UserAccess.RaterAssignment)
                             {
                                 <li><a asp-controller="RaterAssignment" asp-action="RaterList" class="">Rater Assignment</a></li>

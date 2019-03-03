@@ -230,7 +230,14 @@ namespace Excellency.Services
 
         public IEnumerable<Account> Raters()
         {
-            return _dbContext.Accounts
+
+            return _dbContext.Accounts.FromSql(@"SELECT *
+                    FROM [dbo].[Accounts] [a]
+                    WHERE [a].[Id] IN (
+                                          SELECT [ara].[AccountId]
+                                          FROM [dbo].[AccountRoleAssignments] [ara]
+                                          WHERE [ara].[RoleId] = 3
+                                      )")
                    .Include(a => a.Company)
                    .Include(a => a.Branch)
                    .Include(a => a.Department)

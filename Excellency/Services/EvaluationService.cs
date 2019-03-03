@@ -309,6 +309,7 @@ namespace Excellency.Services
             var header = _dbContext.RatingHeader.FirstOrDefault(a => a.Id == item.RatingHeader.Id);
             var status = _dbContext.Statuses.FirstOrDefault(a => a.Id == TransactionStatus.ForApproval.ToInt());
             header.Status = status;
+            header.PostedDate = DateTime.Now;
             _dbContext.Entry(header).State = EntityState.Modified;
             _dbContext.SaveChanges();
         }
@@ -324,6 +325,7 @@ namespace Excellency.Services
             var header = _dbContext.RatingHeader.FirstOrDefault(a => a.Id == item.RatingHeader.Id);
             var status = _dbContext.Statuses.FirstOrDefault(a => a.Id == TransactionStatus.ForApproval.ToInt());
             header.Status = status;
+            header.PostedDate = DateTime.Now;
             _dbContext.Entry(header).State = EntityState.Modified;
             _dbContext.SaveChanges();
         }

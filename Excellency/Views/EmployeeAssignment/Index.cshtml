@@ -19,7 +19,12 @@
     </div>
     <div class="panel-body">
         <div class="table-responsive">
-            <table class="table table-condensed">
+            <div class="input-group col-md-4">
+                <input type="text" id="searchkey" class="form-control" placeholder="Search...">
+                <span class="input-group-btn"><button type="button" id="search" class="btn btn-primary">Search</button></span>
+            </div>
+            <div class="clearfix"></div>
+            <table class="table table-condensed" id="employeelist">
                 <thead>
                     <tr>
                         <th hidden="hidden">Id</th>
@@ -32,7 +37,7 @@
                         <th scope="col" class="col-md-1"></th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="emplist">
                     @foreach (var item in Model.Employees)
                     {
                         <tr>
@@ -46,8 +51,49 @@
                             <td class="text-center"><a asp-controller="EmployeeAssignment" asp-action="Assignment" asp-route-id="@item.Id"><i class="fa fa-clone text-primary"></i></a></td>
                         </tr>
                     }
+
                 </tbody>
             </table>
         </div>
     </div>
 </div>
+
+
+
+@section Scripts{
+    <script type="text/javascript">
+        $('#search').on('click', function () {
+            var keyword = $("#searchkey").val();
+            if (keyword.length > 0) {
+                $.ajax({
+                    url: 'Search',
+                    data: { 'term': keyword },
+                    type: 'GET',
+                    dataType: 'JSON',
+                    success: function (data) {
+                        $('#emplist').empty();
+                        var len = data.result.length
+                        var html = '';
+                        for (var i = 0; i < len; i++) {
+ 
+                            html += `<tr>
+                                <td hidden="hidden">` + data.result[i]['id'] + `</td>
+                                <td>` + data.result[i]['employeeNo'] + `</td>
+                                <td>` + data.result[i]['name'] + `</td>
+                                <td>` + data.result[i]['company'] + `</td>
+                                <td>` + data.result[i]['branch'] + `</td>
+                                <td>` + data.result[i]['department'] + `</td>
+                                <td>` + data.result[i]['position'] + `</td>
+                                <td class="text-center"><a class="fa fa-clone text-primary" href="/EmployeeAssignment/Assignment/` + data.result[i]['id']  + `"></a></td>
+                                </tr>`
+                        }
+                        $('#employeelist tbody').append(html);
+            },
+            error: function (data) {
+            }
+
+        });
+                    }
+                });
+    </script>
+}

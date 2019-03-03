@@ -229,22 +229,20 @@ namespace Excellency.Services
         }
         public int RaterCount()
         {
-            var item = _dbContext.RaterHeader
-                .Include(a => a.Rater)
-                .Where(a => a.IsDeleted == false)
-                .Select(a => a.Rater.Id)
-                .Distinct().Count();
+            var item = _dbContext.AccountRoleAssignments
+               .Include(a => a.Role)
+               .Where(a => a.Role.Id == 3 && a.IsDeleted == false)
+               .Select(a => a.Account.Id)
+               .Distinct().Count();
             return item;
         }
         public int ApproverCount()
         {
-            var item = _dbContext.ApproverAssignments
-              .Include(a => a.User)
-              .Include(a => a.Approver)
-              .Where(a => a.IsDeleted == false)
-              .Select(a => a.Approver)
-              .Distinct()
-              .Count();
+            var item = _dbContext.AccountRoleAssignments
+               .Include(a => a.Role)
+               .Where(a => a.Role.Id == 2 && a.IsDeleted == false)
+               .Select(a => a.Account.Id)
+               .Distinct().Count();
             return item;
         }
         public int EmployeeCount()
@@ -542,59 +540,40 @@ namespace Excellency.Services
 
         public int AssignedPerApprover(int userid)
         {
-            var item = _dbContext.ApproverAssignments
-              .Include(a => a.User)
-              .Include(a => a.Approver)
-              .Where(a => a.Approver.Id == userid && a.IsDeleted == false)
-              .Select(a => a.User.Id)
-              .Distinct()
-              .Count();
-            return item;
+            var count = SCObjects.ReturnText(string.Format(@"SELECT [dbo].[fnGetAssignedApprovalCount]({0})", userid.ToString()), UserConnectionString);
+            return int.Parse(count); 
         }
         public int ApprovedEvaluation(int userid)
         {
-            var users = _dbContext.ApproverAssignments
-              .Include(a => a.User)
-              .Include(a => a.Approver)
-              .Where(a => a.Approver.Id == userid && a.IsDeleted == false)
-              .Select(a => a.User.Id)
-              .Distinct();
-            var item = _dbContext.RatingHeader
-                .Include(a => a.Rater)
-                .Include(a => a.Status)
-                .Where(a => a.IsExpired == false && a.Status.Id == TransactionStatus.Approved.ToInt() && users.Contains(a.Rater.Id))
-                .Distinct()
-                .Count();
-            return item;
+            var count = SCObjects.ReturnText(string.Format(@"SELECT [dbo].[fnGetApprovedEvaluationCount]({0})", userid), UserConnectionString);
+            return int.Parse(count);
         }
         public int PendingForApproval(int userid)
         {
-            var users = _dbContext.ApproverAssignments
-              .Include(a => a.User)
-              .Include(a => a.Approver)
-              .Where(a => a.Approver.Id == userid && a.IsDeleted == false)
-              .Select(a => a.User.Id)
-              .Distinct();
-            var item = _dbContext.RatingHeader
-                .Include(a => a.Rater)
-                .Include(a => a.Status)
-                .Where(a => a.IsExpired == false && a.Status.Id != TransactionStatus.Approved.ToInt() && users.Contains(a.Rater.Id))
-                .Distinct()
-                .Count();
-            return item;
+            var count = SCObjects.ReturnText(string.Format(@"SELECT [dbo].[fnGetPendingApprovalCount]({0})", userid.ToString()), UserConnectionString);
+            return int.Parse(count);
         }
         public IEnumerable<UserPerApprover> ApproverAssignedUser(int userid)
         {
-            var AssignedUser = _dbContext.ApproverAssignments
-              .Include(a => a.User)
-              .Include(a => a.Approver)
-              .Where(a => a.Approver.Id == userid && a.IsDeleted == false)
-              .Select(a => new UserPerApprover
-              {
-                  Id = a.User.Id,
-                  Name = a.User.FirstName + " " + a.User.LastName
-              }).ToList();
-            return AssignedUser;
+            DataTable dt = SCObjects.LoadDataTable(string.Format(@"SELECT * FROM  [dbo].[fnGetAllAssignedPerApprover]({0}) [x]", userid.ToString()), UserConnectionString);
+
+            List<UserPerApprover> items = new List<UserPerApprover>();
+           
+            if(dt != null)
+            {
+                foreach(DataRow dr in dt.Rows)
+                {
+                    var item = new UserPerApprover
+                    {
+                        Id = int.Parse(dr["Id"].ToString()),
+                        Name = dr["Name"].ToString(),
+                    };
+                    items.Add(item);
+                }
+            }
+
+
+            return items;
         }
         #endregion
 

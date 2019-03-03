@@ -43,6 +43,24 @@ namespace Excellency.Controllers
             };
             return View(model);
         }
+
+        public IActionResult Search(string term)
+        {
+            var employees = _Services.Employees()
+               .Select(a => new ApprovalLevelAccountItem
+               {
+                   Id = a.Id,
+                   Name = a.FirstName + " " + a.MiddleName + " " + a.LastName,
+                   Company = a.Company.Description,
+                   Branch = a.Branch.Description,
+                   Department = a.Department.Description,
+                   Position = a.Position.Description,
+                   IsSet = _Services.IsSet(a.Id)
+               }).ToList().Where(x => x.Name.ToLower().Contains(term));
+
+            return Json(new { result = employees });
+        }
+        [HttpGet]
         public IActionResult Assign(int id)
         {
             var model = new ApprovalLevelAssignViewModel();

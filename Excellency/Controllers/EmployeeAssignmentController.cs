@@ -48,6 +48,22 @@ namespace Excellency.Controllers
             };
             return View(model);
         }
+        public IActionResult Search(string term)
+        {
+            var employees = _EmployeeAssignment.Employees()
+                .Select(a => new EmployeeViewModel
+                {
+                    Id = a.Id,
+                    EmployeeNo = a.EmployeeNo,
+                    Name = a.LastName + ", " + a.FirstName + " " + a.MiddleName,
+                    Company = a.Company.Description,
+                    Branch = a.Branch.Description,
+                    Category = a.Category.Description,
+                    Department = a.Department.Description,
+                    Position = a.Position.Description,
+                }).ToList().Where(x => x.Name.ToLower().Contains(term) || term.Length == 0 );
+            return Json(new { result = employees });
+        }
         [SessionAuthorized]
         public IActionResult Assignment(int id)
         {

@@ -12,11 +12,11 @@ namespace Excellency.Controllers
 {
     public class RaterAssignmentController : Controller
     {
-        private IRaterAssignment _RaterAssignment;
+        private IRaterAssignment _Services;
 
         public RaterAssignmentController(IRaterAssignment raterAssignment)
         {
-            _RaterAssignment = raterAssignment;
+            _Services = raterAssignment;
         }
         [SessionAuthorized]
         public IActionResult Index()
@@ -27,7 +27,7 @@ namespace Excellency.Controllers
         [SessionAuthorized]
         public IActionResult RaterList()
         {
-            var result = _RaterAssignment.Raters().Select
+            var result = _Services.Raters().Select
                 (
                  a => new RaterViewModel
                  {
@@ -47,14 +47,14 @@ namespace Excellency.Controllers
         [HttpGet]
         public IActionResult EditRater(int id)
         {
-            var result = _RaterAssignment.GetAccountById(id);
-            var rater = _RaterAssignment.GetRaterById(id);
+            var result = _Services.GetAccountById(id);
+            var rater = _Services.GetRaterById(id);
 
             var raterAssignment = new List<RaterAssignedEmployee>();
 
             if (rater != null)
             {
-                var _AssignedEmployees = _RaterAssignment.RaterAssignedEmployees(rater.Id).Select
+                var _AssignedEmployees = _Services.RaterAssignedEmployees(rater.Id).Select
                 (
                  a => new RaterAssignedEmployee
                  {
@@ -80,7 +80,7 @@ namespace Excellency.Controllers
         }
         private IEnumerable<Employee> Employees(int id)
         {
-            var result = _RaterAssignment.Employees(id)
+            var result = _Services.Employees(id)
                 .Select(
                 a => new Employee
                 {
@@ -102,7 +102,7 @@ namespace Excellency.Controllers
                 {
                     Employees.Add(int.Parse(model.SelectedEmployee[i].ToString()));
                 }
-                _RaterAssignment.AddEmployee(Employees, model.Id,UserId);
+                _Services.AddEmployee(Employees, model.Id,UserId);
             }
             return RedirectToAction("EditRater",new {id = model.Id});
         }
@@ -110,7 +110,7 @@ namespace Excellency.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult RemoveLineItem(RaterEditViewModel model)
         {
-            _RaterAssignment.RemoveLineItem(model.SelectedLineItem);
+            _Services.RemoveLineItem(model.SelectedLineItem);
             return RedirectToAction("EditRater",  new { id = model.Id});
         }
     }

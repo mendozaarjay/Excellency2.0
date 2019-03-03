@@ -280,13 +280,13 @@ namespace Excellency.Controllers
                     Weight = a.Weight,
                     Comment = string.Empty,
                     Score = 0,
-                    RatingTableItems = _Evaluation.GetRatingTableItemsPerId(a.RatingTable.Id)
-                    .Select(b => new EvaluationRatingTableItem
-                    {
-                        Id = b.Id,
-                        Description = b.Description,
-                        Weight = b.Weight.ToString(),
-                    }).ToList(),
+                    //RatingTableItems = _Evaluation.GetRatingTableItemsPerId(a.RatingTable.Id)
+                    //.Select(b => new EvaluationRatingTableItem
+                    //{
+                    //    Id = b.Id,
+                    //    Description = b.Description,
+                    //    Weight = b.Weight.ToString(),
+                    //}).ToList(),
 
                 }).ToList();
             var model = new EmployeeSuccessAreaEvaluation

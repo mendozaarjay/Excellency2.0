@@ -16,12 +16,12 @@ namespace Excellency.Controllers
 {
     public class HomeController : Controller
     {
-        private IHome _Home;
+        private IHome _Services;
         JsonSerializerSettings JsonSerializer = new JsonSerializerSettings() { NullValueHandling = NullValueHandling.Ignore };
 
         public HomeController(IHome home)
         {
-            _Home = home;
+            _Services = home;
         }
         [SessionAuthorized]
         public IActionResult Index()
@@ -29,13 +29,13 @@ namespace Excellency.Controllers
             var userid = int.Parse(HttpContext.Session.GetString("UserId"));
 
             var model = new UserAccountViewModel();
-            model.DashboardAccess = _Home.DashboardAccessPerUser(userid);
-            model.UserCount = _Home.UserCount();
-            model.RaterCount = _Home.RaterCount();
-            model.ApproverCount = _Home.ApproverCount();
-            model.EmployeeCount = _Home.EmployeeCount();
-            model.AccountPeriod = _Home.AccountPeriod();
-            var recentaccounts = _Home.MostRecentAccounts()
+            model.DashboardAccess = _Services.DashboardAccessPerUser(userid);
+            model.UserCount = _Services.UserCount();
+            model.RaterCount = _Services.RaterCount();
+            model.ApproverCount = _Services.ApproverCount();
+            model.EmployeeCount = _Services.EmployeeCount();
+            model.AccountPeriod = _Services.AccountPeriod();
+            var recentaccounts = _Services.MostRecentAccounts()
                 .Select(a => new RecentAccount
                 {
                     Id = a.Id,
@@ -43,7 +43,7 @@ namespace Excellency.Controllers
                     CreationDate = a.CreationDate,
                 }).ToList();
             model.RecentAccounts = recentaccounts;
-            var recentemp = _Home.MostRecentEmployees()
+            var recentemp = _Services.MostRecentEmployees()
                 .Select(a => new RecentEmployee
                 {
                     Id = a.Id,
@@ -53,27 +53,27 @@ namespace Excellency.Controllers
             model.RecentEmployees = recentemp;
 
             //rater
-            model.AssignedRateeCount = _Home.AssignedRateeCount(userid);
-            model.EvaluatedRateeCount = _Home.EvaluatedRateeCount(userid);
-            model.ApprovedRatingCount = _Home.ApprovedRatingCount(userid);
-            model.PendingRatingCount = _Home.PendingRatingCount(userid);
-            model.Employees = _Home.EmployeesPerRater(userid);
+            model.AssignedRateeCount = _Services.AssignedRateeCount(userid);
+            model.EvaluatedRateeCount = _Services.EvaluatedRateeCount(userid);
+            model.ApprovedRatingCount = _Services.ApprovedRatingCount(userid);
+            model.PendingRatingCount = _Services.PendingRatingCount(userid);
+            model.Employees = _Services.EmployeesPerRater(userid);
 
             //Approver
-            model.AssignedPerApprover = _Home.AssignedPerApprover(userid);
-            model.ApprovedEvaluation = _Home.ApprovedEvaluation(userid);
-            model.PendingEvaluation = _Home.PendingForApproval(userid);
-            model.UserPerApprovers = _Home.ApproverAssignedUser(userid);
+            model.AssignedPerApprover = _Services.AssignedPerApprover(userid);
+            model.ApprovedEvaluation = _Services.ApprovedEvaluation(userid);
+            model.PendingEvaluation = _Services.PendingForApproval(userid);
+            model.UserPerApprovers = _Services.ApproverAssignedUser(userid);
 
-            var behavioralheaderitems = _Home.GetBehavioralEvaluations(userid);
-            var kraheaderitems = _Home.GetKRAEvaluations(userid);
+            var behavioralheaderitems = _Services.GetBehavioralEvaluations(userid);
+            var kraheaderitems = _Services.GetKRAEvaluations(userid);
 
             List<EvaluationLineItem> bitems = new List<EvaluationLineItem>();
             List<EvaluationLineItem> kitems = new List<EvaluationLineItem>();
 
             foreach (var item in behavioralheaderitems)
             {
-                var x = _Home.GetBehavioralLineItems(item.Id);
+                var x = _Services.GetBehavioralLineItems(item.Id);
 
                 foreach (var aa in x)
                 {
@@ -83,7 +83,7 @@ namespace Excellency.Controllers
 
             foreach (var item in kraheaderitems)
             {
-                var x = _Home.GetKRAEvaluationLineItems(item.Id);
+                var x = _Services.GetKRAEvaluationLineItems(item.Id);
                 foreach (var aa in x)
                 {
                     kitems.Add(aa);
@@ -108,22 +108,22 @@ namespace Excellency.Controllers
         public IActionResult _SideBar()
         {
             var user = HttpContext.Session.GetString("UserId");
-            var name = _Home.GetAccountById(int.Parse(user)).FirstName;
+            var name = _Services.GetAccountById(int.Parse(user)).FirstName;
             var model = new CurrentUserViewModel
             {
                 Name = name,
-                UserAccess = _Home.UserAccess(int.Parse(user)),
+                UserAccess = _Services.UserAccess(int.Parse(user)),
             };
             return PartialView("_SideBar", model);
         }
         public IActionResult _Header()
         {
             var user = HttpContext.Session.GetString("UserId");
-            var name = _Home.GetUserNameById(int.Parse(user));
+            var name = _Services.GetUserNameById(int.Parse(user));
             var model = new CurrentUserViewModel
             {
                 Name = name,
-                UserAccess = _Home.UserAccess(int.Parse(user)),
+                UserAccess = _Services.UserAccess(int.Parse(user)),
             };
             return PartialView("_Header", model);
         }
@@ -155,21 +155,21 @@ namespace Excellency.Controllers
                     Password = Security.Encrypt(model.Password)
                 };
 
-                if (_Home.IsAccountLocked(account))
+                if (_Services.IsAccountLocked(account))
                 {
                     ViewBag.Message = "Your account is locked.";
                     return View();
                 }
-                if (_Home.IsLoginExpired(account))
+                if (_Services.IsLoginExpired(account))
                 {
                     ViewBag.Message = "Your account is expired.";
                     return View();
                 }
-                if (_Home.IsAvailableToLogin(account))
+                if (_Services.IsAvailableToLogin(account))
                 {
-                    HttpContext.Session.SetString("UserId", _Home.GetUserId(account));
+                    HttpContext.Session.SetString("UserId", _Services.GetUserId(account));
                     var _id = HttpContext.Session.GetString("UserId");
-                    var name = _Home.GetAccountById(int.Parse(_id)).FirstName;
+                    var name = _Services.GetAccountById(int.Parse(_id)).FirstName;
                     HttpContext.Session.SetString("CurrentUser", name);
                     return RedirectToAction("Index");
                 }
@@ -196,12 +196,12 @@ namespace Excellency.Controllers
         [SessionAuthorized]
         public IActionResult EmployeeDashboard(int id)
         {
-            var total = _Home.EmployeeTotalScore(id);
-            var name = _Home.EmployeeNameById(id);
-            var bstrength = _Home.BehavioralStrength(id);
-            var bweakness = _Home.BehavioralWeakness(id);
-            var krastregth = _Home.KeyResultAreaStrength(id);
-            var kraweakness = _Home.KeyResultAreaWeakness(id);
+            var total = _Services.EmployeeTotalScore(id);
+            var name = _Services.EmployeeNameById(id);
+            var bstrength = _Services.BehavioralStrength(id);
+            var bweakness = _Services.BehavioralWeakness(id);
+            var krastregth = _Services.KeyResultAreaStrength(id);
+            var kraweakness = _Services.KeyResultAreaWeakness(id);
             var model = new EmployeeDashboardViewModel
             {
                 EmployeeId = id,
