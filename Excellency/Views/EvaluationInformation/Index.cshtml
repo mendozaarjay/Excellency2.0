@@ -1,0 +1,121 @@
+﻿@model Excellency.ViewModels.EvaluationInfoIndexViewModel
+@{
+    ViewData["Title"] = "Index";
+}
+
+<div class="panel panel-headline">
+    <div class="panel-heading">
+        <div class="panel-title">Current Evaluation</div>
+    </div>
+    <div class="panel-body">
+        <div class="custom-tabs-line tabs-line-bottom left-aligned">
+            <ul class="nav" role="tablist">
+                <li class="active"><a href="#kra" role="tab" data-toggle="tab">Key Result Area</a></li>
+                <li><a href="#behavioral" role="tab" data-toggle="tab">Behavioral Evaluation</a></li>
+                <li><a href="#approval" role="tab" data-toggle="tab">Approval Level</a></li>
+            </ul>
+        </div>
+        <div class="tab-content">
+            <!--Key Result Area-->
+            <div class="tab-pane fade in active" id="kra">
+                @foreach (var item in Model.KRAItems)
+                {
+                    <div class="panel panel-headline">
+                        <div class="panel-heading">
+                            <div class="panel-title">@item.Header.Title</div>
+                        </div>
+                        <div class="panel-body">
+                            @{var total = (from t in item.LineItems select int.Parse(t.Score)).Sum();}
+                            <p><strong>Description : </strong>@item.Header.Description</p>
+                            <p><strong>Weight : </strong>@item.Header.Weight</p>
+                            <p><strong>Evaluated By : </strong>@item.Header.EvaluatedBy</p>
+                            <p><strong>Evaluation Date : </strong>@item.Header.EvaluationDate</p>
+                            <p><strong>Status : </strong>@item.Header.Status</p>
+                            <p><strong>Total Score : </strong>@total</p>
+                            <hr />
+                            <div class="table-responsive">
+                                <table class="table table-condensed">
+                                    <thead>
+                                        <tr>
+                                            <th>Description</th>
+                                            <th>Weight</th>
+                                            <th>Score</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var i in item.LineItems)
+                                        {
+                                            <tr>
+                                                <td>@i.Description</td>
+                                                <td>@i.Weight</td>
+                                                <td>@i.Score</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <!--Behavioral-->
+            <div class="tab-pane fade in" id="behavioral">
+                @foreach (var item in Model.BehavioralItems)
+                {
+                    <div class="panel panel-headline">
+                        <div class="panel-heading">
+                            <div class="panel-title">@item.Header.Title</div>
+                        </div>
+                        <div class="panel-body">
+                            @{var total = (from t in item.LineItems select int.Parse(t.Score)).Sum();}
+                            <p><strong>Description : </strong>@item.Header.Description</p>
+                            <p><strong>Weight : </strong>@item.Header.Weight</p>
+                            <p><strong>Evaluated By : </strong>@item.Header.EvaluatedBy</p>
+                            <p><strong>Evaluation Date : </strong>@item.Header.EvaluationDate</p>
+                            <p><strong>Status : </strong>@item.Header.Status</p>
+                            <p><strong>Total Score : </strong>@total</p>
+                            <hr />
+                            <div class="table-responsive">
+                                <table class="table table-condensed">
+                                    <thead>
+                                        <tr>
+                                            <th>Description</th>
+                                            <th>Weight</th>
+                                            <th>Score</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var i in item.LineItems)
+                                        {
+                                            <tr>
+                                                <td>@i.Description</td>
+                                                <td>@i.Weight</td>
+                                                <td>@i.Score</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="tab-pane fade in" id="approval">
+                <div class="panel panel-headline">
+                    <div class="panel-heading">
+                        <div class="panel-title">Approval Level</div>
+                    </div>
+                    <div class="panel-body">
+                        <p><strong>First Approval : </strong>@Model.ApprovalLevel.FirstApproval</p>
+                        @if (Model.ApprovalLevel.IsWithSecondApproval)
+                        {
+                            <p><strong>Second Approval : </strong>@Model.ApprovalLevel.SecondApproval</p>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
