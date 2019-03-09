@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
 
 namespace Excellency.Services
 {
@@ -13,9 +14,12 @@ namespace Excellency.Services
     {
         private EASDbContext _dbContext;
 
+        public string UserConnectionString { get; }
+
         public AccountRoleService(EASDbContext dbContext)
         {
             _dbContext = dbContext;
+            UserConnectionString = _dbContext.Database.GetDbConnection().ConnectionString;
         }
         public void AddAccount(int RoleId, List<int> Accounts)
         {
@@ -58,6 +62,28 @@ namespace Excellency.Services
         public IEnumerable<Account> GetAllAccount()
         {
             var items = _dbContext.Accounts.Where(a => a.IsDeactivated == false && a.IsDeleted == false);
+            return items;
+        }
+
+        public IEnumerable<Account> GetAllAccounts(int roleid)
+        {
+            var sql = string.Format(@"SELECT * FROM [dbo].[fnAccountRoleLookUp]({0}) [x]", roleid.ToString());
+            DataTable dt = SCObjects.LoadDataTable(sql,UserConnectionString);
+            List<Account> items = new List<Account>();
+            if(dt != null)
+            {
+                foreach(DataRow dr in dt.Rows)
+                {
+                    var item = new Account
+                    {
+                        Id = int.Parse(dr["Id"].ToString()),
+                        FirstName = dr["Firstname"].ToString(),
+                        MiddleName = dr["Middlename"].ToString(),
+                        LastName = dr["Lastname"].ToString(),
+                    };
+                    items.Add(item);
+                }
+            }
             return items;
         }
 
@@ -134,7 +160,8 @@ namespace Excellency.Services
         public void RemoveAccountAssignment(int id)
         {
             var item = _dbContext.AccountRoleAssignments.FirstOrDefault(a => a.Id == id);
-            item.IsDeleted = false;
+            item.IsDeleted = true;
+            _dbContext.Entry(item).State = EntityState.Modified;
             _dbContext.SaveChanges();
         }
 

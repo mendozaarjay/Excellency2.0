@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Excellency.Services
 {
-    public class AccountService : IAccount
+    public class AccountService : IUserAccount
     {
         private EASDbContext _dbContext;
 
@@ -36,7 +36,7 @@ namespace Excellency.Services
 
         public IEnumerable<Branch> Branches()
         {
-            return _dbContext.Branches.Where(a => a.IsDeleted == false);
+            return _dbContext.Branches.Include(a => a.Company).Where(a => a.IsDeleted == false);
         }
 
         public IEnumerable<EmployeeCategory> Categories()

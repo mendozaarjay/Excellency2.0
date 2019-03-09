@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Excellency.Interfaces
 {
-    public interface IAccount
+    public interface IUserAccount
     {
         void Add(Account Account);
         void Update(Account Account);

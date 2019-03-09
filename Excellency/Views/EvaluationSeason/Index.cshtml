@@ -74,11 +74,11 @@
                     </div>
                     <div class="form-group">
                         <label for="startdate">Start Date</label>
-                        <input type="date" name="Evaluation.StartDate" id="startdate" class="form-control" />
+                        <input type="text" name="Evaluation.StartDate" id="startdate" class="form-control" />
                     </div>
                     <div class="form-group">
                         <label for="enddate">End Date</label>
-                        <input type="date" name="Evaluation.EndDate" id="enddate" class="form-control" />
+                        <input type="text" name="Evaluation.EndDate" id="enddate" class="form-control" />
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -179,6 +179,8 @@
 
 @section Scripts{
     <script type="text/javascript">
+        $('#startdate').datepicker();
+        $('#enddate').datepicker();
         $('#addnew').on('show.bs.modal', function (event) {
             var button = $(event.relatedTarget)
             $(".modal-body #id").val(0)
@@ -217,6 +219,17 @@
             var id = button.data('id')
             $(".modal-body #id").val(id)
         })
+        $('#startdate').change(function () {
+            var mindate = $('#startdate').val();
+            $("#enddate").val(mindate)
+            $("#enddate").datepicker("option", "minDate", mindate);
+        });
+        function refreshDate(newdate) {
+            $("#enddate").datepicker({
+                dateFormat: "mm-dd-yyyy",
+                minDate: new Date(newdate)
+            });
+        }
     </script>
 
    

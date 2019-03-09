@@ -36,7 +36,7 @@ namespace Excellency.Controllers
         public IActionResult ViewRoleAssignment(int id)
         {
             var header = _AccountRole.GetRoleById(id);
-            var accounts = _AccountRole.GetAllAccount()
+            var accounts = _AccountRole.GetAllAccounts(id)
                 .Select(a => new AccountItem
                 {
                     Id = a.Id,

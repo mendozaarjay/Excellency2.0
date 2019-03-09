@@ -31,7 +31,7 @@ namespace Excellency
             services.AddScoped<IDepartment, DepartmentService>();
             services.AddScoped<IPosition, PositionService>();
             services.AddScoped<IModule, ModuleService>();
-            services.AddScoped<IAccount, AccountService>();
+            services.AddScoped<IUserAccount, AccountService>();
             services.AddScoped<IEmployee, EmployeeService>();
             services.AddScoped<IRaterAssignment, RaterAssignmentService> ();
             services.AddScoped<IRating, RatingService> ();
@@ -55,6 +55,7 @@ namespace Excellency
             services.AddScoped<IRecommendation, RecommendationService>();
             services.AddScoped<IEvaluationSeason, EvaluationSeasonService>();
             services.AddScoped<IEvaluationInformation, EvaluationInformationService>();
+            services.AddScoped<IUserAccountNew, UserAccountService>();
             services.AddDbContext<EASDbContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("ExcellencyConnection")));
 

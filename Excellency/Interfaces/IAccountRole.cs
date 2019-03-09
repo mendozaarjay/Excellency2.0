@@ -14,6 +14,7 @@ namespace Excellency.Interfaces
 
         Account GetAccountById(int id);
         IEnumerable<Account> GetAllAccount();
+        IEnumerable<Account> GetAllAccounts(int roleid);
 
         void AddAccount(int RoleId, List<int> Accounts);
         void RemoveAccount(int id);

@@ -14,9 +14,9 @@ namespace Excellency.Controllers
 {
     public class AccountController : Controller
     {
-        private IAccount _UserAccount;
+        private IUserAccount _UserAccount;
 
-        public AccountController(IAccount account)
+        public AccountController(IUserAccount account)
         {
             _UserAccount = account;
         }
@@ -102,7 +102,7 @@ namespace Excellency.Controllers
                     EmployeeNo = account.EmployeeNo,
                     FirstName = account.FirstName,
                     LastName = account.LastName,
-                    MiddleName = account.MiddleName,
+                    MiddleName = account.MiddleName == null ? "" : account.MiddleName,
                     Username = account.Username,
                     Mobile = account.Mobile,
                     Password = Security.Encrypt(account.Password),
@@ -125,6 +125,13 @@ namespace Excellency.Controllers
                 account.Categories = this.Categories();
                 return View(account);
             }
+        }
+        public IActionResult GetBranches(int id)
+        {
+            var items = _UserAccount.Branches()
+                .Where(a => a.Company.Id == id)
+                .Select(a => new SelectListItem { Value = a.Id.ToString(), Text = a.Description }).ToList();
+            return Json(new { result = items });
         }
         public IEnumerable<SelectListItem> Companies()
         {

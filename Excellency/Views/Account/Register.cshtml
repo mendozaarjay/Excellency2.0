@@ -13,6 +13,7 @@
         {
 
         <div class="row">
+            <input type="hidden" name="id" id="id" value="0" />
             @if (Html.ViewData.ModelState.ErrorCount > 0)
             {
                 <div class="alert alert-danger alert-dismissible" role="alert">
@@ -86,3 +87,31 @@
         }
     </div>
 </div>
+
+@section Scripts{ 
+    <script type="text/javascript">
+        $('#Company').change(function () {
+            var item = $('#Company').val();
+            $('#Branch').empty();
+
+            if (item.length > 0) {
+                $.ajax({
+                    url: '/Account/GetBranches',
+                    datatype: "json",
+                    type: 'GET',
+                    async: true,
+                    data: { "id": item },
+                    success: function (data) {
+                        var len = data.result.length;
+                        for (var i = 0; i < len; i++) {
+                            var code = data.result[i]["value"];
+                            var description = data.result[i]["text"];
+                            $('#Branch').append("<option value ='" + code + "'>" + description + "</option>");
+                        }
+                        $('#Branch').val('');
+                    }
+                })
+            }
+        });
+    </script>
+}

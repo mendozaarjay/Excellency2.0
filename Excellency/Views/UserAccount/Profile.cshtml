@@ -1,0 +1,27 @@
+﻿@model Excellency.ViewModels.ProfileViewModel
+@{
+    ViewData["Title"] = "Profile";
+}
+
+
+<div class="panel">
+    <div class="panel-body">
+        <div class="col-md-6">
+            <h4 class="heading">Account Information</h4>
+            <ul class="list-unstyled list-justify">
+                <li>Employee No <span>@Model.EmployeeNo</span></li>
+                <li>Username <span>@Model.Username</span></li>
+                <li>Firstname <span>@Model.FirstName</span></li>
+                <li>Middlename <span>@Model.MiddleName</span></li>
+                <li>Lastname <span>@Model.LastName</span></li>
+                <li>Company <span>@Model.Company</span></li>
+                <li>Branch <span>@Model.Branch</span></li>
+                <li>Department <span>@Model.Department</span></li>
+                <li>Position <span>@Model.Position</span></li>
+                <li>Email <span>@Model.Email</span></li>
+                <li>Mobile <span>@Model.Mobile</span></li>
+            </ul>
+            <div class="text-center"><a asp-controller="UserAccount" asp-action="ChangePassword" class="btn btn-primary">Change Password</a></div>
+        </div>
+    </div>
+</div>
