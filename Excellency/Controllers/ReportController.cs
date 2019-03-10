@@ -62,6 +62,25 @@ namespace Excellency.Controllers
             var items = _Services.Employees(keyword);
             return Json(new { result = items });
         }
+        public IActionResult EmployeePerformance()
+        {
+            var periods = _Services.EvaluationSeasons()
+               .Select(a => new SelectListItem
+               {
+                   Value = a.Id.ToString(),
+                   Text = a.Title,
+               }).ToList();
+            var model = new EmployeePerformanceIndexViewModel
+            {
+                Periods = periods,
+            };
+            return View(model);
+        }
+        public IActionResult GetEmployeePerformance(int period)
+        {
+            var items = _Services.EmployeePerformances(period, string.Empty);
+            return Json(new { result = items });
+        }
         public IActionResult KRAResult()
         {
             return View();

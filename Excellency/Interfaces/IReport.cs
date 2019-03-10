@@ -9,5 +9,6 @@ namespace Excellency.Interfaces
         IEnumerable<EvaluationReport> Evaluations(int periodid,string type);
         IEnumerable<EvaluationSeason> EvaluationSeasons();
         IEnumerable<EmployeeInformation> Employees(string keyword);
+        IEnumerable<EmployeePerformance> EmployeePerformances(int period, string keyword);
     }
 }

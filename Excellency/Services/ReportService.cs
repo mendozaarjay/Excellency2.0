@@ -87,5 +87,36 @@ namespace Excellency.Services
             }
             return items;
         }
+
+        public IEnumerable<EmployeePerformance> EmployeePerformances(int period, string keyword)
+        {
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandText = "[dbo].[spEmployeePerformance]";
+            cmd.Parameters.Clear();
+            cmd.Parameters.AddWithValue("@SeasonId", period);
+            cmd.Parameters.AddWithValue("@Keyword", keyword);
+            DataTable dt = SCObjects.ExecGetData(cmd, UserConnectionString);
+
+            List<EmployeePerformance> items = new List<EmployeePerformance>();
+            if(dt != null)
+            {
+                foreach(DataRow dr in dt.Rows)
+                {
+                    var item = new EmployeePerformance
+                    {
+                        Id = int.Parse(dr["Id"].ToString()),
+                        Name = dr["EmployeeName"].ToString(),
+                        TotalScore = decimal.Parse(dr["TotalScore"].ToString()),
+                        TotalWeight = decimal.Parse(dr["TotalWeight"].ToString()),
+                        ConvertedScore = decimal.Parse(dr["ConvertedScore"].ToString()),
+                        WeightedScore = decimal.Parse(dr["WeightedScore"].ToString()),
+                        Percentage = decimal.Parse(dr["Percentage"].ToString()),
+                    };
+                    items.Add(item);
+                }
+            }
+            return items;
+            
+        }
     }
 }
