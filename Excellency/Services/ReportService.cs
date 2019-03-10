@@ -57,5 +57,35 @@ namespace Excellency.Services
         {
             return _dbContext.EvaluationSeasons.Where(a => a.IsDeleted == false);
         }
+
+        public IEnumerable<EmployeeInformation> Employees(string keyword)
+        {
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandText = StoredProcedure;
+            cmd.Parameters.Clear();
+            cmd.Parameters.AddWithValue("@Keyword", keyword);
+            cmd.Parameters.AddWithValue("@QueryType", 2);
+            DataTable dt = SCObjects.ExecGetData(cmd, UserConnectionString);
+            List<EmployeeInformation> items = new List<EmployeeInformation>();
+            if(dt != null)
+            {
+                foreach(DataRow dr in dt.Rows)
+                {
+                    var item = new EmployeeInformation
+                    {
+                        Id = int.Parse(dr["Id"].ToString()),
+                        Name = dr["Name"].ToString(),
+                        EmployeeNo = dr["EmployeeNo"].ToString(),
+                        Category = dr["Category"].ToString(),
+                        Company = dr["Company"].ToString(),
+                        Branch = dr["Branch"].ToString(),
+                        Department = dr["Department"].ToString(),
+                        Position = dr["Position"].ToString(),
+                    };
+                    items.Add(item);
+                }
+            }
+            return items;
+        }
     }
 }

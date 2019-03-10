@@ -1,0 +1,75 @@
+﻿
+@{
+    ViewData["Title"] = "Employees";
+}
+
+<div class="panel panel-headline">
+   <div class="panel-heading">
+       <h3 class="panel-title">Employee Information</h3>
+   </div>
+   <div class="panel-body">
+       <div class="input-group col-md-4">
+           <input type="text" id="searchkey" class="form-control" placeholder="Search...">
+           <span class="input-group-btn"><button type="button" id="search" class="btn btn-primary">Search</button></span>
+       </div>
+       <div class="clearfix"></div>
+       <hr />
+       <div class="table-responsive">
+           <table id="result" class="table table-condensed">
+               <thead>
+                   <tr>
+                       <th>Employee No</th>
+                       <th>Name</th>
+                       <th>Category</th>
+                       <th>Company</th>
+                       <th>Branch</th>
+                       <th>Department</th>
+                       <th>Position</th>
+                       <th></th>
+                   </tr>
+               </thead>
+               <tbody id="resultlist">
+
+               </tbody>
+           </table>
+       </div>
+   </div>
+</div>
+
+@section Scripts{ 
+    <script type="text/javascript">
+        $('#search').on('click', function () {
+            var keyword = $('#searchkey').val();
+            if (keyword.length > 0) {
+                $.ajax({
+                    url: 'SearchEmployees',
+                    data: { 'keyword': keyword },
+                    type: 'GET',
+                    dataType: 'JSON',
+                    success: function (data) {
+                        $('#resultlist').empty;
+                        var len = data.result.length;
+                        var html = '';
+                        for (var i = 0; i < len; i++) {
+                           var url = 'http://localhost:50050/Report/PrintEmployeeInformation?id=' + data.result[i]['id']
+                           var a = '<a href="' + url + '"  target="_blank" class="fa fa-newspaper-o">  </a>'
+
+                            html += `<tr>
+                                <td>` + data.result[i]['employeeNo'] + ` </td>
+                                <td>` + data.result[i]['name'] + ` </td>
+                                <td>` + data.result[i]['category'] + ` </td>
+                                <td>` + data.result[i]['company'] + ` </td>
+                                <td>` + data.result[i]['branch'] + ` </td>
+                                <td>` + data.result[i]['department'] + ` </td>
+                                <td>` + data.result[i]['position'] + ` </td>
+                                <td>` + a + ` </td>
+                                </tr>
+                                `
+                        }
+                        $('#result tbody').append(html);
+                    }
+                })
+            }
+        });
+    </script>
+}

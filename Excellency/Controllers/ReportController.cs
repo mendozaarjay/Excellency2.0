@@ -53,6 +53,15 @@ namespace Excellency.Controllers
             var items = _Services.Evaluations(period, type);
             return Json(new { result = items });
         }
+        public IActionResult Employees()
+        {
+            return View();
+        }
+        public IActionResult SearchEmployees(string keyword)
+        {
+            var items = _Services.Employees(keyword);
+            return Json(new { result = items });
+        }
         public IActionResult KRAResult()
         {
             return View();
