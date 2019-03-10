@@ -135,6 +135,17 @@
                     </ul>
                 </div>
             </li>
+            @if (Model.UserAccess.Settings || Model.UserAccess.Evaluation)
+            {
+                <li>
+                    <a href="#reports" data-toggle="collapse" class="collapsed"><i class="fa fa-newspaper-o"></i> <span>Reports</span> <i class="icon-submenu lnr lnr-chevron-left"></i></a>
+                    <div id="reports" class="collapse ">
+                        <ul class="nav">
+                            <li><a asp-controller="Report" asp-action="Index" class="">Performance Appraisal</a></li>
+                        </ul>
+                    </div>
+                </li>
+            }
         </ul>
     </nav>
 </div>

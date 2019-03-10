@@ -1,0 +1,108 @@
+﻿@model Excellency.ViewModels.ReportIndexViewModel
+@{
+    ViewData["Title"] = "Index";
+}
+
+<div class="panel panel-headline">
+    <div class="panel-heading">
+        <h3 class="panel-title">Performance Appraisal</h3>
+    </div>
+    <div class="panel-body">
+        <div class="row">
+            <form>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="period">Period</label>
+                        <select name="period" id="period" class="form-control">
+                            @foreach (var item in Model.Periods)
+                            {
+                                <option value="@item.Value">@item.Text</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="period">Period</label>
+                        <select name="type" id="type" class="form-control">
+                            @foreach (var item in Model.Types)
+                            {
+                                <option value="@item.Value">@item.Text</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <button type="button" id="generate"  class="btn btn-success">Generate</button>
+                </div>
+            </form>
+        </div>
+
+        <hr />
+        <div class="row">
+            <div class="table-responsive">
+                <table id="result" class="table table-condensed">
+                    <thead>
+                        <tr>
+                            <th>Type</th>
+                            <th>Name</th>
+                            <th>Rater</th>
+                            <th>Date</th>
+                            <th>Period</th>
+                            <th>Status</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="resultlist">
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts{ 
+    <script type="text/javascript">
+        $('#generate').on('click', function () {
+            var period = $('#period').val();
+            var type = $('#type').val();
+            $.ajax({
+                url: 'GenerateReport',
+                data: { 'period': period, 'type': type },
+                type: 'GET',
+                dataType: 'JSON',
+                success: function (data) {
+                    $('#resultlist').empty();
+                    var len = data.result.length;
+                    var html = '';
+                    for (var i = 0; i < len; i++) {
+                        var a = '';
+                        var url = '';
+
+                        if (data.result[i]['type'] == 'KRA') {
+                            url = 'http://localhost:50050/Report/PrintPerformanceAppraisal?id=' + data.result[i]['id']
+                            a = '<a href="' + url + '"  target="_blank" class="fa fa-newspaper-o">  </a>'
+                        }
+                        else {
+                            url = 'http://localhost:50050/Report/Printbehavioral?id=' + data.result[i]['id']
+                            a = '<a href="' + url + '"  target="_blank" class="fa fa-newspaper-o">  </a>'
+                        }
+                        html += `<tr>
+                            <td>` + data.result[i]['type'] + `</td>
+                            <td>` + data.result[i]['name'] + `</td>
+                            <td>` + data.result[i]['rater'] + `</td>
+                            <td>` + data.result[i]['dateCreated'] + `</td>
+                            <td>` + data.result[i]['period'] + `</td>
+                            <td>` + data.result[i]['status'] + `</td>
+                            <td> ` + a + `</td> 
+                            </tr>
+                                `
+                        $('#result tbody').append(html);
+                    }
+
+                }
+            });
+        });
+    </script>
+}
