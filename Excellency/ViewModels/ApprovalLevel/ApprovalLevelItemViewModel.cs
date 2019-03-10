@@ -9,7 +9,7 @@ namespace Excellency.ViewModels
         public int EmployeeId { get; set; }
         public int FirstApprovalId { get; set; }
         [NotMapped]
-        public int SecondApprovalId { get; set; }
+        public int? SecondApprovalId { get; set; }
         public string IsWithSecondApproval { get; set; }
     }
 }

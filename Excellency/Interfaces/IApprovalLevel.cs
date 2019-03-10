@@ -11,7 +11,7 @@ namespace Excellency.Interfaces
         IEnumerable<Account> Approvers(int id);
         ApprovalLevelAssignment ApprovalLevelById(int id);
         ApprovalLevelAssignment ApprovalAssignmentByEmployee(int id);
-        Account GetAccountById(int id);
+        Account GetAccountById(int? id);
         string GetNameById(int id);
         void RemoveById(int id);
         bool IsSet(int id);

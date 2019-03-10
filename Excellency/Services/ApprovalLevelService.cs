@@ -57,7 +57,7 @@ namespace Excellency.Services
                     .Include(a => a.Position)
                 ;
         }
-        public Account GetAccountById(int id)
+        public Account GetAccountById(int? id)
         {
             return _dbContext.Accounts.FirstOrDefault(a => a.Id == id);
         }
@@ -84,12 +84,15 @@ namespace Excellency.Services
             //_dbContext.SaveChanges();
 
             SqlCommand cmd = new SqlCommand();
-            cmd.CommandText = "[dbo].[spApprovalLevelAssignment]";
+            cmd.CommandText = "[dbo].[spApprovalLevelAssignment]"; 
             cmd.Parameters.Clear();
             cmd.Parameters.AddWithValue("@Id", approval.Id);
             cmd.Parameters.AddWithValue("@EmployeeId", approval.Employee.Id);
             cmd.Parameters.AddWithValue("@FirstApproval", approval.FirstApproval.Id);
-            cmd.Parameters.AddWithValue("@SecondApproval", approval.SecondApproval.Id);
+            if(approval.IsWithSecondApproval)
+            {
+                cmd.Parameters.AddWithValue("@SecondApproval", approval.SecondApproval.Id);
+            }
             cmd.Parameters.AddWithValue("@CreatedBy", userid);
             cmd.Parameters.AddWithValue("@ModifiedBy", userid);
             cmd.Parameters.AddWithValue("@IsWithSecondApproval", approval.IsWithSecondApproval ? 1 : 0);

@@ -10,16 +10,16 @@ namespace Excellency.Controllers
 {
     public class EmployeeAssignmentController : Controller
     {
-        private IEmployeeAssignment _EmployeeAssignment;
+        private IEmployeeAssignment _Services;
 
         public EmployeeAssignmentController(IEmployeeAssignment employeeAssignment)
         {
-            _EmployeeAssignment = employeeAssignment;
+            _Services = employeeAssignment;
         }
         [SessionAuthorized]
         public IActionResult Index()
         {
-            var result = _EmployeeAssignment.Employees().Select(a => new EmployeeViewModel
+            var result = _Services.Employees().Select(a => new EmployeeViewModel
             {
                 Id = a.Id,
                 EmployeeNo = a.EmployeeNo,
@@ -30,7 +30,7 @@ namespace Excellency.Controllers
                 Department = a.Department.Description,
                 Position = a.Position.Description,
             }).ToList();
-            var aes = _EmployeeAssignment.ActiveSeason();
+            var aes = _Services.ActiveSeason();
             var season = new EvaluationSeasonItem();
             if (aes != null)
             {
@@ -43,14 +43,14 @@ namespace Excellency.Controllers
             var model = new EmployeeAssignmentViewModel
             {
                 Employees = result,
-                IsWithActiveSeason = _EmployeeAssignment.IsWithActiveSeason(),
+                IsWithActiveSeason = _Services.IsWithActiveSeason(),
                 ActiveSeason = season,
             };
             return View(model);
         }
         public IActionResult Search(string term)
         {
-            var employees = _EmployeeAssignment.Employees()
+            var employees = _Services.Employees()
                 .Select(a => new EmployeeViewModel
                 {
                     Id = a.Id,
@@ -67,7 +67,7 @@ namespace Excellency.Controllers
         [SessionAuthorized]
         public IActionResult Assignment(int id)
         {
-            var _employee = _EmployeeAssignment.EmployeeById(id);
+            var _employee = _Services.EmployeeById(id);
             var employee = new EmployeeViewModel
             {
                 Id = _employee.Id,
@@ -82,10 +82,10 @@ namespace Excellency.Controllers
 
             var kralist = new List<AssignedKeyResultViewModel>();
             var behaviorallist = new List<AssignedBehavioralViewModel>();
-            var header = _EmployeeAssignment.EmployeeAssignmentByEmployeeId(id);
+            var header = _Services.EmployeeAssignmentByEmployeeId(id);
             if (header != null)
             {
-                var kra = _EmployeeAssignment.EmployeeKRAAssignmentByHeaderId(header.Id)
+                var kra = _Services.EmployeeKRAAssignmentByHeaderId(header.Id)
                 .Select(a => new AssignedKeyResultViewModel
                 {
                     Id = a.Id,
@@ -94,7 +94,7 @@ namespace Excellency.Controllers
                     Weight = a.KeyResultArea.Weight
                 }).ToList();
                 kralist = kra;
-                var behavioral = _EmployeeAssignment.EmployeeBehavioralAssignmentByHeaderId(header.Id)
+                var behavioral = _Services.EmployeeBehavioralAssignmentByHeaderId(header.Id)
                     .Select(a => new AssignedBehavioralViewModel
                     {
                         Id = a.Id,
@@ -104,20 +104,20 @@ namespace Excellency.Controllers
                     }).ToList();
                 behaviorallist = behavioral;
             }
-            var kraitems = _EmployeeAssignment.KeyResultAreas()
+            var kraitems = _Services.GetAvailableKRA(id)
                 .Select(a => new KeyResultAreaViewModel
                 {
                     Id = a.Id,
                     Title = a.Title,
                 }).ToList();
-            var bfitems = _EmployeeAssignment.BehavioralFactors()
+            var bfitems = _Services.GetAvailableBehavioral(id)
                 .Select(a => new BehavioralFactorViewModel
                 {
                     Id = a.Id,
                     Title = a.Title,
                 }).ToList();
 
-            var aes = _EmployeeAssignment.ActiveSeason();
+            var aes = _Services.ActiveSeason();
             var season = new EvaluationSeasonItem();
             if (aes != null)
             {
@@ -136,7 +136,7 @@ namespace Excellency.Controllers
                 AssignedKeyResultsItems = kralist,
                 BehavioralFactors = bfitems,
                 KeyResultAreas = kraitems,
-                IsWithActiveSeason = _EmployeeAssignment.IsWithActiveSeason(),
+                IsWithActiveSeason = _Services.IsWithActiveSeason(),
                 ActiveSeason = season,
             };
             return View(model);
@@ -153,7 +153,7 @@ namespace Excellency.Controllers
                 {
                     items.Add(int.Parse(model.SelectedBehavioralFactors[i].ToString()));
                 }
-                _EmployeeAssignment.SaveBehavioralItems(model.Employee.Id, items);
+                _Services.SaveBehavioralItems(model.Employee.Id, items);
             }
             return RedirectToAction("Assignment", new { id = model.Employee.Id });
         }
@@ -169,20 +169,20 @@ namespace Excellency.Controllers
                 {
                     items.Add(int.Parse(model.SelectedKeyResultAreas[i].ToString()));
                 }
-                _EmployeeAssignment.SaveKRAItems(model.Employee.Id, items);
+                _Services.SaveKRAItems(model.Employee.Id, items);
             }
             return RedirectToAction("Assignment", new { id = model.Employee.Id });
         }
         [HttpPost]
         public IActionResult RemoveKRAById(int id,int employeeid)
         {
-            _EmployeeAssignment.RemoveKRAById(id);
+            _Services.RemoveKRAById(id);
             return RedirectToAction("Assignment", new { id = employeeid });
         }
         [HttpPost]
         public IActionResult RemoveBehavioralById(int id, int employeeid)
         {
-            _EmployeeAssignment.RemoveBehavioralPerId(id);
+            _Services.RemoveBehavioralPerId(id);
             return RedirectToAction("Assignment", new { id = employeeid });
         }
     }

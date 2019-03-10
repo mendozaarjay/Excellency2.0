@@ -3,6 +3,7 @@ using Excellency.Models;
 using Excellency.Persistence;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 
 namespace Excellency.Services
@@ -11,9 +12,12 @@ namespace Excellency.Services
     {
         private EASDbContext _dbContext;
 
+        public string UserConnectionString { get; }
+
         public EmployeeAssignmentService(EASDbContext dbContext)
         {
             _dbContext = dbContext;
+            UserConnectionString = _dbContext.Database.GetDbConnection().ConnectionString;
         }
 
         public BehavioralFactor BehavioralFactorById(int id)
@@ -193,6 +197,50 @@ namespace Excellency.Services
         public EvaluationSeason EvaluationSeasonById(int id)
         {
             return _dbContext.EvaluationSeasons.FirstOrDefault(a => a.Id == id);
+        }
+
+        public IEnumerable<KeyResultArea> GetAvailableKRA(int employeeid)
+        {
+            string sql = string.Format(@"SELECT * FROM [dbo].[fnAvailableKRALookup]({0}) [fakl]", employeeid.ToString());
+            DataTable dt = SCObjects.LoadDataTable(sql, UserConnectionString);
+            List<KeyResultArea> items = new List<KeyResultArea>();
+            if(dt != null)
+            {
+                foreach(DataRow dr in dt.Rows)
+                {
+                    var item = new KeyResultArea
+                    {
+                        Id = int.Parse(dr["Id"].ToString()),
+                        Title = dr["Title"].ToString(),
+                        Description = dr["Description"].ToString(),
+                        Weight = int.Parse(dr["Weight"].ToString()),
+                    };
+                    items.Add(item);
+                }
+            }
+            return items;
+        }
+
+        public IEnumerable<BehavioralFactor> GetAvailableBehavioral(int employeeid)
+        {
+            string sql = string.Format("SELECT * FROM [dbo].[fnAvailableBehavioralLookup]({0}) [fabl]", employeeid.ToString());
+            DataTable dt = SCObjects.LoadDataTable(sql, UserConnectionString);
+            List<BehavioralFactor> items = new List<BehavioralFactor>();
+            if(dt != null)
+            {
+                foreach(DataRow dr in dt.Rows)
+                {
+                    var item = new BehavioralFactor
+                    {
+                        Id = int.Parse(dr["Id"].ToString()),
+                        Title = dr["Title"].ToString(),
+                        Description = dr["Description"].ToString(),
+                        Weight = int.Parse(dr["Weight"].ToString()),
+                    };
+                    items.Add(item);
+                }
+            }
+            return items;
         }
     }
 }

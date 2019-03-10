@@ -72,12 +72,13 @@ namespace Excellency.Controllers
             var _item = _Services.ApprovalAssignmentByEmployee(id);
             if (_item != null)
             {
+                
                 var item = new ApprovalLevelItemViewModel
                 {
                     Id = _item.Id,
                     EmployeeId = _item.Id,
                     FirstApprovalId = _item.FirstApproval.Id,
-                    SecondApprovalId = _item.SecondApproval.Id,
+                    SecondApprovalId = _item.SecondApproval == null ?  0 : _item.SecondApproval.Id,
                     IsWithSecondApproval = _item.IsWithSecondApproval ? "on" : "off"
                 };
                 model.ApprovalLevel = item;

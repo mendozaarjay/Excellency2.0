@@ -25,6 +25,8 @@ namespace Excellency.Interfaces
         IEnumerable<KeyResultArea> KeyResultAreas();
         IEnumerable<BehavioralFactor> BehavioralFactors();
 
+        IEnumerable<KeyResultArea> GetAvailableKRA(int employeeid);
+        IEnumerable<BehavioralFactor> GetAvailableBehavioral(int employeeid);
 
         bool IsWithActiveSeason();
         EvaluationSeason ActiveSeason();
