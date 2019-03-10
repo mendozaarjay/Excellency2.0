@@ -14,14 +14,14 @@
                 <input type="hidden" name="raterid" id="raterid" value="@Model.RaterId" />
                 <div class="form-group">
                     <label for="id">Select employee to add.</label>
-                    <select id="id" name="id" class="chosen-select form-control" data-placeholder="Select Employee">
+                    <select id="employeeid" name="id" class="chosen-select form-control" data-placeholder="Select Employee">
                         @foreach (var item in Model.Accounts)
                         {
                             <option value="@item.Id">@item.Name</option>
                         }
                     </select>
                 </div>
-                <button type="submit" class="btn btn-primary">Add</button>
+                <button type="submit" id="btnsubmit" class="btn btn-primary">Add</button>
             }
         </div>
     </div>
@@ -84,6 +84,18 @@
 @section Scripts{
 
     <script type="text/javascript">
+        $('#employeeid').val('').trigger("chosen:updated");
+        $('#btnsubmit').prop("disabled", true);
+        $('#employeeid').change(function () {
+            var item = $('#employeeid').val();
+            if (item.length > 0) {
+                $('#btnsubmit').prop("disabled", false);
+            }
+            else {
+                $('#btnsubmit').prop("disabled", true);
+            }
+        });
+
         $(".chosen-select").chosen(
 
         );

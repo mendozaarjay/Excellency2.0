@@ -4,6 +4,7 @@ using Excellency.Persistence;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -22,7 +23,24 @@ namespace Excellency.Services
         }
         public IEnumerable<Account> Accounts(int userid)
         {
-            return _dbContext.Accounts.Where(a => a.IsDeleted == false && a.IsDeactivated == false && a.Id != userid);
+            string sql = string.Format("SELECT * FROM  [dbo].[fnRecommendationEmployeeLookUp]({0}) [x]", userid.ToString());
+            DataTable dt = SCObjects.LoadDataTable(sql, UserConnectionString);
+            List<Account> items = new List<Account>();
+            if(dt != null)
+            {
+                foreach(DataRow dr in dt.Rows)
+                {
+                    var item = new Account
+                    {
+                        Id = int.Parse(dr["Id"].ToString()),
+                        FirstName = dr["Firstname"].ToString(),
+                        MiddleName = dr["Middlename"].ToString(),
+                        LastName = dr["Lastname"].ToString(),
+                    };
+                    items.Add(item);
+                }
+            }
+            return items;
         }
 
         public IEnumerable<RatingBehavioralFactor> BehavioralRatingById(int id)

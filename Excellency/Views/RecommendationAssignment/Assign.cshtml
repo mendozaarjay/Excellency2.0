@@ -1,0 +1,107 @@
+﻿@model Excellency.ViewModels.RecommendationAssignViewModel
+@{
+    ViewData["Title"] = "Assign";
+}
+
+<div class="panel panel-headline">
+    <div class="panel-heading">
+        <h3 class="panel-title">Recommendation for : @Model.Name</h3>
+    </div>
+    <div class="panel-body">
+        <div>
+            @using (Html.BeginForm("Save", "RecommendationAssignment"))
+            {
+                <input type="hidden" name="id" id="id" value="@Model.Id" />
+                <div class="form-group">
+                    <select class="chosen-select form-control" data-placeholder="Select Employee" name="employeeid" id="employeeid">
+                        @foreach (var item in Model.Employees)
+                        {
+                            <option value="@item.Id">@item.Name</option>
+                        }
+                    </select>
+                </div>
+                <div class="form-group">
+                    <button type="submit" id="btnsubmit" class="btn btn-success">Add</button>
+                </div>
+            }
+        </div>
+        <hr />
+        <div class="panel panel-headline">
+            <div class="panel-heading">
+                <h3 class="panel-title">Assigned Employees</h3>
+            </div>
+            <div class="panel-body">
+                <div class="table-responsive">
+                    <table class="table table-condensed">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Assigned)
+                            {
+                                <tr>
+                                    <td>@item.Name</td>
+                                    <td><a class="fa fa-trash text-danger" data-toggle="modal" data-target="#remove" data-recordid="@item.Id" data-id="@Model.Id"></a></td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="remove" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        @using (Html.BeginForm("Remove", "RecommendationAssignment"))
+        {
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Confirmation</h4>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="recordid" id="recordid" />
+                    <input type="hidden" name="id" id="id" />
+                    <p>Are you sure you want to delete the current record?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+@section Scripts{
+    <script type="text/javascript">
+        $('#btnsubmit').prop("disabled", true);
+        $('#employeeid').val('').trigger("chosen:updated");
+        $(function () {
+            $(".chosen-select").chosen(
+
+            );
+        });
+        $('#employeeid').change(function () {
+            var item = $('#employeeid').val();
+            if (item.length > 0) {
+                $('#btnsubmit').prop("disabled", false);
+            }
+            else {
+                $('#btnsubmit').prop("disabled", true);
+            }
+        });
+        $('#remove').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget)
+            var id = button.data('id')
+            var recordid = button.data('recordid')
+            $(".modal-body #id").val(id)
+            $(".modal-body #recordid").val(recordid)
+        })
+    </script>
+
+}

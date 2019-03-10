@@ -1,0 +1,31 @@
+﻿@model Excellency.ViewModels.RecommendationAssignmentIndexViewModel
+@{
+    ViewData["Title"] = "Index";
+}
+
+<div class="panel panel-headline">
+    <div class="panel-heading">
+        <h3 class="panel-title">Recommendation Assignment</h3>
+    </div>
+    <div class="panel-body">
+        <div class="table-responsive">
+            <table class="table table-condensed">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach(var item in Model.Recommenders)
+                    {
+                        <tr>
+                            <td>@item.Name</td>
+                            <td><a asp-controller="RecommendationAssignment" asp-action="Assign" asp-route-id="@item.Id" class="fa fa-clone text-primary"></a></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

@@ -5,6 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20190310070054_Added Recommendation Assignment.cs" />
+    <Compile Remove="Migrations\20190310070054_Added Recommendation Assignment.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="jQuery.UI" Version="1.12.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.8" />
     <PackageReference Include="Microsoft.AspNetCore.Session" Version="2.1.1" />
