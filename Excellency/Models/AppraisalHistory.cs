@@ -1,6 +1,6 @@
 ﻿namespace Excellency.Models
 {
-    public class EmployeePerformance
+    public class AppraisalHistory
     {
         public int Id { get; set; }
         public string Period { get; set; }

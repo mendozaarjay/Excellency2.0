@@ -41,17 +41,18 @@
         $('#search').on('click', function () {
             var keyword = $('#searchkey').val();
             if (keyword.length > 0) {
+                $('#resultlist').empty();
                 $.ajax({
                     url: 'SearchEmployees',
                     data: { 'keyword': keyword },
                     type: 'GET',
                     dataType: 'JSON',
                     success: function (data) {
-                        $('#resultlist').empty;
+
                         var len = data.result.length;
                         var html = '';
                         for (var i = 0; i < len; i++) {
-                           var url = 'http://localhost:50050/Report/PrintEmployeeInformation?id=' + data.result[i]['id']
+                            var url = 'http://isuzueas1-001-site1.atempurl.com/Report/PrintEmployeeInformation?id=' + data.result[i]['id']
                            var a = '<a href="' + url + '"  target="_blank" class="fa fa-newspaper-o">  </a>'
 
                             html += `<tr>

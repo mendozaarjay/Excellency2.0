@@ -1,6 +1,7 @@
 ﻿using Excellency.Interfaces;
 using Excellency.Models;
 using Excellency.Persistence;
+using Excellency.ViewModels;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -88,13 +89,13 @@ namespace Excellency.Services
             return items;
         }
 
-        public IEnumerable<EmployeePerformance> EmployeePerformances(int period, string keyword)
+        public IEnumerable<EmployeePerformance> EmployeePerformances(int period, int id)
         {
             SqlCommand cmd = new SqlCommand();
             cmd.CommandText = "[dbo].[spEmployeePerformance]";
             cmd.Parameters.Clear();
             cmd.Parameters.AddWithValue("@SeasonId", period);
-            cmd.Parameters.AddWithValue("@Keyword", keyword);
+            cmd.Parameters.AddWithValue("@EmployeeId", id);
             DataTable dt = SCObjects.ExecGetData(cmd, UserConnectionString);
 
             List<EmployeePerformance> items = new List<EmployeePerformance>();
@@ -106,6 +107,7 @@ namespace Excellency.Services
                     {
                         Id = int.Parse(dr["Id"].ToString()),
                         Name = dr["EmployeeName"].ToString(),
+                        Period = dr["Period"].ToString(),
                         TotalScore = decimal.Parse(dr["TotalScore"].ToString()),
                         TotalWeight = decimal.Parse(dr["TotalWeight"].ToString()),
                         ConvertedScore = decimal.Parse(dr["ConvertedScore"].ToString()),
@@ -117,6 +119,48 @@ namespace Excellency.Services
             }
             return items;
             
+        }
+
+        public IEnumerable<AppraisalHistory> AppraisalHistories(int period, int id)
+        {
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandText = "[dbo].[spAppraisalHistory]";
+            cmd.Parameters.Clear();
+            cmd.Parameters.AddWithValue("@SeasonId", period);
+            cmd.Parameters.AddWithValue("@EmployeeId", id);
+            DataTable dt = SCObjects.ExecGetData(cmd, UserConnectionString);
+
+            List<AppraisalHistory> items = new List<AppraisalHistory>();
+            if (dt != null)
+            {
+                foreach (DataRow dr in dt.Rows)
+                {
+                    var item = new AppraisalHistory
+                    {
+                        Id = int.Parse(dr["Id"].ToString()),
+                        Period = dr["Period"].ToString(),
+                        Name = dr["EmployeeName"].ToString(),
+                        TotalScore = decimal.Parse(dr["TotalScore"].ToString()),
+                        TotalWeight = decimal.Parse(dr["TotalWeight"].ToString()),
+                        ConvertedScore = decimal.Parse(dr["ConvertedScore"].ToString()),
+                        WeightedScore = decimal.Parse(dr["WeightedScore"].ToString()),
+                        Percentage = decimal.Parse(dr["Percentage"].ToString()),
+                    };
+                    items.Add(item);
+                }
+            }
+            return items;
+        }
+
+        public IEnumerable<AccountItem> Accounts()
+        {
+            var items = _dbContext.Accounts.Where(a => a.IsDeactivated == false && a.IsDeleted == false)
+                .Select(a => new AccountItem
+                {
+                    Id = a.Id,
+                    Name = a.FirstName + " " + a.LastName
+                }).ToList();
+            return items;
         }
     }
 }

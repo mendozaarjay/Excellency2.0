@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Excellency.Controllers
 {
+    [SessionAuthorized]
     public class ReportController : Controller
     {
         private IReport _Services;
@@ -70,15 +71,49 @@ namespace Excellency.Controllers
                    Value = a.Id.ToString(),
                    Text = a.Title,
                }).ToList();
+            var accounts = _Services.Accounts()
+               .Select(a => new SelectListItem
+               {
+                   Value = a.Id.ToString(),
+                   Text = a.Name
+               }).ToList();
             var model = new EmployeePerformanceIndexViewModel
             {
                 Periods = periods,
+                Employees = accounts
+
             };
             return View(model);
         }
-        public IActionResult GetEmployeePerformance(int period)
+        public IActionResult GetEmployeePerformance(int period,int id)
         {
-            var items = _Services.EmployeePerformances(period, string.Empty);
+            var items = _Services.EmployeePerformances(period, id);
+            return Json(new { result = items });
+        }
+        public IActionResult AppraisalHistory()
+        {
+            var periods = _Services.EvaluationSeasons()
+                .Select(a => new SelectListItem
+                {
+                    Value = a.Id.ToString(),
+                    Text = a.Title,
+                }).ToList();
+            var accounts = _Services.Accounts()
+                .Select(a => new SelectListItem
+                {
+                    Value = a.Id.ToString(),
+                    Text = a.Name
+                }).ToList();
+            var model = new AppraisalHistoryIndexViewModel
+            {
+                Employees = accounts,
+                Periods = periods
+            };
+            return View(model);
+        }
+        public IActionResult GenerateAppraisal(int period,int id)
+        {
+            var items = _Services.AppraisalHistories(period, id);
             return Json(new { result = items });
         }
         public IActionResult KRAResult()

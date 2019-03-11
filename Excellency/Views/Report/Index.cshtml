@@ -81,11 +81,11 @@
                         var url = '';
 
                         if (data.result[i]['type'] == 'KRA') {
-                            url = 'http://localhost:50050/Report/PrintPerformanceAppraisal?id=' + data.result[i]['id']
+                            url = 'http://isuzueas1-001-site1.atempurl.com/Report/PrintPerformanceAppraisal?id=' + data.result[i]['id']
                             a = '<a href="' + url + '"  target="_blank" class="fa fa-newspaper-o">  </a>'
                         }
                         else {
-                            url = 'http://localhost:50050/Report/Printbehavioral?id=' + data.result[i]['id']
+                            url = 'http://isuzueas1-001-site1.atempurl.com/Report/Printbehavioral?id=' + data.result[i]['id']
                             a = '<a href="' + url + '"  target="_blank" class="fa fa-newspaper-o">  </a>'
                         }
                         html += `<tr>
