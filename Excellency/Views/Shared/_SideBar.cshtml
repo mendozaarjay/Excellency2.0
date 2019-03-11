@@ -58,7 +58,7 @@
                             }
                             @if (Model.UserAccess.PeerCriteria)
                             {
-                                <li><a asp-controller="PeerCriteria" asp-action="Index" class="">Peer Evaluation Criteria</a></li>
+                                <li><a asp-controller="CriteriaSetting" asp-action="Index" class="">Peer Evaluation Criteria</a></li>
                                 <li><a asp-controller="PeerAssignment" asp-action="Index" class="">Peer Assignment</a></li>
                             }
                             @if (Model.UserAccess.EmployeeKRAAssignment)
@@ -147,6 +147,15 @@
                     </div>
                 </li>
             }
+            <li>
+                <a href="#aboutus" data-toggle="collapse" class="collapsed"><i class="fa fa-info"></i> <span>About Us</span> <i class="icon-submenu lnr lnr-chevron-left"></i></a>
+                <div id="aboutus" class="collapse ">
+                    <ul class="nav">
+                        <li><a asp-controller="AboutUs" asp-action="Profile" class="">Company Profile</a></li>
+                        <li><a asp-controller="AboutUs" asp-action="OrganizationalChart" class="">Organizational Chart</a></li>
+                    </ul>
+                </div>
+            </li>
         </ul>
     </nav>
 </div>

@@ -56,5 +56,8 @@ namespace Excellency.Persistence
         public DbSet<Recommendation> Recommendations { get; set; }
         public DbSet<EvaluationSeason> EvaluationSeasons { get; set; }
         public DbSet<RecommendationAssignment> RecommendationAssignments { get; set; }
+
+        public DbSet<CriteriaHeader> CriteriaHeaders { get; set; }
+        public DbSet<CriteriaLine> CriteriaLines { get; set; }
     }
 }

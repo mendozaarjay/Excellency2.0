@@ -61,7 +61,7 @@ namespace Excellency.Services
                 .Include(a => a.BehavioralFactor)
                 .Include(a => a.EmployeeAssignment.Employee)
                 .Include(a => a.EvaluationSeason)
-                .Where(a => a.EmployeeAssignment.Employee.Id == id && a.EmployeeAssignment.IsDeleted == false && a.EvaluationSeason.Id == ActiveSeason().Id)
+                .Where(a => a.EmployeeAssignment.Employee.Id == id && a.EmployeeAssignment.IsDeleted == false && a.EvaluationSeason.Id == ActiveSeason().Id && a.IsDeleted == false)
                 .Select(a => new BehavioralFactor
                 {
                     Id = a.BehavioralFactor.Id,
