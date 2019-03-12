@@ -77,5 +77,15 @@ namespace Excellency.Services
             cmd.Parameters.AddWithValue("@QueryType", 4);
             return SCObjects.ExecGetData(cmd, UserConnectionString);
         }
+
+        public void Confirm(int id)
+        {
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandText = StoredProcedure;
+            cmd.Parameters.Clear();
+            cmd.Parameters.AddWithValue("@RecordId", id);
+            cmd.Parameters.AddWithValue("@QueryType", 5);
+            var result = SCObjects.ExecuteNonQuery(cmd, UserConnectionString);
+        }
     }
 }

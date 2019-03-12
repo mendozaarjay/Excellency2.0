@@ -1,0 +1,71 @@
+﻿@model Excellency.ViewModels.CriteriaEvaluationOverViewModel
+@{
+    ViewData["Title"] = "Overview";
+}
+
+<div class="panel panel-headline">
+    <div class="panel-heading">
+        <h3 class="panel-title">Evaluation for : @Model.Name</h3>
+    </div>
+    <div class="panel-body">
+        <p><strong>Title : </strong>@Model.Title</p>
+        <p><strong>Description : </strong>@Model.Description</p>
+        <p><strong>Weight : </strong>@Model.Weight</p>
+        <hr />
+        <br />
+        @if (!Model.IsPosted)
+        {
+            @if (Model.IsEvaluated)
+            {
+                <a role="button" class="btn btn-primary" asp-controller="CriteriaEvaluation" asp-action="Edit" asp-route-employeeid="@Model.EmployeeId">Edit</a>
+                <a role="button" class="btn btn-success" data-toggle="modal" data-target="#post" data-recordid="@Model.RecordId" data-employeeid="@Model.EmployeeId">Post</a>
+            }
+            else
+            {
+                <a role="button" class="btn btn-primary" asp-controller="CriteriaEvaluation" asp-action="Evaluate" asp-route-employeeid="@Model.EmployeeId">Evaluate</a>
+            }
+        }
+        else
+        {
+            <div class="alert alert-info alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+                <i class="fa fa-info-circle"></i> You have successfully posted this evaluation.
+            </div>
+        }
+    </div>
+</div>
+<div class="modal fade" id="post" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        @using (Html.BeginForm("Post", "CriteriaEvaluation"))
+        {
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Confirmation</h4>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="recordid" id="recordid" />
+                    <input type="hidden" name="employeeid" id="employeeid" />
+                    <p>Are you sure you want to post the current record?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-success">Post</button>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts{
+    <script type="text/javascript">
+       
+        $('#post').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget)
+            var recordid = button.data('recordid')
+            var employeeid = button.data('employeeid')
+            $(".modal-body #recordid").val(recordid)
+            $(".modal-body #employeeid").val(employeeid)
+        })
+    </script>
+}

@@ -32,6 +32,19 @@
                             <p><strong>Evaluation Date : </strong>@item.Header.EvaluationDate</p>
                             <p><strong>Status : </strong>@item.Header.Status</p>
                             <p><strong>Total Score : </strong>@total</p>
+                            <div>
+                                @if (item.Header.IsConfirmed)
+                                {
+                                    <div class="alert alert-info alert-dismissible" role="alert">
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                        <i class="fa fa-info-circle"></i> You have successfully confirmed this evaluation.
+                                    </div>
+                                }
+                                else
+                                {
+                                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#confirm" data-id="@item.Header.RecordId">Confirm</button>
+                                }
+                            </div>
                             <hr />
                             <div class="table-responsive">
                                 <table class="table table-condensed">
@@ -75,7 +88,21 @@
                             <p><strong>Evaluation Date : </strong>@item.Header.EvaluationDate</p>
                             <p><strong>Status : </strong>@item.Header.Status</p>
                             <p><strong>Total Score : </strong>@total</p>
+                            <div>
+                                @if (item.Header.IsConfirmed)
+                                {
+                                    <div class="alert alert-info alert-dismissible" role="alert">
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                        <i class="fa fa-info-circle"></i> You have successfully confirmed this evaluation.
+                                    </div>
+                                }
+                                else
+                                {
+                                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#confirm" data-id="@item.Header.RecordId">Confirm</button>
+                                }
+                            </div>
                             <hr />
+
                             <div class="table-responsive">
                                 <table class="table table-condensed">
                                     <thead>
@@ -119,3 +146,36 @@
     </div>
 </div>
 
+<div class="modal fade" id="confirm" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        @using (Html.BeginForm("Confirm", "EvaluationInformation"))
+        {
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Confirmation</h4>
+                </div>
+                <div class="modal-body">
+                   
+                    <input type="hidden" name="id" id="id" />
+                    <p>Are you sure you want to post the current record?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-success">Confirm</button>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts{
+    <script type="text/javascript">
+
+        $('#confirm').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget)
+            var id = button.data('id')
+            $(".modal-body #id").val(id)
+        })
+    </script>
+}

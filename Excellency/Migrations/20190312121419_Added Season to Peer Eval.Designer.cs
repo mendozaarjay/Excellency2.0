@@ -4,14 +4,16 @@ using Excellency.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Excellency.Migrations
 {
     [DbContext(typeof(EASDbContext))]
-    partial class EASDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190312121419_Added Season to Peer Eval")]
+    partial class AddedSeasontoPeerEval
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1199,8 +1201,6 @@ namespace Excellency.Migrations
                     b.Property<int?>("FirstApproverId");
 
                     b.Property<string>("FirstApproverRemarks");
-
-                    b.Property<bool>("IsConfirmed");
 
                     b.Property<bool>("IsDeleted");
 

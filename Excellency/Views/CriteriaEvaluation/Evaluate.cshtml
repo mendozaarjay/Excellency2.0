@@ -1,0 +1,47 @@
+﻿@model Excellency.ViewModels.CreatePeerEvaluationViewModel
+@{
+    ViewData["Title"] = "Evaluate";
+}
+
+<div class="panel panel-headline">
+    <div class="panel-heading">
+        <h3 class="panel-title">Evaluation for : @Model.Name</h3>
+    </div>
+    <div class="panel-body">
+        <p><strong>Title : </strong>@Model.Header.Title</p>
+        <p><strong>Description : </strong>@Model.Header.Description</p>
+        <p><strong>Weight : </strong>@Model.Header.Weight</p>
+        <hr />
+
+        <div>
+            @using (Html.BeginForm("Save", "CriteriaEvaluation"))
+            {
+                @Html.AntiForgeryToken()
+                int count = 0;
+                @Html.HiddenFor(m => m.EmployeeId)
+                @Html.HiddenFor(m => m.Header.Id)
+                @foreach (var item in Model.LineItems)
+                {
+
+                    <div class="form-group form-horizontal">
+                        @Html.HiddenFor(m => m.LineItems[count].Id)
+                        <p><strong>Title : </strong>@item.Title</p>
+                        <p><strong>Description : </strong>@item.Description</p>
+                        <p><strong>Weight : </strong>@item.Weight</p>
+                        <p><i>Note : 1 is the lowest score and @item.Weight is the highest score.</i></p>
+                        @Html.ValidationMessageFor(m => item.Score)
+                        @Html.DropDownListFor(m => m.LineItems[count].Score, Enumerable.Range(1, int.Parse(item.Weight.ToString())).Select(x => new SelectListItem { Text = x.ToString(), Value = x.ToString() }), new { @class = "form-control" })
+                        @Html.LabelFor(m => m.LineItems[count].Comment)
+                        @Html.TextAreaFor(m => m.LineItems[count].Comment, new { @class = "form-control" })
+                    </div>
+                    <hr />
+                    count++;
+                }
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            }
+        </div>
+
+    </div>
+</div>

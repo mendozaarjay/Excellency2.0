@@ -25,6 +25,8 @@ namespace Excellency.Models
 
         public virtual EvaluationSeason EvaluationSeason { get; set; }
 
+        public bool IsConfirmed { get; set; } = false;
+
         public bool IsExpired { get; set; } = false;
         public bool IsDeleted { get; set; } = false;
         public string CreatedBy { get; set; }

@@ -45,6 +45,7 @@ namespace Excellency.Controllers
                         Description = dr["Description"].ToString(),
                         Weight = dr["Weight"].ToString(),
                         Status = dr["Status"].ToString(),
+                        IsConfirmed = dr["IsConfirmed"].Equals("1") ? true : false,
                     };
                     item.Header = headeritem;
                     var litems = _Services.GetAllBehavioralRecordPerId(headeritem.RecordId);
@@ -83,6 +84,7 @@ namespace Excellency.Controllers
                         Description = dr["Description"].ToString(),
                         Weight = dr["Weight"].ToString(),
                         Status = dr["Status"].ToString(),
+                        IsConfirmed = dr["IsConfirmed"].Equals("1") ? true : false,
                     };
                     item.Header = headeritem;
                     var litems = _Services.GetAllKRARecordPerId(headeritem.RecordId);
@@ -126,6 +128,11 @@ namespace Excellency.Controllers
                 Name = _Services.Name(userId)
             };
             return View(model);
+        }
+        public IActionResult Confirm(int id)
+        {
+            _Services.Confirm(id);
+            return RedirectToAction("Index");
         }
     }
 }

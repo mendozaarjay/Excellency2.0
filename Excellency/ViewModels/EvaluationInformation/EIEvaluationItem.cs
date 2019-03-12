@@ -10,5 +10,6 @@
         public string Description { get; set; }
         public string Weight { get; set; }
         public string Status { get; set; }
+        public bool IsConfirmed { get; set; }
     }
 }

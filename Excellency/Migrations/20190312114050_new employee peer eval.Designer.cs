@@ -4,14 +4,16 @@ using Excellency.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Excellency.Migrations
 {
     [DbContext(typeof(EASDbContext))]
-    partial class EASDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190312114050_new employee peer eval")]
+    partial class newemployeepeereval
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -392,8 +394,6 @@ namespace Excellency.Migrations
 
                     b.Property<DateTime>("DateCreated");
 
-                    b.Property<int?>("PeriodId");
-
                     b.Property<int?>("RateeId");
 
                     b.Property<int?>("RaterId");
@@ -403,8 +403,6 @@ namespace Excellency.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CriteriaId");
-
-                    b.HasIndex("PeriodId");
 
                     b.HasIndex("RateeId");
 
@@ -1200,8 +1198,6 @@ namespace Excellency.Migrations
 
                     b.Property<string>("FirstApproverRemarks");
 
-                    b.Property<bool>("IsConfirmed");
-
                     b.Property<bool>("IsDeleted");
 
                     b.Property<bool>("IsExpired");
@@ -1522,10 +1518,6 @@ namespace Excellency.Migrations
                     b.HasOne("Excellency.Models.CriteriaHeader", "Criteria")
                         .WithMany()
                         .HasForeignKey("CriteriaId");
-
-                    b.HasOne("Excellency.Models.EvaluationSeason", "Period")
-                        .WithMany()
-                        .HasForeignKey("PeriodId");
 
                     b.HasOne("Excellency.Models.Account", "Ratee")
                         .WithMany()

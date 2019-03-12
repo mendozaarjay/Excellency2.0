@@ -1,0 +1,41 @@
+﻿@model Excellency.ViewModels.CriteriaEvaluationIndexViewModel
+@{
+    ViewData["Title"] = "Index";
+}
+
+<div class="panel panel-headline">
+    <div class="panel-heading">
+        <h3 class="panel-title">Peer Evaluation</h3>
+        <p class="panel-subtitle">Evaluation for co-associates.</p>
+    </div>
+    <div class="panel-body">
+        @using (Html.BeginForm("Overview", "CriteriaEvaluation", FormMethod.Get))
+        {
+            <div class="form-group">
+                <label form="employee">Co-associate</label>
+                <select name="employee" id="employee" class="form-control">
+                    @foreach(var item in Model.Employees)
+                    {
+                        <option value="@item.Value">@item.Text</option>
+                    }
+                </select>
+            </div>
+            <button type="submit" id="btnsubmit" class="btn btn-primary">Evaluate</button>
+        }
+    </div>
+</div>
+@section Scripts{ 
+    <script type="text/javascript">
+        $('#employee').val('');
+        $('#btnsubmit').prop("disabled", true);
+        $('#employee').on('change', function () {
+            var item = $('#employee').val();
+            if (item.length > 0) {
+                $('#btnsubmit').prop("disabled", false);
+            }
+            else {
+                $('#btnsubmit').prop("disabled", true);
+            }
+        });
+    </script>
+}

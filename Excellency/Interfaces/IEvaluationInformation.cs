@@ -14,5 +14,6 @@ namespace Excellency.Interfaces
         DataTable GetAllBehavioralRecordPerId(int recordid);
         DataTable GetApprovalLevel(int id);
         string Name(int id);
+        void Confirm(int id);
     }
 }

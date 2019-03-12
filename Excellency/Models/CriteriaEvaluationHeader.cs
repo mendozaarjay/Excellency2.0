@@ -10,6 +10,6 @@ namespace Excellency.Models
         public CriteriaHeader Criteria { get; set; }
         public DateTime DateCreated { get; set; }
         public Status Status { get; set; }
-
+        public EvaluationSeason Period { get; set; }
     }
 }
