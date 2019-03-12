@@ -59,5 +59,9 @@ namespace Excellency.Persistence
 
         public DbSet<CriteriaHeader> CriteriaHeaders { get; set; }
         public DbSet<CriteriaLine> CriteriaLines { get; set; }
+
+        public DbSet<CriteriaEvaluationHeader> CriteriaEvaluationHeaders { get; set; }
+        public DbSet<CriteriaEvaluationLine> CriteriaEvaluationLines { get; set; }
+        public DbSet<EmployeeCriteriaAssignment> EmployeeCriteriaAssignments { get; set; }
     }
 }

@@ -1,0 +1,107 @@
+﻿@model Excellency.ViewModels.CriteriaAssignItemViewModel
+@{
+    ViewData["Title"] = "Assign";
+}
+
+<div class="panel panel-headline">
+    <div class="panel-heading">
+        <h3 class="panel-title">@Model.Title</h3>
+        <p class="panel-subtitle">@Model.Description - <i>Weigh : @Model.Weight</i></p>
+    </div>
+    <div class="panel-body">
+        <div>
+            @using (Html.BeginForm("Save", "EmployeeCriteria"))
+            {
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="criteriaid" id="criteriaid" value="@Model.Id" />
+                <div class="form-group">
+                    <label for="period">Employee</label>
+                    <select name="employee" id="employee" class="chosen-select form-control" data-placeholder="Select Employee">
+                        @foreach (var item in Model.Employees)
+                        {
+                            <option value="@item.Value">@item.Text</option>
+                        }
+                    </select>
+                </div>
+                <button id="btnadd" type="submit" class="btn btn-primary">Add Employee</button>
+            }
+        </div>
+        <hr />
+        <br />
+        <div class="table-responsive">
+            <table class="table table-condensed">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Items)
+                    {
+                        <tr>
+                            <td>@item.Name</td>
+                            <td><a class="fa fa-trash text-danger" data-toggle="modal" data-target="#delete" data-id="@item.Id" data-criteriaid="@Model.Id"></a></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="delete" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        @using (Html.BeginForm("Remove", "EmployeeCriteria"))
+        {
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Confirmation</h4>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="id" id="id" />
+                    <input type="hidden" name="criteriaid" id="criteriaid" />
+                    <p>Are you sure you want to delete the current record?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+@section Scripts{
+    <script type="text/javascript">
+
+
+        $('#employee').val('').trigger("chosen:updated");
+        $('#btnadd').prop("disabled", true);
+
+        $('#employee').on('change', function () {
+            var employee = $('#employee').val();
+            if (employee.length > 0) {
+                $('#btnadd').prop("disabled", false);
+            }
+            else {
+                $('#btnadd').prop("disabled", true);
+            }
+        });
+
+        $(function () {
+            $(".chosen-select").chosen(
+
+            );
+        });
+
+        $('#delete').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget)
+            var id = button.data('id')
+            var criteriaid = button.data('criteriaid')
+            $(".modal-body #id").val(id)
+            $(".modal-body #criteriaid").val(criteriaid)
+        })
+
+    </script>
+}
