@@ -1,0 +1,46 @@
+﻿@model Excellency.ViewModels.GraphicalDistributionViewModel
+@{
+    ViewData["Title"] = "Graph";
+}
+
+<div class="panel panel-headline">
+    <div class="panel-heading">
+        <h3 class="panel-title">Graphical Distribution</h3>
+    </div>
+    <div class="panel-body">
+        <form>
+            <div class="form-group">
+                <label for="period">Period</label>
+                <select name="period" id="period" class="form-control">
+                    @foreach (var item in Model.Periods)
+                    {
+                        <option value="@item.Value">@item.Text</option>
+                    }
+                </select>
+            </div>
+            <button type="button" class="btn btn-primary" id="btnview">View</button>
+        </form>
+    </div>
+</div>
+@section Scripts{
+    <script type="text/javascript">
+        $('#period').val('');
+        $('#btnview').prop("disabled", true);
+        $('#period').on('change', function () {
+            var item = $('#period').val();
+            if (item.length > 0) {
+                $('#btnview').prop("disabled", false);
+            }
+            else {
+                $('#btnview').prop("disabled", true);
+            }
+        });
+        $('#btnview').on('click', function () {
+            var item = $('#period').val();
+            var url = 'http://isuzueas1-001-site1.atempurl.com/Report/PrintGraphicalDistribution?period=' + item;
+            window.open(url, '_blank');
+            return false;
+        })
+    </script>
+}
+

@@ -1,0 +1,45 @@
+﻿@model Excellency.ViewModels.GraphicalDistributionViewModel
+@{
+    ViewData["Title"] = "GraphicalDistribution";
+}
+
+<div class="panel panel-headline">
+    <div class="panel-heading">
+        <h3 class="panel-title">Graphical Distribution</h3>
+    </div>
+    <div class="panel-body">
+        <form>
+            <div class="form-group">
+                <label for="period">Period</label>
+                <select name="period" id="period">
+                    @foreach(var item in Model.Periods)
+                    {
+                        <option value="@item.Value">@item.Text</option>
+                    }
+                </select>
+            </div>
+            <button type="button" class="btn btn-primary" id="btnview">View</button>
+        </form>
+    </div>
+</div>
+@section Scripts{ 
+    <script type="text/javascript">
+        $('#period').val('');
+        $('#btnview').prop("disabled", true);
+        $('#period').on('change', function () {
+            var item = $('#period').val();
+            if (item.length > 0) {
+                $('#btnview').prop("disabled", false);
+            }
+            else {
+                $('#btnview').prop("disabled", true);
+            }
+        });
+        $('#btnview').on('click', function () {
+            var item = $('#period').val();
+            window.location.href = 'http://localhost:50050/Report/PrintGraphicalDistribution?period=' + item;
+            return false;
+        })
+    </script>
+}
+

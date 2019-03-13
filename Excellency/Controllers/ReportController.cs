@@ -164,6 +164,34 @@ namespace Excellency.Controllers
             };
             return View(model);
         }
+        public IActionResult GraphicalDistribution()
+        {
+            var periods = _Services.EvaluationSeasons()
+                .Select(a => new SelectListItem
+                {
+                    Value = a.Id.ToString(),
+                    Text = a.Title,
+                }).ToList();
+            var model = new GraphicalDistributionViewModel
+            {
+                Periods = periods
+            };
+            return View(model);
+        }
+        public IActionResult Graph()
+        {
+            var periods = _Services.EvaluationSeasons()
+                .Select(a => new SelectListItem
+                {
+                    Value = a.Id.ToString(),
+                    Text = a.Title,
+                }).ToList();
+            var model = new GraphicalDistributionViewModel
+            {
+                Periods = periods
+            };
+            return View(model);
+        }
 
     }
 }
