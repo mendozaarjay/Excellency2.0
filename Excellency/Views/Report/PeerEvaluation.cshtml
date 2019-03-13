@@ -1,0 +1,115 @@
+﻿@model Excellency.ViewModels.PeerEvaluationResultViewModel
+@{
+    ViewData["Title"] = "PeerEvaluation";
+}
+
+<div class="panel panel-headline">
+    <div class="panel-heading">
+        <h3 class="panel-title">Appraisal History</h3>
+    </div>
+    <div class="panel-body">
+        <div class="row">
+            <form>
+                <div class="col-md-6">
+                    <div class="form-group small">
+                        <label for="period">Period</label>
+                        <select name="period" id="period" class="form-control">
+                            <option value="0">--Select All--</option>
+                            @foreach (var item in Model.Periods)
+                            {
+                                <option value="@item.Value">@item.Text</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="period">Employee</label>
+                        <select name="employee" id="employee" class="chosen-select form-control" data-placeholder="Select Employee">
+                            <option value="0">--Select All--</option>
+                            @foreach (var item in Model.Employees)
+                            {
+                                <option value="@item.Value">@item.Text</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <div class="col-md-6">
+                    <button type="button" id="generate" class="btn btn-success">Generate</button>
+                </div>
+            </form>
+        </div>
+        <hr />
+        <div class="table-responsive">
+            <table id="result" class="table table-condensed">
+                <thead>
+                    <tr>
+                        <th>Period</th>
+                        <th>Name</th>
+                        <th>Score</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="resultlist"></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script type="text/javascript">
+        //$('#employee').val('').trigger("chosen:updated");
+        //$('#generate').prop("disabled", true);
+
+        //$('#employee').on('change', function () {
+        //    var employee = $('#employee').val();
+        //    if (employee.length > 0) {
+        //        $('#generate').prop("disabled", false);
+        //    }
+        //    else {
+        //        $('#generate').prop("disabled", true);
+        //    }
+        //});
+
+        $(function () {
+            $(".chosen-select").chosen(
+
+            );
+        });
+
+        //Generate
+        $('#generate').on('click', function () {
+            var employee = $('#employee').val();
+            var period = $('#period').val();
+            if (employee.length > 0 && period.length > 0) {
+                $.ajax({
+                    url: 'PeerEvaluationSummary',
+                    data: { 'period': period, 'id': employee },
+                    type: 'GET',
+                    dataType: 'JSON',
+                    success: function (data) {
+                        $('#resultlist').empty();
+                        var len = data.result.length;
+                        var html = '';
+                        for (var i = 0; i < len; i++) {
+
+                            var id = data.result[i]['id'];
+                            var url = '<a class="fa fa-newspaper-o" href="/Report/ViewDetailed/period='  +period+ '&id=' +id + '"></a>'
+                            html += `<tr>
+                                    <td>` + data.result[i]['period'] + `</td>
+                                    <td>` + data.result[i]['name'] + `</td>
+                                    <td>` + data.result[i]['score'] + `</td>
+                                    <td>`+url+`</td>
+                                    </tr>`
+                        }
+                        $('#result tbody').append(html);
+
+                    }
+                });
+            }
+        });
+
+    </script>
+}

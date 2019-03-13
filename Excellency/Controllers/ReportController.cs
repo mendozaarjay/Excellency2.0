@@ -116,9 +116,54 @@ namespace Excellency.Controllers
             var items = _Services.AppraisalHistories(period, id);
             return Json(new { result = items });
         }
-        public IActionResult KRAResult()
+
+        public IActionResult PeerEvaluation()
         {
-            return View();
+            var periods = _Services.EvaluationSeasons()
+                .Select(a => new SelectListItem
+                {
+                    Value = a.Id.ToString(),
+                    Text = a.Title,
+                }).ToList();
+            var accounts = _Services.Accounts()
+                .Select(a => new SelectListItem
+                {
+                    Value = a.Id.ToString(),
+                    Text = a.Name
+                }).ToList();
+            var model = new PeerEvaluationResultViewModel
+            {
+                Employees = accounts,
+                Periods = periods
+            };
+            return View(model);
         }
+        public IActionResult PeerEvaluationSummary(int period, int id)
+        {
+            var items = _Services.PeerRatings(period, id);
+            return Json(new { result = items });
+        }
+        public IActionResult PeerDetailedRating(int period, int id)
+        {
+            var items = _Services.PeerDetailedRating(period, id);
+            return Json(new { result = items });
+        }
+        [HttpGet]
+        public IActionResult ViewDetailed(int period, int id)
+        {
+            var items = _Services.PeerDetailedRating(period, id);
+            var header = _Services.EmployeeCriteria(period, id);
+            var model = new DetailedViewModel
+            {
+                Id = id,
+                Name = _Services.NameById(id),
+                Title = header.Criteria.Title,
+                Description = header.Criteria.Description,
+                Weight = header.Criteria.Weight,
+                Items = items,
+            };
+            return View(model);
+        }
+
     }
 }

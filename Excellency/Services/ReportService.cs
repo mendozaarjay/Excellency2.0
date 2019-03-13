@@ -162,5 +162,80 @@ namespace Excellency.Services
                 }).ToList();
             return items;
         }
+
+        public IEnumerable<PeerRatingSummary> PeerRatings(int period, int employee)
+        {
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandText = "[dbo].[spPeerEvaluationReport]";
+            cmd.Parameters.Clear();
+            cmd.Parameters.AddWithValue("@Period", period);
+            cmd.Parameters.AddWithValue("@Id", employee);
+            cmd.Parameters.AddWithValue("@QueryType", 0);
+            DataTable dt = SCObjects.ExecGetData(cmd, UserConnectionString);
+            List<PeerRatingSummary> items = new List<PeerRatingSummary>();
+
+            if(dt != null)
+            {
+                foreach(DataRow dr in dt.Rows)
+                {
+                    var item = new PeerRatingSummary
+                    {
+                        Id = int.Parse(dr["RateeId"].ToString()),
+                        Period = dr["Period"].ToString(),
+                        Name = dr["Name"].ToString(),
+                        Score = decimal.Parse(dr["Average"].ToString()),
+                    };
+                    items.Add(item);
+                }
+            }
+
+            return items;
+        }
+
+        public IEnumerable<PeerRatingDetailed> PeerDetailedRating(int period, int employee)
+        {
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandText = "[dbo].[spPeerEvaluationReport]";
+            cmd.Parameters.Clear();
+            cmd.Parameters.AddWithValue("@Period", period);
+            cmd.Parameters.AddWithValue("@Id", employee);
+            cmd.Parameters.AddWithValue("@QueryType", 1);
+            DataTable dt = SCObjects.ExecGetData(cmd, UserConnectionString);
+            List<PeerRatingDetailed> items = new List<PeerRatingDetailed>();
+
+            if (dt != null)
+            {
+                foreach (DataRow dr in dt.Rows)
+                {
+                    var item = new PeerRatingDetailed
+                    {
+                        Id = int.Parse(dr["Id"].ToString()),
+                        Period = dr["Period"].ToString(),
+                        Name = dr["Name"].ToString(),
+                        Rater = dr["Rater"].ToString(),
+                        Score = decimal.Parse(dr["Score"].ToString()),
+                        Weight = decimal.Parse(dr["Weight"].ToString()),
+                        TotalScore = decimal.Parse(dr["Average"].ToString()),
+                    };
+                    items.Add(item);
+                }
+            }
+
+            return items;
+        }
+
+        public EmployeeCriteriaAssignment EmployeeCriteria(int period, int id)
+        {
+            return _dbContext.EmployeeCriteriaAssignments
+                .Include(a => a.Employee)
+                .Include(a => a.Criteria)
+                .FirstOrDefault(a => a.Employee.Id == id && a.Period.Id == period && a.IsDeleted == false);
+        }
+
+        public string NameById(int id)
+        {
+            var item = _dbContext.Accounts.FirstOrDefault(a => a.Id == id);
+            return item.FirstName + " " + item.LastName;
+        }
     }
 }

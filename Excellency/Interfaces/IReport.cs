@@ -13,5 +13,10 @@ namespace Excellency.Interfaces
         IEnumerable<EmployeePerformance> EmployeePerformances(int period, int id);
         IEnumerable<AppraisalHistory> AppraisalHistories(int period, int id);
         IEnumerable<AccountItem> Accounts();
+
+        IEnumerable<PeerRatingSummary> PeerRatings(int period, int employee);
+        IEnumerable<PeerRatingDetailed> PeerDetailedRating(int period, int employee);
+        EmployeeCriteriaAssignment EmployeeCriteria(int period, int id);
+        string NameById(int id);
     }
 }

@@ -1,0 +1,44 @@
+﻿@model Excellency.ViewModels.DetailedViewModel
+@{
+    ViewData["Title"] = "ViewDetailed";
+}
+
+<div class="panel panel-headline">
+    <div class="panel-heading">
+        <h3 class="panel-title">@Model.Name</h3>
+    </div>
+    <div class="panel-body">
+        <p> <strong>Title : </strong>@Model.Title</p>
+        <p> <strong>Description : </strong>@Model.Description</p>
+        <p> <strong>Weight : </strong>@Model.Weight</p>
+        <hr />
+        <div class="table-responsive">
+            <table class="table table-condensed">
+                <thead>
+                    <tr>
+                        <th>Period</th>
+                        <th>Rater</th>
+                        <th>Name</th>
+                        <th>Weight</th>
+                        <th>Score</th>
+                        <th>Total Score</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Items)
+                    {
+                    <tr>
+                        <td>@item.Period</td>
+                        <td>@item.Rater</td>
+                        <td>@item.Name</td>
+                        <td>@item.Weight</td>
+                        <td>@item.Score</td>
+                        <td>@item.TotalScore</td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
