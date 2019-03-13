@@ -9,14 +9,16 @@
     </div>
     <div class="panel-body">
         <form>
-            <div class="form-group">
-                <label for="period">Period</label>
-                <select name="period" id="period" class="form-control">
-                    @foreach (var item in Model.Periods)
-                    {
-                        <option value="@item.Value">@item.Text</option>
-                    }
-                </select>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="period">Period</label>
+                    <select name="period" id="period" class="form-control">
+                        @foreach (var item in Model.Periods)
+                        {
+                            <option value="@item.Value">@item.Text</option>
+                        }
+                    </select>
+                </div>
             </div>
             <button type="button" class="btn btn-primary" id="btnview">View</button>
         </form>
