@@ -1,11 +1,11 @@
 ﻿@model Excellency.ViewModels.PeerEvaluationResultViewModel
 @{
-    ViewData["Title"] = "PeerEvaluation";
+    ViewData["Title"] = "Peer Evaluation";
 }
 
 <div class="panel panel-headline">
     <div class="panel-heading">
-        <h3 class="panel-title">Appraisal History</h3>
+        <h3 class="panel-title">Peer Evaluation</h3>
     </div>
     <div class="panel-body">
         <div class="row">
@@ -14,7 +14,6 @@
                     <div class="form-group small">
                         <label for="period">Period</label>
                         <select name="period" id="period" class="form-control">
-                            <option value="0">--Select All--</option>
                             @foreach (var item in Model.Periods)
                             {
                                 <option value="@item.Value">@item.Text</option>
@@ -27,7 +26,6 @@
                     <div class="form-group">
                         <label for="period">Employee</label>
                         <select name="employee" id="employee" class="chosen-select form-control" data-placeholder="Select Employee">
-                            <option value="0">--Select All--</option>
                             @foreach (var item in Model.Employees)
                             {
                                 <option value="@item.Value">@item.Text</option>
@@ -96,7 +94,7 @@
                         for (var i = 0; i < len; i++) {
 
                             var id = data.result[i]['id'];
-                            var url = '<a class="fa fa-newspaper-o" href="/Report/ViewDetailed/period='  +period+ '&id=' +id + '"></a>'
+                            var url = '<a class="fa fa-newspaper-o" href="/Report/ViewDetailed?period='  +period+ '&id=' +id + '"></a>'
                             html += `<tr>
                                     <td>` + data.result[i]['period'] + `</td>
                                     <td>` + data.result[i]['name'] + `</td>
