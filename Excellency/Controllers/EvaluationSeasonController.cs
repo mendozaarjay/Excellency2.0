@@ -83,5 +83,68 @@ namespace Excellency.Controllers
             _Services.SetActive(id);
             return RedirectToAction("Index");
         }
+        public IActionResult Create()
+        {
+            var model = new EvaluationPeriodItem();
+            return View(model);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Create(EvaluationPeriodItem model)
+        {
+            var userId = int.Parse(HttpContext.Session.GetString("UserId"));
+            if (ModelState.IsValid)
+            {
+                var item = new EvaluationSeason
+                {
+                    Id = 0,
+                    Title = model.Title,
+                    Remarks = model.Remarks,
+                    StartDate = model.StartDate,
+                    EndDate = model.EndDate,
+                };
+                _Services.Save(item, userId);
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                return View(model);
+            }
+        }
+
+        [HttpGet]
+        public IActionResult Edit(int id)
+        {
+            var model = new EvaluationPeriodItem();
+            var item = _Services.EvaluationSeasonById(id);
+            model.Id = item.Id;
+            model.Title = item.Title;
+            model.Remarks = item.Remarks;
+            model.StartDate = item.StartDate;
+            model.EndDate = item.EndDate;
+            return View(model);
+        }
+        [HttpPost]
+        public IActionResult Edit(EvaluationPeriodItem model)
+        {
+            var userId = int.Parse(HttpContext.Session.GetString("UserId"));
+            if (ModelState.IsValid)
+            {
+                var item = new EvaluationSeason
+                {
+                    Id = model.Id,
+                    Title = model.Title,
+                    Remarks = model.Remarks,
+                    StartDate = model.StartDate,
+                    EndDate = model.EndDate,
+                };
+                _Services.Save(item, userId);
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                return View(model);
+            }
+        }
     }
 }

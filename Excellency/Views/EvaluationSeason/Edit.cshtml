@@ -1,0 +1,50 @@
+﻿@model Excellency.ViewModels.EvaluationPeriodItem
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<div class="panel panel-headline">
+    <div class="panel-heading">
+        <h3 class="panel-title">Evaluation Period</h3>
+    </div>
+    <div class="panel-body">
+        <div class="col-md-6">
+            @using (Html.BeginForm("Edit", "EvaluationSeason"))
+            {
+                @Html.AntiForgeryToken()
+                <div class="form-group">
+                    @Html.ValidationSummary()
+                </div>
+                @Html.HiddenFor(m => m.Id)
+                <div class="form-group">
+                    <label for="title">Title</label>
+                    @Html.TextBoxFor(m => m.Title, new { @class = "form-control" })
+                </div>
+                <div class="form-group">
+                    <label for="remarks">Remarks</label>
+                    @Html.TextAreaFor(m => m.Remarks, new { @class = "form-control" })
+                </div>
+                <div class="form-group">
+                    <label for="startdate">Start Date</label>
+                    @Html.TextBoxFor(m => m.StartDate, "{0:MM/dd/yyyy}", new { @class = "form-control" })
+                </div>
+                <div class="form-group">
+                    <label for="enddate">End</label>
+                    @Html.TextBoxFor(m => m.EndDate, "{0:MM/dd/yyyy}", new { @class = "form-control" })
+                </div>
+                <button type="submit" class="btn btn-primary">Save</button>
+                <br />
+                <br />
+                <br />
+            }
+        </div>
+    </div>
+</div>
+@section Scripts{
+    <script type="text/javascript">
+        $('#StartDate').datepicker();
+        $('#EndDate').datepicker();
+    </script>
+
+
+}

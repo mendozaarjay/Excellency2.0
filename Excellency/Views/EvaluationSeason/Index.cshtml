@@ -7,7 +7,7 @@
     <div class="panel-heading">
         <h3 class="panel-title">Evaluation Period</h3>
         <div class="right">
-            <button type="button" data-toggle="modal" data-target="#addnew"><i class="fa fa-plus"></i></button>
+            <a asp-controller="EvaluationSeason" asp-action="Create" class="fa fa-plus"></a>
         </div>
     </div>
     <div class="panel-body">
@@ -42,7 +42,7 @@
                             <td><span><label class="label label-warning">Not Active</label></span></td>
                         }
                         <td class="text-center"><a class="fa fa-trash text-danger" data-toggle="modal" data-target="#delete" data-id="@item.Id"></a></td>
-                        <td class="text-center"><a class="fa fa-pencil text-primary" data-toggle="modal" data-target="#edit" data-id="@item.Id" data-title="@item.Title" data-remarks="@item.Remarks" data-startdate="@item.StartDate.ToString("yyyy-MM-dd")" data-enddate="@item.EndDate.ToString("yyyy-MM-dd")" data-createdby="@item.CreatedBy" data-creationdate="@item.CreationDate"> </a></td>
+                        <td class="text-center"><a class="fa fa-pencil text-primary" asp-controller="EvaluationSeason" asp-action="Edit" asp-route-id="@item.Id"> </a></td>
                         <td class="text-center"><a class="fa fa-check-circle text-success" data-toggle="modal" data-target="#setactive" data-id="@item.Id"></a></td>
                     </tr>
                     }

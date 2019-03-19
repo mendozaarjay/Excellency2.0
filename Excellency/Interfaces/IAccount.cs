@@ -11,7 +11,7 @@ namespace Excellency.Interfaces
         Account GetAccountById(int id);
         void RemoveById(int Id);
 
-        void Save(Account account, string UserId);
+        void Save(Account account,List<int> userTypes, string UserId);
         string NextEmployeeNo();
 
         IEnumerable<Company> Companies();
@@ -19,12 +19,15 @@ namespace Excellency.Interfaces
         IEnumerable<Department> Departments();
         IEnumerable<Position> Positions();
         IEnumerable<EmployeeCategory> Categories();
+        IEnumerable<UserType> UserTypes();
+
 
         Company GetCompanyById(int id);
         Branch GetBranchById(int id);
         Department GetDepartmentById(int id);
         Position GetPositionById(int id);
         EmployeeCategory GetCategoryById(int id);
+        UserType UserTypeById(int id);
 
         string GetUserId(Account account);
 

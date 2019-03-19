@@ -61,6 +61,8 @@ namespace Excellency
             services.AddScoped<IEmployeeCriteria, EmployeeCriteriaService>();
             services.AddScoped<ICriteriaEvaluation, CriteriaEvaluationService>();
             services.AddScoped<IReport, ReportService>();
+            services.AddScoped<IUserType, UserTypeService>();
+            services.AddScoped<IPositionLevel, PositionLevelService>();
             services.AddDbContext<EASDbContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("ExcellencyConnection")));
 

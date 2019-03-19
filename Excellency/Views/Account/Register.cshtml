@@ -78,6 +78,17 @@
                         @Html.LabelFor(m => m.Category)
                         @Html.DropDownListFor(m => m.Category, Model.Categories, "- Select Category -", new { @class = "form-control" })
                     </div>
+                    <div class="form-group">
+                        <label for="Types">User Type</label>
+                        @*<select multiple class="chosen-select form-control" data-placeholder="--Select Here--" name="types" id="types" data-val="true" data-val-required="User type is required.">
+                            @foreach (var item in Model.UserTypes)
+                            {
+                                <option value="@item.Value">@item.Text</option>
+                            }
+                        </select>*@
+                        @Html.DropDownListFor(m => m.Types, Model.UserTypes, new { @multiple ="multiple",@class="chosen-select form-control" })
+
+                    </div>
                 </div>
         </div>
             <div class="form-group">
@@ -90,6 +101,13 @@
 
 @section Scripts{ 
     <script type="text/javascript">
+        $(function () {
+
+            $(".chosen-select").chosen();
+            $('#Types').attr('data-placeholder', '--Select Here--');
+            $('#Types').trigger('chosen:updated');
+        });
+
         $('#Company').change(function () {
             var item = $('#Company').val();
             $('#Branch').empty();

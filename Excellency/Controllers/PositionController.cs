@@ -12,24 +12,34 @@ namespace Excellency.Controllers
 {
     public class PositionController : Controller
     {
-        private IPosition _Position;
+        private IPosition _Services;
 
         public PositionController(IPosition position)
         {
-            _Position = position;
+            _Services = position;
         }
         [SessionAuthorized]
         public IActionResult Index()
         {
-            var result = _Position.Positions().Select
+            var result = _Services.Positions().Select
                 (a => new PositionViewModel
                 {
                     Id = a.Id,
-                    Description = a.Description
+                    Description = a.Description,
+                    Level = a.PositionLevel.Id,
+                    LevelDescription = a.PositionLevel.Description,
+                }).ToList();
+            var levels = _Services.PositionLevels()
+                .Select(a => new PositionLevelItem
+                {
+                    Id = a.Id,
+                    Description = a.Description,
+                    Level = a.Level
                 }).ToList();
             var model = new PositionIndexViewModel
             {
-                Positions = result
+                Positions = result,
+                Levels = levels,
             };
             return View(model);
         }
@@ -37,38 +47,24 @@ namespace Excellency.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Save(PositionIndexViewModel model)
         {
-            var UserId = HttpContext.Session.GetString("UserId");
-            if (ModelState.IsValid)
+            var UserId = int.Parse(HttpContext.Session.GetString("UserId"));
+            if(ModelState.IsValid)
             {
-                var position = new Position
+                var item = new Position
                 {
                     Id = model.Id,
                     Description = model.Description,
+                    PositionLevel = _Services.PositionLevelById(model.Level),
                 };
-                if (model.Id.ToString().Equals("0"))
-                {
-                    position.CreatedBy = UserId;
-                    position.CreationDate = DateTime.Now;
-                    _Position.Add(position);
-                }
-                else
-                {
-                    position.ModifiedBy = UserId;
-                    position.ModifiedDate = DateTime.Now;
-                    _Position.Update(position);
-                }
-                return RedirectToAction("Index");
+                _Services.Save(item, UserId);
             }
-            else
-            {
-                return RedirectToAction("Index",model);
-            }
+            return RedirectToAction("Index");
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Delete(int id)
         {
-            _Position.RemoveById(id);
+            _Services.RemoveById(id);
             return RedirectToAction("Index");
         }
     }

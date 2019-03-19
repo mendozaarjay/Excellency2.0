@@ -1,16 +1,12 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
 
 namespace Excellency.Models
 {
-    public class Position
+    public class PositionLevel
     {
         public int Id { get; set; }
-
-        [Required]
-        [MaxLength(255)]
+        public int Level { get; set; }
         public string Description { get; set; }
-        public PositionLevel PositionLevel { get; set; }
         public bool IsDeleted { get; set; } = false;
         public string CreatedBy { get; set; }
         public DateTime CreationDate { get; set; }

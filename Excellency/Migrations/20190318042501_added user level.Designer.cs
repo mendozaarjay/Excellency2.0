@@ -4,14 +4,16 @@ using Excellency.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Excellency.Migrations
 {
     [DbContext(typeof(EASDbContext))]
-    partial class EASDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190318042501_added user level")]
+    partial class addeduserlevel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1123,38 +1125,13 @@ namespace Excellency.Migrations
 
                     b.Property<DateTime>("ModifiedDate");
 
-                    b.Property<int?>("PositionLevelId");
+                    b.Property<int?>("UserLevelId");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PositionLevelId");
+                    b.HasIndex("UserLevelId");
 
                     b.ToTable("Positions");
-                });
-
-            modelBuilder.Entity("Excellency.Models.PositionLevel", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("CreatedBy");
-
-                    b.Property<DateTime>("CreationDate");
-
-                    b.Property<string>("Description");
-
-                    b.Property<bool>("IsDeleted");
-
-                    b.Property<int>("Level");
-
-                    b.Property<string>("ModifiedBy");
-
-                    b.Property<DateTime>("ModifiedDate");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("PositionLevels");
                 });
 
             modelBuilder.Entity("Excellency.Models.Rating", b =>
@@ -1458,36 +1435,7 @@ namespace Excellency.Migrations
                     b.ToTable("Statuses");
                 });
 
-            modelBuilder.Entity("Excellency.Models.UserAccessType", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int?>("AccountId");
-
-                    b.Property<string>("CreatedBy");
-
-                    b.Property<DateTime>("CreationDate");
-
-                    b.Property<bool>("IsDeleted");
-
-                    b.Property<string>("ModifiedBy");
-
-                    b.Property<DateTime>("ModifiedDate");
-
-                    b.Property<int?>("UserTypeId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AccountId");
-
-                    b.HasIndex("UserTypeId");
-
-                    b.ToTable("UserAccessTypes");
-                });
-
-            modelBuilder.Entity("Excellency.Models.UserType", b =>
+            modelBuilder.Entity("Excellency.Models.UserLevel", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -1501,13 +1449,15 @@ namespace Excellency.Migrations
 
                     b.Property<bool>("IsDeleted");
 
+                    b.Property<int>("Level");
+
                     b.Property<string>("ModifiedBy");
 
                     b.Property<DateTime>("ModifiedDate");
 
                     b.HasKey("Id");
 
-                    b.ToTable("UserTypes");
+                    b.ToTable("UserLevels");
                 });
 
             modelBuilder.Entity("Excellency.Models.Account", b =>
@@ -1808,9 +1758,9 @@ namespace Excellency.Migrations
 
             modelBuilder.Entity("Excellency.Models.Position", b =>
                 {
-                    b.HasOne("Excellency.Models.PositionLevel", "PositionLevel")
+                    b.HasOne("Excellency.Models.UserLevel", "UserLevel")
                         .WithMany()
-                        .HasForeignKey("PositionLevelId");
+                        .HasForeignKey("UserLevelId");
                 });
 
             modelBuilder.Entity("Excellency.Models.RatingBehavioralFactor", b =>
@@ -1908,17 +1858,6 @@ namespace Excellency.Migrations
                     b.HasOne("Excellency.Models.Account", "Employee")
                         .WithMany()
                         .HasForeignKey("EmployeeId");
-                });
-
-            modelBuilder.Entity("Excellency.Models.UserAccessType", b =>
-                {
-                    b.HasOne("Excellency.Models.Account", "Account")
-                        .WithMany()
-                        .HasForeignKey("AccountId");
-
-                    b.HasOne("Excellency.Models.UserType", "UserType")
-                        .WithMany()
-                        .HasForeignKey("UserTypeId");
                 });
 #pragma warning restore 612, 618
         }

@@ -139,10 +139,21 @@ namespace Excellency.Services
             _dbContext.SaveChanges();
         }
 
-        public void Save(Account account, string UserId)
+        public void Save(Account account,List<int> userTypes, string UserId)
         {
             if(account.Id == 0)
             {
+                foreach(var item in userTypes)
+                {
+                    var usertype = new UserAccessType
+                    {
+                        UserType = UserTypeById(item),
+                        Account = account,
+                        CreatedBy = UserId,
+                        CreationDate = DateTime.Now,
+                    };
+                    _dbContext.Add(usertype);
+                }
                 account.CreatedBy = UserId;
                 account.CreationDate = DateTime.Now;
                 _dbContext.Add(account);
@@ -165,6 +176,16 @@ namespace Excellency.Services
             var UserConnectionString = _dbContext.Database.GetDbConnection().ConnectionString;
             var item = SCObjects.ReturnText("SELECT REPLICATE('0',4 - LEN(COUNT([a].[EmployeeNo]) + 1)) + CAST((COUNT([a].[EmployeeNo]) + 1) AS VARCHAR) FROM [dbo].[Accounts] [a]", UserConnectionString);
             return item;
+        }
+
+        public IEnumerable<UserType> UserTypes()
+        {
+            return _dbContext.UserTypes.Where(a => a.IsDeleted == false);
+        }
+
+        public UserType UserTypeById(int id)
+        {
+            return _dbContext.UserTypes.FirstOrDefault(a => a.Id == id);
         }
     }
 }

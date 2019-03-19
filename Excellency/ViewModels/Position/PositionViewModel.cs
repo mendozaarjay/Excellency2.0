@@ -8,5 +8,7 @@ namespace Excellency.ViewModels
         [Required(ErrorMessage = "Description is required.")]
         [MaxLength(255,ErrorMessage = "Description should be less than or equal to 255 characters.")]
         public string Description { get; set; }
+        public int Level { get; set; }
+        public string LevelDescription { get; set; }
     }
 }

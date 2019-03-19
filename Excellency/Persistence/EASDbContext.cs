@@ -16,6 +16,9 @@ namespace Excellency.Persistence
         public DbSet<Branch> Branches { get; set; }
         public DbSet<Department> Departments { get; set; }
         public DbSet<Position> Positions { get; set; }
+        public DbSet<PositionLevel> PositionLevels { get; set; }
+        public DbSet<UserType> UserTypes { get; set; }
+        public DbSet<UserAccessType> UserAccessTypes { get; set; }
         public DbSet<Account> Accounts { get; set; }
         public DbSet<Module> Modules { get; set; }
         public DbSet<EmployeeRaterHeader> RaterHeader { get; set; }

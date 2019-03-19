@@ -1,11 +1,11 @@
-﻿@model Excellency.ViewModels.CompanyIndexViewModel
+﻿@model Excellency.ViewModels.UserTypeIndexViewModel
 @{
-    ViewData["Title"] = "Company";
+    ViewData["Title"] = "Index";
 }
 
 <div class="panel panel-headline">
     <div class="panel-heading">
-        <h3 class="panel-title">Companies</h3>
+        <h3 class="panel-title">User Types</h3>
         <div class="right">
             <button type="button" data-toggle="modal" data-target="#addnew"><i class="fa fa-plus"></i></button>
         </div>
@@ -16,20 +16,19 @@
                 <thead>
                     <tr>
                         <th>Id</th>
-                        <th>Company</th>
+                        <th>Description</th>
                         <th scope="col" class="col-md-1"></th>
                         <th scope="col" class="col-md-1"></th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var item in Model.Companies)
+                    @foreach (var item in Model.UserTypes)
                     {
                         <tr>
                             <td>@item.Id</td>
                             <td>@item.Description</td>
                             <td class="text-center"><a data-toggle="modal" data-target="#edit" data-id="@item.Id" data-description="@item.Description"><i class="fa fa-pencil text-success"></i></a></td>
                             <td class="text-center"><a data-toggle="modal" data-target="#delete" data-id="@item.Id"><i class="fa fa-trash text-danger"></i></a></td>
-
                         </tr>
                     }
                 </tbody>
@@ -41,20 +40,19 @@
 
 <!-- Add New -->
 <div class="modal fade" id="addnew" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-    @using (Html.BeginForm("Save", "Company"))
+    @using (Html.BeginForm("Save", "UserType"))
     {
         @Html.AntiForgeryToken()
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="myModalLabel">Company</h4>
+                    <h4 class="modal-title" id="myModalLabel">User Type</h4>
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
-                        <label for="companyDescription">Company</label>
-                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                        <input type="text" name="Description" class="form-control" id="companyDescription" placeholder="Company">
+                        <label for="description">Description</label>
+                        <input type="text" name="item.description" class="form-control" id="description" placeholder="Description">
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -68,21 +66,21 @@
 <!--End of Save-->
 <!-- Edit -->
 <div class="modal fade" id="edit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-    @using (Html.BeginForm("Save", "Company"))
+    @using (Html.BeginForm("Save", "UserType"))
     {
         @Html.AntiForgeryToken()
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="myModalLabel">Company</h4>
-                    <input type="hidden" name="id" />
+                    <h4 class="modal-title" id="myModalLabel">User Type</h4>
+
                 </div>
                 <div class="modal-body">
+                    <input type="hidden" name="item.id" id="id"/>
                     <div class="form-group">
-                        <label for="companyDescription">Company</label>
-                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                        <input type="text" name="description" class="form-control" id="companyDescription" placeholder="Company">
+                        <label for="description">Description</label>
+                        <input type="text" name="item.description" class="form-control" id="description" placeholder="Description">
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -97,15 +95,16 @@
 <!--Delete-->
 <div class="modal fade" id="delete" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
-        @using (Html.BeginForm("Delete", "Company"))
+        @using (Html.BeginForm("Remove", "UserType"))
         {
+            @Html.AntiForgeryToken()
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     <h4 class="modal-title" id="myModalLabel">Confirmation</h4>
                 </div>
                 <div class="modal-body">
-                    <input type="hidden" name="id" />
+                    <input type="hidden" name="id" id="id" />
                     <p>Are you sure you want to delete the current record?</p>
                 </div>
                 <div class="modal-footer">
@@ -117,27 +116,27 @@
     </div>
 </div>
 <!--End of Delete-->
-
-
 @section Scripts{
     <script type="text/javascript">
+        $('#addnew').on('show.bs.modal', function (event) {
+            $(".modal-body #id").val(0)
+            $(".modal-body #description").val('')
+        })
         $('#edit').on('show.bs.modal', function (event) {
             var button = $(event.relatedTarget)
             var id = button.data('id')
             var description = button.data('description')
-            var modal = $(this)
-            modal.find('.modal-header input').val(id)
-            modal.find('.modal-body input').val(description)
-
+            $(".modal-body #id").val(id)
+            $(".modal-body #description").val(description)
         })
     </script>
-
     <script type="text/javascript">
         $('#delete').on('show.bs.modal', function (event) {
             var button = $(event.relatedTarget)
             var id = button.data('id')
-            var modal = $(this)
-            modal.find('.modal-body input').val(id)
+            $(".modal-body #id").val(id)
         })
     </script>
 }
+
+

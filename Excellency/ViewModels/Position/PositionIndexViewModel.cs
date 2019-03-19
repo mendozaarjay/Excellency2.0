@@ -6,6 +6,8 @@ namespace Excellency.ViewModels
     {
         public int Id { get; set; }
         public string Description { get; set; }
+        public int Level { get; set; }
         public IEnumerable<PositionViewModel> Positions { get; set; }
+        public IEnumerable<PositionLevelItem> Levels { get; set; }
     }
 }

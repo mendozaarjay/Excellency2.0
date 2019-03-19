@@ -14,17 +14,17 @@ namespace Excellency.Controllers
 {
     public class AccountController : Controller
     {
-        private IUserAccount _UserAccount;
+        private IUserAccount _Services;
 
         public AccountController(IUserAccount account)
         {
-            _UserAccount = account;
+            _Services = account;
         }
         [SessionAuthorized]
         public IActionResult Index()
         {
 
-            var result = _UserAccount.Accounts().Select
+            var result = _Services.Accounts().Select
                 (a => new AccountListingViewModel
                 {
                     Id = a.Id,
@@ -42,7 +42,7 @@ namespace Excellency.Controllers
 
         public IActionResult Edit(int id)
         {
-            var item = _UserAccount.GetAccountById(id);
+            var item = _Services.GetAccountById(id);
             var model = new AccountRegisterViewModel
             {
                 Id = item.Id,
@@ -69,7 +69,7 @@ namespace Excellency.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Delete(int id)
         {
-            _UserAccount.RemoveById(id);
+            _Services.RemoveById(id);
             return RedirectToAction("Index");   
         }
 
@@ -79,15 +79,26 @@ namespace Excellency.Controllers
         {
             var model = new AccountRegisterViewModel
             {
-                EmployeeNo = _UserAccount.NextEmployeeNo(),
+                EmployeeNo = _Services.NextEmployeeNo(),
                 Companies = this.Companies(),
                 Branches = this.Branches(),
                 Departments = this.Departments(),
                 Positions = this.Positions(),
                 Categories = this.Categories(),
+                UserTypes = this.UserTypes(),
             };
 
             return View(model);
+        }
+        private IEnumerable<SelectListItem> UserTypes()
+        {
+            var items = _Services.UserTypes()
+                .Select(a => new SelectListItem
+                {
+                    Text = a.Description,
+                    Value = a.Id.ToString()
+                }).ToList();
+            return items;
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -107,13 +118,13 @@ namespace Excellency.Controllers
                     Mobile = account.Mobile,
                     Password = Security.Encrypt(account.Password),
                     Email = account.Email,
-                    Company = _UserAccount.GetCompanyById(int.Parse(account.Company.ToString())),
-                    Branch = _UserAccount.GetBranchById(int.Parse(account.Branch.ToString())),
-                    Position = _UserAccount.GetPositionById(int.Parse(account.Position.ToString())),
-                    Department = _UserAccount.GetDepartmentById(int.Parse(account.Department.ToString())),
-                    Category = _UserAccount.GetCategoryById(int.Parse(account.Category))
+                    Company = _Services.GetCompanyById(int.Parse(account.Company.ToString())),
+                    Branch = _Services.GetBranchById(int.Parse(account.Branch.ToString())),
+                    Position = _Services.GetPositionById(int.Parse(account.Position.ToString())),
+                    Department = _Services.GetDepartmentById(int.Parse(account.Department.ToString())),
+                    Category = _Services.GetCategoryById(int.Parse(account.Category))
                 };
-                _UserAccount.Save(UserAccount,UserId);
+                _Services.Save(UserAccount,account.Types,UserId);
                 return RedirectToAction("Index");
             }
             else
@@ -123,19 +134,20 @@ namespace Excellency.Controllers
                 account.Positions = this.Positions();
                 account.Departments = this.Departments();
                 account.Categories = this.Categories();
+                account.UserTypes = this.UserTypes();
                 return View(account);
             }
         }
         public IActionResult GetBranches(int id)
         {
-            var items = _UserAccount.Branches()
+            var items = _Services.Branches()
                 .Where(a => a.Company.Id == id)
                 .Select(a => new SelectListItem { Value = a.Id.ToString(), Text = a.Description }).ToList();
             return Json(new { result = items });
         }
         public IEnumerable<SelectListItem> Companies()
         {
-            var result = _UserAccount.Companies().
+            var result = _Services.Companies().
                 Select(
                 a => new SelectListItem
                 {
@@ -148,7 +160,7 @@ namespace Excellency.Controllers
         }
         public IEnumerable<SelectListItem> Branches()
         {
-            var result = _UserAccount.Branches().
+            var result = _Services.Branches().
                 Select(
                 a => new SelectListItem
                 {
@@ -161,7 +173,7 @@ namespace Excellency.Controllers
         }
         public IEnumerable<SelectListItem> Departments()
         {
-            var result = _UserAccount.Departments().
+            var result = _Services.Departments().
                 Select(
                 a => new SelectListItem
                 {
@@ -174,7 +186,7 @@ namespace Excellency.Controllers
         }
         public IEnumerable<SelectListItem> Positions()
         {
-            var result = _UserAccount.Positions().
+            var result = _Services.Positions().
                 Select(
                 a => new SelectListItem
                 {
@@ -187,7 +199,7 @@ namespace Excellency.Controllers
         } 
         public IEnumerable<SelectListItem> Categories()
         {
-            var items = _UserAccount.Categories()
+            var items = _Services.Categories()
                 .Select(a => new SelectListItem
                 {
                     Value = a.Id.ToString(),
@@ -212,21 +224,21 @@ namespace Excellency.Controllers
                     Password = Security.Encrypt(model.Password)
                 };
 
-                if (_UserAccount.IsAccountLocked(account))
+                if (_Services.IsAccountLocked(account))
                 {
                     ViewBag.Message = "Your account is locked.";
                     return View();
                 }
-                if (_UserAccount.IsLoginExpired(account))
+                if (_Services.IsLoginExpired(account))
                 {
                     ViewBag.Message = "Your account is expired.";
                     return View();
                 }
-                if (_UserAccount.IsAvailableToLogin(account))
+                if (_Services.IsAvailableToLogin(account))
                 {
-                    HttpContext.Session.SetString("UserId", _UserAccount.GetUserId(account));
+                    HttpContext.Session.SetString("UserId", _Services.GetUserId(account));
                     var _id = HttpContext.Session.GetString("UserId");
-                    var name = _UserAccount.GetAccountById(int.Parse(_id)).FirstName;
+                    var name = _Services.GetAccountById(int.Parse(_id)).FirstName;
                     HttpContext.Session.SetString("CurrentUser",name);
                     return RedirectToAction("Index", "Home");
                 }

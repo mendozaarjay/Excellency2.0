@@ -34,7 +34,6 @@ namespace Excellency.Services
                 .Include(a => a.SecondApproval)
                 .Where(a => a.IsDeleted == false);
         }
-
         public IEnumerable<Account> Approvers(int id)
         {
             return _dbContext.Accounts

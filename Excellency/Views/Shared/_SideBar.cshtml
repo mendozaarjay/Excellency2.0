@@ -27,6 +27,7 @@
                             }
                             @if (Model.UserAccess.Position)
                             {
+                                <li><a asp-controller="PositionLevel" asp-action="Index" class="">Position Level</a></li>
                                 <li><a asp-controller="Position" asp-action="Index" class="">Position</a></li>
                             }
                             @if (Model.UserAccess.EmployeeCategory)
