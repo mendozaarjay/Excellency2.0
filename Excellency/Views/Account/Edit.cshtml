@@ -9,81 +9,175 @@
     </div>
     <div class="panel-body">
 
-        @using (Html.BeginForm("Register", "Account"))
+        <div>
+            @using (Html.BeginForm("Edit", "Account"))
+            {
+
+                <div class="row">
+                    @if (Html.ViewData.ModelState.ErrorCount > 0)
+                    {
+                        <div class="alert alert-danger alert-dismissible" role="alert">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+                        </div>
+                    }
+                    <div class="col-md-6">
+                        @Html.HiddenFor(m => m.Id)
+                        <div class="form-group">
+                            <label for="employeeno">Employee No</label>
+                            @Html.TextBoxFor(m => m.EmployeeNo, new { @class = "form-control" })
+                        </div>
+
+                        <div class="form-group">
+                            <label for="firstname">Username</label>
+                            @Html.TextBoxFor(m => m.Username, new { @class = "form-control" })
+                        </div>
+                        <div class="form-group">
+                            <label for="firstname">First name</label>
+                            @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control" })
+                        </div>
+
+                        <div class="form-group">
+                            <label for="middlename">Middle name</label>
+                            @Html.TextBoxFor(m => m.MiddleName, new { @class = "form-control" })
+                        </div>
+
+                        <div class="form-group">
+                            <label for="lastname">Last name</label>
+                            @Html.TextBoxFor(m => m.LastName, new { @class = "form-control" })
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            @*<input type="password" class="form-control" id="password" placeholder="Password" name="Password">*@
+                            @Html.TextBoxFor(m => m.Password,new {@class ="form-control",@placeholder="Password",@type="password" })
+                        </div>
+                        <div class="form-group">
+                            <label for="confirmpassword">Confirm Password</label>
+                            @*<input type="password" class="form-control" id="confirmpassword" placeholder="Confirm Password" name="ConfirmPassword">*@
+                            @Html.TextBoxFor(m => m.ConfirmPassword, new { @class = "form-control", @placeholder = "Confirm Password", @type = "password" })
+
+                        </div>
+
+
+
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Company)
+                            @Html.DropDownListFor(m => m.Company, Model.Companies, "- Select Company -", new { @class = "form-control" })
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Branch)
+                            @Html.DropDownListFor(m => m.Branch, Model.Branches, "- Select Branch -", new { @class = "form-control" })
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Department)
+                            @Html.DropDownListFor(m => m.Department, Model.Departments, "- Select Department -", new { @class = "form-control" })
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Position)
+                            @Html.DropDownListFor(m => m.Position, Model.Positions, "- Select Position -", new { @class = "form-control" })
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Category)
+                            @Html.DropDownListFor(m => m.Category, Model.Categories, "- Select Category -", new { @class = "form-control" })
+                        </div>
+                        <div class="form-group">
+                            <label for="Types">User Type</label>
+                            @Html.DropDownListFor(m => m.Types, Model.UserTypes, new { @multiple = "multiple", @class = "chosen-select form-control" })
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <button type="button" class="btn btn-default">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            }
+        </div>
+        <hr />
+        <h4> User Access</h4>
+        <div class="table-responsive">
+            <table class="table table-condensed">
+                <thead>
+                    <tr>
+                        <th>Description</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach(var item in Model.UserAccessTypes)
+                    {
+                        <tr>
+                            <td>@item.Description</td>
+                            <td><a class="fa fa-trash text-danger" data-toggle="modal" data-target="#delete" data-recorid="@item.RecordId" data-employeeid="@Model.Id"></a></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="delete" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        @using (Html.BeginForm("RemoveAccess", "Account"))
         {
-
-            <div class="row">
-                @if (Html.ViewData.ModelState.ErrorCount > 0)
-                {
-                    <div class="alert alert-danger alert-dismissible" role="alert">
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        @Html.ValidationSummary(false, "", new { @class = "text-danger" })
-                    </div>
-                }
-                <div class="col-md-6">
-                    @Html.HiddenFor(m => m.Id)
-                    <div class="form-group">
-                        <label for="employeeno">Employee No</label>
-                        @Html.TextBoxFor(m => m.EmployeeNo, new { @class = "form-control" })
-                    </div>
-
-                    <div class="form-group">
-                        <label for="firstname">Username</label>
-                        @Html.TextBoxFor(m => m.Username, new { @class = "form-control" })
-                    </div>
-                    <div class="form-group">
-                        <label for="firstname">First name</label>
-                        @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control" })
-                    </div>
-
-                    <div class="form-group">
-                        <label for="middlename">Middle name</label>
-                        @Html.TextBoxFor(m => m.MiddleName, new { @class = "form-control" })
-                    </div>
-
-                    <div class="form-group">
-                        <label for="lastname">Last name</label>
-                        @Html.TextBoxFor(m => m.LastName, new { @class = "form-control" })
-                    </div>
-                    <div class="form-group">
-                        <label for="password">Password</label>
-                        <input type="password" class="form-control" id="password" placeholder="Password" name="Password">
-                    </div>
-                    <div class="form-group">
-                        <label for="confirmpassword">Confirm Password</label>
-                        <input type="password" class="form-control" id="confirmpassword" placeholder="Confirm Password" name="ConfirmPassword">
-                    </div>
-
-
-
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Confirmation</h4>
                 </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        @Html.LabelFor(m => m.Company)
-                        @Html.DropDownListFor(m => m.Company, Model.Companies, "- Select Company -", new { @class = "form-control" })
-                    </div>
-                    <div class="form-group">
-                        @Html.LabelFor(m => m.Branch)
-                        @Html.DropDownListFor(m => m.Branch, Model.Branches, "- Select Branch -", new { @class = "form-control" })
-                    </div>
-                    <div class="form-group">
-                        @Html.LabelFor(m => m.Department)
-                        @Html.DropDownListFor(m => m.Department, Model.Departments, "- Select Department -", new { @class = "form-control" })
-                    </div>
-                    <div class="form-group">
-                        @Html.LabelFor(m => m.Position)
-                        @Html.DropDownListFor(m => m.Position, Model.Positions, "- Select Position -", new { @class = "form-control" })
-                    </div>
-                    <div class="form-group">
-                        @Html.LabelFor(m => m.Category)
-                        @Html.DropDownListFor(m => m.Category, Model.Categories, "- Select Category -", new { @class = "form-control" })
-                    </div>
+                <div class="modal-body">
+                    <input type="hidden" name="recordid" id="recordid" />
+                    <input type="hidden" name="employeeid" id="employeeid" />
+                    <p>Are you sure you want to delete the current record?</p>
                 </div>
-            </div>
-            <div class="form-group">
-                <button type="button" class="btn btn-default">Cancel</button>
-                <button type="submit" class="btn btn-primary">Register Account</button>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </div>
             </div>
         }
     </div>
 </div>
+@section Scripts{
+    <script type="text/javascript">
+        $('#delete').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget)
+            var recordid = button.data('recorid')
+            var employeeid = button.data('employeeid')
+       
+            $(".modal-body #recordid").val(recordid)
+            $(".modal-body #employeeid").val(employeeid)
+        })
+        $(function () {
+
+            $(".chosen-select").chosen();
+            $('#Types').attr('data-placeholder', '--Select Here--');
+            $('#Types').trigger('chosen:updated');
+        });
+
+        $('#Company').change(function () {
+            var item = $('#Company').val();
+            $('#Branch').empty();
+
+            if (item.length > 0) {
+                $.ajax({
+                    url: '/Account/GetBranches',
+                    datatype: "json",
+                    type: 'GET',
+                    async: true,
+                    data: { "id": item },
+                    success: function (data) {
+                        var len = data.result.length;
+                        for (var i = 0; i < len; i++) {
+                            var code = data.result[i]["value"];
+                            var description = data.result[i]["text"];
+                            $('#Branch').append("<option value ='" + code + "'>" + description + "</option>");
+                        }
+                        $('#Branch').val('');
+                    }
+                })
+            }
+        });
+    </script>
+}

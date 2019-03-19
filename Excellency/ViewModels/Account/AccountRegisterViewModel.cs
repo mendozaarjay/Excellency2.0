@@ -60,7 +60,9 @@ namespace Excellency.ViewModels
         public IEnumerable<SelectListItem> Categories { get; set; }
         public IEnumerable<SelectListItem> UserTypes { get; set; }
         [ListHasElements(ErrorMessage = "User type is required.")]
+
         public List<int> Types { get; set; }
+        public IEnumerable<UserAccessTypeItemViewModel> UserAccessTypes { get; set; }
 
 
     }

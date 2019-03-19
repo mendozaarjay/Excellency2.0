@@ -37,5 +37,9 @@ namespace Excellency.Interfaces
         bool IsLoginExpired(Account account);
         bool IsNotExist(Account account);
 
+        IEnumerable<UserAccessType> UserAccessTypePerEmployee(int id);
+        IEnumerable<UserType> AvailableUserTypesPerEmployee(int id);
+        void RemoveAccessById(int id);
+
     }
 }

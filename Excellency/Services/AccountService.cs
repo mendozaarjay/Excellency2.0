@@ -4,6 +4,7 @@ using Excellency.Persistence;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -13,9 +14,12 @@ namespace Excellency.Services
     {
         private EASDbContext _dbContext;
 
+        public string UserConnectionString { get; }
+
         public AccountService(EASDbContext dbContext)
         {
             _dbContext = dbContext;
+            UserConnectionString = dbContext.Database.GetDbConnection().ConnectionString;
         }
         public IEnumerable<Account> Accounts()
         {
@@ -141,19 +145,20 @@ namespace Excellency.Services
 
         public void Save(Account account,List<int> userTypes, string UserId)
         {
-            if(account.Id == 0)
+            foreach (var item in userTypes)
             {
-                foreach(var item in userTypes)
+                var usertype = new UserAccessType
                 {
-                    var usertype = new UserAccessType
-                    {
-                        UserType = UserTypeById(item),
-                        Account = account,
-                        CreatedBy = UserId,
-                        CreationDate = DateTime.Now,
-                    };
-                    _dbContext.Add(usertype);
-                }
+                    UserType = UserTypeById(item),
+                    Account = account,
+                    CreatedBy = UserId,
+                    CreationDate = DateTime.Now,
+                };
+                _dbContext.Add(usertype);
+            }
+            if (account.Id == 0)
+            {
+
                 account.CreatedBy = UserId;
                 account.CreationDate = DateTime.Now;
                 _dbContext.Add(account);
@@ -186,6 +191,49 @@ namespace Excellency.Services
         public UserType UserTypeById(int id)
         {
             return _dbContext.UserTypes.FirstOrDefault(a => a.Id == id);
+        }
+
+        public IEnumerable<UserAccessType> UserAccessTypePerEmployee(int id)
+        {
+            return _dbContext.UserAccessTypes
+                .Include(a => a.Account)
+                .Include(a => a.UserType)
+                .Where(a => a.Account.Id == id && a.IsDeleted == false);
+        }
+
+        public IEnumerable<UserType> AvailableUserTypesPerEmployee(int id)
+        {
+            List<UserType> items = new List<UserType>();
+            string sql = string.Format(@"SELECT *
+                                        FROM [dbo].[UserTypes] [ut]
+                                        WHERE [ut].[Id] NOT IN (
+                                                                   SELECT [uat].[UserTypeId]
+                                                                   FROM [dbo].[UserAccessTypes] [uat]
+                                                                   WHERE [uat].[AccountId] = {0}
+                                                                         AND [uat].[IsDeleted] = 0
+                                                               )", id.ToString());
+            DataTable dt = SCObjects.LoadDataTable(sql, UserConnectionString);
+            if(dt != null)
+            {
+                foreach(DataRow dr in dt.Rows)
+                {
+                    var item = new UserType
+                    {
+                        Id = int.Parse(dr["Id"].ToString()),
+                        Description = dr["Description"].ToString(),
+                    };
+                    items.Add(item);
+                }
+            }
+            return items;
+        }
+
+        public void RemoveAccessById(int id)
+        {
+            var item = _dbContext.UserAccessTypes.FirstOrDefault(a => a.Id == id);
+            item.IsDeleted = true;
+            _dbContext.Entry(item).State = EntityState.Modified;
+            _dbContext.SaveChanges();
         }
     }
 }

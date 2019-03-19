@@ -43,6 +43,24 @@ namespace Excellency.Controllers
         public IActionResult Edit(int id)
         {
             var item = _Services.GetAccountById(id);
+            var useraccess = _Services.UserAccessTypePerEmployee(id)
+                .Select(a => new UserAccessTypeItemViewModel
+                {
+                    RecordId = a.Id,
+                    Id = a.UserType.Id,
+                    Description = a.UserType.Description,
+                }).ToList();
+            var result = _Services.AvailableUserTypesPerEmployee(id);
+            List<SelectListItem> types = new List<SelectListItem>();
+            foreach(var i in result)
+            {
+                var x = new SelectListItem
+                {
+                    Value = i.Id.ToString(),
+                    Text = i.Description,
+                };
+                types.Add(x);
+            }
             var model = new AccountRegisterViewModel
             {
                 Id = item.Id,
@@ -54,17 +72,78 @@ namespace Excellency.Controllers
                 Branch = item.Branch.Id.ToString(),
                 Department = item.Department.Id.ToString(),
                 Position = item.Position.Id.ToString(),
+                Password = Security.Decrypt(item.Password),
+                ConfirmPassword = Security.Decrypt(item.Password),
                 Category = item.Category.Id.ToString(),
                 Companies = this.Companies(),
                 Branches = this.Branches(),
                 Departments = this.Departments(),
                 Positions = this.Positions(),
                 Username = item.Username,
-                Categories = this.Categories()
+                Categories = this.Categories(),
+                UserAccessTypes = useraccess,
+                UserTypes = types
             };
             return View(model);
         }
-
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Edit(AccountRegisterViewModel model)
+        {
+            var UserId = HttpContext.Session.GetString("UserId");
+            if (ModelState.IsValid)
+            {
+                var UserAccount = new Account
+                {
+                    Id = model.Id,
+                    EmployeeNo = model.EmployeeNo,
+                    FirstName = model.FirstName,
+                    LastName = model.LastName,
+                    MiddleName = model.MiddleName == null ? "" : model.MiddleName,
+                    Username = model.Username,
+                    Mobile = model.Mobile,
+                    Password = Security.Encrypt(model.Password),
+                    Email = model.Email,
+                    Company = _Services.GetCompanyById(int.Parse(model.Company.ToString())),
+                    Branch = _Services.GetBranchById(int.Parse(model.Branch.ToString())),
+                    Position = _Services.GetPositionById(int.Parse(model.Position.ToString())),
+                    Department = _Services.GetDepartmentById(int.Parse(model.Department.ToString())),
+                    Category = _Services.GetCategoryById(int.Parse(model.Category))
+                };
+                _Services.Save(UserAccount, model.Types, UserId);
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                var item = _Services.GetAccountById(model.Id);
+                var useraccess = _Services.UserAccessTypePerEmployee(model.Id)
+                    .Select(a => new UserAccessTypeItemViewModel
+                    {
+                        RecordId = a.Id,
+                        Id = a.UserType.Id,
+                        Description = a.UserType.Description,
+                    }).ToList();
+                var result = _Services.AvailableUserTypesPerEmployee(model.Id);
+                List<SelectListItem> types = new List<SelectListItem>();
+                foreach (var i in result)
+                {
+                    var x = new SelectListItem
+                    {
+                        Value = i.Id.ToString(),
+                        Text = i.Description,
+                    };
+                    types.Add(x);
+                }
+                model.Companies = this.Companies();
+                model.Branches = this.Branches();
+                model.Positions = this.Positions();
+                model.Departments = this.Departments();
+                model.Categories = this.Categories();
+                model.UserTypes = types;
+                model.UserAccessTypes = useraccess;
+                return View(model);
+            }
+        }
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Delete(int id)
@@ -208,6 +287,12 @@ namespace Excellency.Controllers
             return items;
         }
         #endregion
+        [HttpPost]
+        public IActionResult RemoveAccess(int recordid,int employeeid)
+        {
+            _Services.RemoveAccessById(recordid);
+            return RedirectToAction("Edit", new { id = employeeid });
+        }
         public IActionResult Login()
         {
             return View();
