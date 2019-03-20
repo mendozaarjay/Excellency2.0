@@ -1,4 +1,5 @@
 ﻿using Excellency.Models;
+using Excellency.ViewModels;
 using System.Collections.Generic;
 
 namespace Excellency.Interfaces
@@ -39,6 +40,8 @@ namespace Excellency.Interfaces
 
         IEnumerable<UserAccessType> UserAccessTypePerEmployee(int id);
         IEnumerable<UserType> AvailableUserTypesPerEmployee(int id);
+        IEnumerable<AccountListingViewModel> AccountsPage(int page);
+        IEnumerable<AccountListingViewModel> SearchAccount(string Keyword);
         void RemoveAccessById(int id);
 
     }

@@ -1,6 +1,7 @@
 ﻿using Excellency.Interfaces;
 using Excellency.Models;
 using Excellency.Persistence;
+using Excellency.ViewModels;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -234,6 +235,60 @@ namespace Excellency.Services
             item.IsDeleted = true;
             _dbContext.Entry(item).State = EntityState.Modified;
             _dbContext.SaveChanges();
+        }
+
+        public IEnumerable<AccountListingViewModel> AccountsPage(int page)
+        {
+            List<AccountListingViewModel> accounts = new List<AccountListingViewModel>();
+            var sql = string.Format("EXEC [dbo].[spEmployeeIndex]  @Page = {0},@QueryType = 0 ", page.ToString());
+            DataTable dt = SCObjects.LoadDataTable(sql, UserConnectionString);
+
+            if(dt != null)
+            {
+                foreach(DataRow dr in dt.Rows)
+                {
+                    var item = new AccountListingViewModel
+                    {
+                        Id = int.Parse(dr["Id"].ToString()),
+                        Name = dr["Name"].ToString(),
+                        Company = dr["Company"].ToString(),
+                        Branch = dr["Branch"].ToString(),
+                        Position = dr["Position"].ToString(),
+                        Department = dr["Department"].ToString(),
+                        EmployeeNo = dr["EmployeeNo"].ToString(),
+                    };
+                    accounts.Add(item);
+                }
+            }
+
+            return accounts;
+        }
+
+        public IEnumerable<AccountListingViewModel> SearchAccount(string Keyword)
+        {
+            List<AccountListingViewModel> accounts = new List<AccountListingViewModel>();
+            var sql = string.Format("EXEC [dbo].[spEmployeeIndex]  @Keyword = {0},@QueryType = 1", Keyword);
+            DataTable dt = SCObjects.LoadDataTable(sql, UserConnectionString);
+
+            if (dt != null)
+            {
+                foreach (DataRow dr in dt.Rows)
+                {
+                    var item = new AccountListingViewModel
+                    {
+                        Id = int.Parse(dr["Id"].ToString()),
+                        Name = dr["Name"].ToString(),
+                        Company = dr["Company"].ToString(),
+                        Branch = dr["Branch"].ToString(),
+                        Position = dr["Position"].ToString(),
+                        Department = dr["Department"].ToString(),
+                        EmployeeNo = dr["EmployeeNo"].ToString(),
+                    };
+                    accounts.Add(item);
+                }
+            }
+
+            return accounts;
         }
     }
 }

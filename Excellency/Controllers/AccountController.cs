@@ -21,25 +21,29 @@ namespace Excellency.Controllers
             _Services = account;
         }
         [SessionAuthorized]
-        public IActionResult Index()
+        public IActionResult Index(int? page)
         {
+            int currentpage;
+            if (page == null)
+                currentpage = 1;
+            else
+                currentpage = (int)page;
 
-            var result = _Services.Accounts().Select
-                (a => new AccountListingViewModel
-                {
-                    Id = a.Id,
-                    Name = a.FirstName + " " + a.LastName + " " + a.MiddleName,
-                    Branch = a.Branch.Description,
-                    Company = a.Company.Description,
-                    Department = a.Department.Description,
-                    Position = a.Position.Description
-                }).ToList();
+            var maxcount = currentpage < 5 ? 5 : currentpage + 2;
+            var mincount = currentpage < 5 ? 1 : currentpage - 2;
+
+            var maxpage = (_Services.Accounts().Count() / 10) + 1;
+
+            maxcount = currentpage <= maxpage ? maxcount : maxpage;
+            var result = _Services.AccountsPage(currentpage);
             var model = new AccountIndexViewModel();
             model.Accounts = result;
+            ViewBag.MaxCount = maxcount;
+            ViewBag.MinCount = mincount;
+            ViewBag.CurrentPage = currentpage;
+            ViewBag.MaxPage = maxpage;
             return View(model);
         }
-
-
         public IActionResult Edit(int id)
         {
             var item = _Services.GetAccountById(id);
@@ -150,6 +154,11 @@ namespace Excellency.Controllers
         {
             _Services.RemoveById(id);
             return RedirectToAction("Index");   
+        }
+        public IActionResult Search(string keyword)
+        {
+            var items = _Services.SearchAccount(keyword);
+            return Json(new { result = items });
         }
 
         #region User Registration
