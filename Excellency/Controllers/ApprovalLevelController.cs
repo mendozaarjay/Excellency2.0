@@ -24,23 +24,30 @@ namespace Excellency.Controllers
         }
 
 
-        public IActionResult Index()
+        public IActionResult Index(int? page)
         {
-            var result = _Services.Employees()
-                .Select(a => new ApprovalLevelAccountItem
-                {
-                    Id = a.Id,
-                    Name = a.FirstName + " " + a.MiddleName + " " + a.LastName,
-                    Company = a.Company.Description,
-                    Branch = a.Branch.Description,
-                    Department = a.Department.Description,
-                    Position = a.Position.Description,
-                    IsSet = _Services.IsSet(a.Id)
-                }).ToList();
+            int currentpage;
+            if (page == null)
+                currentpage = 1;
+            else
+                currentpage = (int)page;
+
+            var maxcount = currentpage < 5 ? 5 : currentpage + 2;
+            var mincount = currentpage < 5 ? 1 : currentpage - 2;
+
+            var maxpage = (_Services.Employees().Count() / 10) + 1;
+
+            maxcount = currentpage <= maxpage ? maxcount : maxpage;
+
+            var result = _Services.ApprovalLevelItems(currentpage);
             var model = new ApprovalLevelIndexViewModel
             {
                 Employees = result
             };
+            ViewBag.MaxCount = maxcount;
+            ViewBag.MinCount = mincount;
+            ViewBag.CurrentPage = currentpage;
+            ViewBag.MaxPage = maxpage;
             return View(model);
         }
 
@@ -63,12 +70,12 @@ namespace Excellency.Controllers
         [HttpGet]
         public IActionResult Assign(int id)
         {
-            var model = new ApprovalLevelAssignViewModel();
-            model.EmployeeId = id;
-            model.FirstApprovers = this.Approvers(id);
-            model.SecondApprovers = this.Approvers(id);
-            model.Name = _Services.GetNameById(id);
-            model.EmployeeId = id;
+            var modelitem = new ApprovalLevelAssignViewModel();
+            modelitem.EmployeeId = id;
+            modelitem.FirstApprovers = this.Approvers(id);
+            modelitem.SecondApprovers = this.Approvers(id);
+            modelitem.Name = _Services.GetNameById(id);
+            modelitem.EmployeeId = id;
             var _item = _Services.ApprovalAssignmentByEmployee(id);
             if (_item != null)
             {
@@ -81,9 +88,9 @@ namespace Excellency.Controllers
                     SecondApprovalId = _item.SecondApproval == null ?  0 : _item.SecondApproval.Id,
                     IsWithSecondApproval = _item.IsWithSecondApproval ? "on" : "off"
                 };
-                model.ApprovalLevel = item;
+                modelitem.ApprovalLevel = item;
             }
-            return View(model);
+            return View(modelitem);
         }
 
         [HttpPost]
@@ -91,7 +98,7 @@ namespace Excellency.Controllers
         public IActionResult Save(ApprovalLevelAssignViewModel model)
         {
             var userId = int.Parse(HttpContext.Session.GetString("UserId"));
-            if(model.ApprovalLevel != null)
+            if (model.ApprovalLevel != null)
             {
                 var approvalLevel = new ApprovalLevelAssignment
                 {
@@ -101,12 +108,11 @@ namespace Excellency.Controllers
                     SecondApproval = model.ApprovalLevel.IsWithSecondApproval == "on" ? _Services.GetAccountById(model.ApprovalLevel.SecondApprovalId) : null,
                     IsWithSecondApproval = model.ApprovalLevel.IsWithSecondApproval == "on" ? true : false
                 };
-                _Services.Save(approvalLevel,userId);
+                _Services.Save(approvalLevel, userId);
                 return RedirectToAction("Index");
             }
             else
             {
-        
                 return RedirectToAction("Index");
             }
         }

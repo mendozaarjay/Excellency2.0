@@ -1,4 +1,5 @@
 ﻿using Excellency.Models;
+using Excellency.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,6 +24,8 @@ namespace Excellency.Interfaces
         Position GetPositionById(int id);
         EmployeeRaterHeader GetRaterById(int RaterId);
         IEnumerable<EmployeeRaterLine> RaterAssignedEmployees(int HeaderId);
+        IEnumerable<RaterViewModel> RaterList(int page);
+        IEnumerable<RaterViewModel> SearchRater(string keyword);
         int GetRaterHeaderId(int RaterId);
         void AddEmployee(int Id,int RaterId);
         void AddEmployee(IEnumerable<int> Items,int RaterId,string UserId);

@@ -25,23 +25,33 @@ namespace Excellency.Controllers
             return View();
         }
         [SessionAuthorized]
-        public IActionResult RaterList()
+        public IActionResult RaterList(int? page)
         {
-            var result = _Services.Raters().Select
-                (
-                 a => new RaterViewModel
-                 {
-                     Id = a.Id,
-                     Name = a.FirstName + " " + a.LastName,
-                     Branch = a.Branch.Description,
-                     Company = a.Company.Description,
-                     Department = a.Department.Description,
-                     Position = a.Position.Description
-                 }
-                ).ToList();
+            int currentpage;
+            if (page == null)
+                currentpage = 1;
+            else
+                currentpage = (int)page;
+
+            var maxcount = currentpage < 5 ? 5 : currentpage + 2;
+            var mincount = currentpage < 5 ? 1 : currentpage - 2;
+
+            var maxpage = (_Services.Raters().Count() / 10) + 1;
+
+            maxcount = currentpage <= maxpage ? maxcount : maxpage;
+            var result = _Services.RaterList(currentpage);
             var model = new RaterListingViewModel();
             model.Raters = result;
+            ViewBag.MaxCount = maxcount;
+            ViewBag.MinCount = mincount;
+            ViewBag.CurrentPage = currentpage;
+            ViewBag.MaxPage = maxpage;
             return View(model);
+        }
+        public IActionResult Search(string keyword)
+        {
+            var items = _Services.SearchRater(keyword);
+            return Json(new { result = items });
         }
         [SessionAuthorized]
         [HttpGet]

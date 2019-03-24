@@ -45,7 +45,7 @@ namespace Excellency.Controllers
                     Id = model.Header.Id,
                     Title = model.Header.Title,
                     Description = model.Header.Description,
-                    Weight = model.Header.Weight,
+                    Weight = 100,
                 };
                 _Service.SaveHeader(item, userId);
             }

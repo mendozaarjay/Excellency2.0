@@ -71,7 +71,7 @@ namespace Excellency.Controllers
                     Id = model.BehavioralFactor.Id,
                     Title = model.BehavioralFactor.Title,
                     Description = model.BehavioralFactor.Description,
-                    Weight = model.BehavioralFactor.Weight,
+                    Weight = 100,
                     Category = _BehavioralFactor.GetEmployeeCategoryById(model.BehavioralFactor.Category),
                     CreatedBy = HttpContext.Session.GetString("UserId"),
                     CreationDate = DateTime.Now,

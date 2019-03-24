@@ -1,4 +1,5 @@
 ﻿using Excellency.Models;
+using Excellency.ViewModels;
 using System.Collections.Generic;
 
 namespace Excellency.Interfaces
@@ -31,6 +32,7 @@ namespace Excellency.Interfaces
         bool IsWithActiveSeason();
         EvaluationSeason ActiveSeason();
         EvaluationSeason EvaluationSeasonById(int id);
+        IEnumerable<EmployeeViewModel> EmployeeItems(int page);
 
     }
 }

@@ -17,19 +17,24 @@
         <p class="panel-subtitle">Assign employee to evaluate their co-assosiate.</p>
     </div>
     <div class="panel-body">
+        <div class="input-group col-md-4">
+            <input type="text" id="searchkey" class="form-control" placeholder="Search...">
+            <span class="input-group-btn"><button type="button" id="search" class="btn btn-primary">Search</button></span>
+        </div>
+        <br />
         <div class="table-responsive">
-            <table class="table table-condensed">
+            <table class="table table-condensed" id="employeelist">
                 <thead>
                     <tr>
                         <th>Name</th>
                         <th>Company</th>
                         <th>Branch</th>
                         <th>Department</th>
-                        <th>Positiion</th>
+                        <th>Position</th>
                         <th></th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="emplist">
                     @foreach (var item in Model.Accounts)
                     {
                         <tr>
@@ -43,6 +48,60 @@
                     }
                 </tbody>
             </table>
+            <ul class="pagination">
+                @{ var prev = ViewBag.CurrentPage - 1;}
+                @{ var next = ViewBag.CurrentPage + 1;}
+
+                @if (ViewBag.CurrentPage > 1)
+                {
+                    <li class="page-item"><a class="page-link lnr lnr-arrow-left" asp-controller="PeerAssignment" asp-action="Index" asp-route-page="@prev"></a></li>
+                }
+
+                @for (int i = ViewBag.MinCount; i <= ViewBag.MaxCount; i++)
+                {
+                    <li class="page-item"><a class="page-link" asp-controller="PeerAssignment" asp-action="Index" asp-route-page="@i">@i</a></li>
+                }
+                @if (ViewBag.CurrentPage <= ViewBag.MaxPage)
+                {
+                    <li class="page-item"><a class="page-link lnr lnr-arrow-right" asp-controller="PeerAssignment" asp-action="Index" asp-route-page="@next"></a></li>
+                }
+            </ul>
         </div>
     </div>
 </div>
+
+@section Scripts{
+
+    <script type="text/javascript">
+        $('#search').on('click', function () {
+            var keyword = $("#searchkey").val();
+            if (keyword.length > 0) {
+                $.ajax({
+                    url: 'Search',
+                    data: { 'keyword': keyword },
+                    type: 'GET',
+                    dataType: 'JSON',
+                    success: function (data) {
+                        $('#emplist').empty();
+                        var len = data.result.length
+                        var html = '';
+                        for (var i = 0; i < len; i++) {
+                            html += `<tr>
+                                <td>` + data.result[i]['name'] + `</td>
+                                <td>` + data.result[i]['company'] + `</td>
+                                <td>` + data.result[i]['branch'] + `</td>
+                                <td>` + data.result[i]['department'] + `</td>
+                                <td>` + data.result[i]['position'] + `</td>
+                                <td class="text-center"><a href="/PeerAssignment/Assign/` + data.result[i]['id'] + `"><i class="fa fa-clone"></i></a></td>
+                                </tr>`
+                        }
+                        $('#employeelist tbody').append(html);
+                    },
+                    error: function (data) {
+                    }
+
+                });
+            }
+        });
+    </script>
+}

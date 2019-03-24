@@ -8,8 +8,9 @@
     </div>
 
     <div class="panel-body">
-        @using (Html.BeginForm("Save", "ApprovalLevel"))
+        @using (Html.BeginForm("Save", "ApprovalLevel", FormMethod.Post, new { @id = "saveform" }))
         {
+            <div id="errormessage" class="text-danger"></div>
             @Html.HiddenFor(m => m.ApprovalLevel.Id)
             <input type="hidden" name="ApprovalLevel.EmployeeId" value="@Model.EmployeeId" />
             <div class="form-group">
@@ -59,7 +60,7 @@
                 <label for="secondapproval">Second Approval</label>
                 @Html.DropDownListFor(m => m.ApprovalLevel.SecondApprovalId, Model.SecondApprovers, new { @class = "form-control" })
             </div>
-            <button type="submit" class="btn btn-primary">Save</button>
+            <button type="submit" class="btn btn-primary" onclick="return validateForm();">Save</button>
         }
     </div>
 </div>
@@ -96,5 +97,23 @@
             }
 
         })
+        function validateForm() {
+            var firstapproval = $('#ApprovalLevel_FirstApprovalId').val();
+            var secondapproval = $('#ApprovalLevel_SecondApprovalId').val();
+            const checkbox = document.getElementById('iswithsecondapproval')
+            var item = checkbox.checked;
+            if (item == true) {
+        
+                if (firstapproval == secondapproval) {
+                    document.getElementById("errormessage").innerHTML = "First Approval is should be different in second approval.";
+                    return false;
+                }
+
+                else {
+                    saveform.submit();
+                }
+            }
+
+        }
     </script>
 }

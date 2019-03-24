@@ -84,10 +84,7 @@
                             {
                                 <li><a asp-controller="Account" asp-action="Index" class="">Users</a></li>
                             }
-                            @if (Model.UserAccess.UserRoles)
-                            {
-                                <li><a asp-controller="AccountRole" asp-action="Index" class="">User Roles</a></li>
-                            }
+               
                             @if (Model.UserAccess.ApproverAssignment)
                             {
                                 @*<li><a asp-controller="ApproverAssignment" asp-action="Index" class="">Approver Assignment</a></li>*@

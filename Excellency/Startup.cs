@@ -63,6 +63,7 @@ namespace Excellency
             services.AddScoped<IReport, ReportService>();
             services.AddScoped<IUserType, UserTypeService>();
             services.AddScoped<IPositionLevel, PositionLevelService>();
+            services.AddScoped<IEvaluationSettings, EvaluationSettingsService>();
             services.AddDbContext<EASDbContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("ExcellencyConnection")));
 

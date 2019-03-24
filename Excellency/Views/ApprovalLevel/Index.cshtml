@@ -14,6 +14,7 @@
                 <input type="text" id="searchkey" class="form-control" placeholder="Search...">
                 <span class="input-group-btn"><button type="button" id="search" class="btn btn-primary">Search</button></span>
             </div>
+            <br />
             <div class="clearfix"></div>
             <table class="table table-condensed" id="employeelist">
                 <thead>
@@ -52,6 +53,24 @@
                     }
                 </tbody>
             </table>
+            <ul class="pagination">
+                @{ var prev = ViewBag.CurrentPage - 1;}
+                @{ var next = ViewBag.CurrentPage + 1;}
+
+                @if (ViewBag.CurrentPage > 1)
+                {
+                    <li class="page-item"><a class="page-link lnr lnr-arrow-left" asp-controller="ApprovalLevel" asp-action="Index" asp-route-page="@prev"></a></li>
+                }
+
+                @for (int i = ViewBag.MinCount; i <= ViewBag.MaxCount; i++)
+                {
+                    <li class="page-item"><a class="page-link" asp-controller="ApprovalLevel" asp-action="Index" asp-route-page="@i">@i</a></li>
+                }
+                @if (ViewBag.CurrentPage <= ViewBag.MaxPage)
+                {
+                    <li class="page-item"><a class="page-link lnr lnr-arrow-right" asp-controller="ApprovalLevel" asp-action="Index" asp-route-page="@next"></a></li>
+                }
+            </ul>
         </div>
     </div>
 </div>

@@ -1,6 +1,7 @@
 ﻿using Excellency.Interfaces;
 using Excellency.Models;
 using Excellency.Persistence;
+using Excellency.ViewModels;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Data;
@@ -236,6 +237,32 @@ namespace Excellency.Services
                         Title = dr["Title"].ToString(),
                         Description = dr["Description"].ToString(),
                         Weight = int.Parse(dr["Weight"].ToString()),
+                    };
+                    items.Add(item);
+                }
+            }
+            return items;
+        }
+
+        public IEnumerable<EmployeeViewModel> EmployeeItems(int page)
+        {
+            List<EmployeeViewModel> items = new List<EmployeeViewModel>();
+            string sql = string.Format("EXEC [dbo].[spEmployeeAssignmetIndex] @Page = {0}", page.ToString());
+            DataTable dt = SCObjects.LoadDataTable(sql, UserConnectionString);
+            if(dt != null)
+            {
+                foreach(DataRow dr in dt.Rows)
+                {
+                    var item = new EmployeeViewModel
+                    {
+                        Id = int.Parse(dr["Id"].ToString()),
+                        EmployeeNo = dr["EmployeeNo"].ToString(),
+                        Name = dr["Name"].ToString(),
+                        Company = dr["Company"].ToString(),
+                        Department = dr["Department"].ToString(),
+                        Branch = dr["Branch"].ToString(),
+                        Position = dr["Position"].ToString(),
+                        Category = dr["Category"].ToString(),
                     };
                     items.Add(item);
                 }

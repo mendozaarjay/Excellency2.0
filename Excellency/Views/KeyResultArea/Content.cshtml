@@ -13,13 +13,14 @@
         <div class="panel">
             <div class="panel-heading">
                 <h3 class="panel-title">Key Success Indicator</h3>
+                <p class="panel-subtitle">Total Weight : @Model.SuccessIndicators.Sum(a => a.Weight)</p>
                 <div class="right">
                     <button type="button" data-toggle="modal" data-target="#addnew" data-kraid="@Model.KeyResultAreaId"><i class="fa fa-plus"></i></button>
                 </div>
             </div>
             <div class="panel-body">
                 <div class="table-responsive">
-                    <table class="table table-condensed">
+                    <table class="table table-condensed" id="ksicontent">
                         <thead>
                             <tr>
                                 <th hidden="hidden">Id</th>
@@ -31,16 +32,19 @@
                             </tr>
                         </thead>
                         <tbody>
+                            @{ var count = 0;}
                             @foreach (var item in Model.SuccessIndicators)
                             {
+                                var id = "weight" + count.ToString();
                                 <tr>
                                     <td hidden="hidden">@item.Id</td>
                                     <td><strong>@item.Title</strong></td>
                                     <td>@item.Description</td>
-                                    <td>@item.Weight</td>
-                                    <td class="text-center"><a data-toggle="modal" data-target="#edit" data-id="@item.Id" data-title="@item.Title" data-weight="@item.Weight" data-description="@item.Description" data-kraid="@Model.KeyResultAreaId"><i class="fa fa-pencil text-success"></i></a></td>
+                                    <td>@item.Weight <input type="hidden" id="@id" value="@item.Weight" /></td>
+                                    <td class="text-center"><a data-toggle="modal" data-target="#edit" data-id="@item.Id" data-title="@item.Title" data-weight="@item.Weight" data-description="@item.Description" data-kraid="@Model.KeyResultAreaId" data-original="@item.Weight"><i class="fa fa-pencil text-success"></i></a></td>
                                     <td class="text-center"><a data-toggle="modal" data-target="#delete" data-id="@item.Id" data-kraid="@Model.KeyResultAreaId"><i class="fa fa-trash text-danger"></i></a></td>
                                 </tr>
+                                count++;
                             }
                         </tbody>
                     </table>
@@ -52,7 +56,7 @@
 
 <!-- Add New -->
 <div class="modal fade" id="addnew" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-    @using (Html.BeginForm("SaveKeySuccessIndicator", "KeyResultArea"))
+    @using (Html.BeginForm("SaveKeySuccessIndicator", "KeyResultArea", FormMethod.Post, new { @id = "formadd" }))
     {
         @Html.AntiForgeryToken()
         <div class="modal-dialog" role="document">
@@ -62,6 +66,7 @@
                     <h4 class="modal-title" id="myModalLabel">Add New Key Success Indicator</h4>
                 </div>
                 <div class="modal-body">
+                    <div class="text-danger" id="savemessage"></div>
                     <input type="hidden" name="kraid" id="kraid" />
                     <div class="form-group">
                         <label for="ksititle">Title</label>
@@ -78,7 +83,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Save</button>
+                    <button type="submit" class="btn btn-primary" onclick="return validateSave();">Save</button>
                 </div>
             </div>
         </div>
@@ -87,7 +92,7 @@
 <!--End of Save-->
 <!-- Edit -->
 <div class="modal fade" id="edit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-    @using (Html.BeginForm("SaveKeySuccessIndicator", "KeyResultArea"))
+    @using (Html.BeginForm("SaveKeySuccessIndicator", "KeyResultArea", FormMethod.Post, new { @id = "formedit" }))
     {
         @Html.AntiForgeryToken()
         <div class="modal-dialog" role="document">
@@ -95,27 +100,29 @@
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     <h4 class="modal-title" id="myModalLabel">Edit Key Success Indicator</h4>
-                    
+
                 </div>
                 <div class="modal-body">
-                    <input type="hidden" name="ksiid" id="ksiid" />
-                    <input type="hidden" name="kraid" id="kraid" />
+                    <div class="text-danger" id="editmessage"></div>
+                    <input type="hidden" name="ksiid" id="ksiidedit" />
+                    <input type="hidden" name="kraid" id="kraidedit" />
+                    <input type= "hidden" id="originaledit" />
                     <div class="form-group">
                         <label for="ksititle">Title</label>
-                        <input class="form-control" name="ksititle" id="ksititle" placeholder="Title" />
+                        <input class="form-control" name="ksititle" id="ksititleedit" placeholder="Title" />
                     </div>
                     <div class="form-group">
                         <label for="ksidescription">Description</label>
-                        <input class="form-control" name="ksidescription" id="ksidescription" placeholder="Description" />
+                        <input class="form-control" name="ksidescription" id="ksidescriptionedit" placeholder="Description" />
                     </div>
                     <div class="form-group">
                         <label for="ksiweight">Weight</label>
-                        <input type="number" class="form-control" name="ksiweight" id="ksiweight" placeholder="Weight" />
+                        <input type="number" class="form-control" name="ksiweight" id="ksiweightedit" placeholder="Weight" />
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Save</button>
+                    <button type="submit" class="btn btn-primary" onclick="return validateEdit();">Save</button>
                 </div>
             </div>
         </div>
@@ -150,11 +157,57 @@
 
 @section Scripts{
     <script type="text/javascript">
+
+        function validateSave() {
+            var rows = document.getElementById('ksicontent').getElementsByTagName("tbody")[0].getElementsByTagName("tr").length;
+            var weight = parseFloat($('#ksiweight').val());
+            var total = 0;
+            for (var i = 0; i <= rows - 1; i++) {
+                var name = "#weight" + i;
+                total += parseFloat($(name).val());
+            }
+
+            console.log(total);
+            var grandtotal = total + weight;
+            console.log(grandtotal)
+            if (grandtotal > 100) {
+                document.getElementById("savemessage").innerHTML = "Total percentage should be equal to 100. You still have " + (100 - total) + " to continue.";
+                return false;
+            }
+
+            else {
+                formadd.submit();
+            }
+        }
+        function validateEdit() {
+            var rows = document.getElementById('ksicontent').getElementsByTagName("tbody")[0].getElementsByTagName("tr").length;
+            var weight = parseFloat($('#ksiweightedit').val());
+            var original = parseFloat($('#originaledit').val());
+            var total = 0;
+            for (var i = 0; i <= rows - 1; i++) {
+                var name = "#weight" + i;
+                total += parseFloat($(name).val());
+            }
+            var grandtotal = (total - original) +  weight;
+            if (grandtotal > 100) {
+                document.getElementById("editmessage").innerHTML = "Total percentage should be equal to 100. You still have " + (100 - total) + " to continue.";
+                return false;
+            }
+
+            else {
+                formedit.submit();
+            }
+
+
+        }
         $('#addnew').on('show.bs.modal', function (event) {
             var button = $(event.relatedTarget)
             var kraid = button.data('kraid')
             var modal = $(this)
             $(".modal-body #kraid").val(kraid)
+            $(".modal-body #ksititle").val('')
+            $(".modal-body #ksidescription").val('')
+            $(".modal-body #ksiweight").val(0)
 
         })
     </script>
@@ -166,12 +219,12 @@
             var title = button.data('title')
             var description = button.data('description')
             var weight = button.data('weight')
-            var modal = $(this)
-            $(".modal-body #kraid").val(kraid)
-            $(".modal-body #ksiid").val(id)
-            $(".modal-body #ksititle").val(title)
-            $(".modal-body #ksidescription").val(description)
-            $(".modal-body #ksiweight").val(weight)
+            $(".modal-body #kraidedit").val(kraid)
+            $(".modal-body #ksiidedit").val(id)
+            $(".modal-body #ksititleedit").val(title)
+            $(".modal-body #ksidescriptionedit").val(description)
+            $(".modal-body #ksiweightedit").val(weight)
+            $(".modal-body #originaledit").val(weight)
 
         })
     </script>
@@ -186,5 +239,6 @@
             $(".modal-body #ksiid").val(id)
         })
     </script>
+
 }
 

@@ -60,7 +60,7 @@ namespace Excellency.Controllers
                     Id = model.Id,
                     Title = model.Title,
                     Description = model.Description,
-                    Weight = model.Weight
+                    Weight = 100
                 };
                 if (model.Id == 0)
                 {

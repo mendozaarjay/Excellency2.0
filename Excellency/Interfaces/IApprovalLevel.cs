@@ -1,4 +1,5 @@
 ﻿using Excellency.Models;
+using Excellency.ViewModels;
 using System.Collections.Generic;
 
 namespace Excellency.Interfaces
@@ -15,5 +16,6 @@ namespace Excellency.Interfaces
         string GetNameById(int id);
         void RemoveById(int id);
         bool IsSet(int id);
+        IEnumerable<ApprovalLevelAccountItem> ApprovalLevelItems(int page);
     }
 }

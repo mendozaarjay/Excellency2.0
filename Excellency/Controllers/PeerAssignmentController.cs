@@ -21,18 +21,22 @@ namespace Excellency.Controllers
             _Services = peerAssignment;
         }
         // GET: /<controller>/
-        public IActionResult Index()
+        public IActionResult Index(int? page)
         {
-            var result = _Services.GetAllAccounts()
-                .Select(a => new PeerAssignmentIndexItem
-                {
-                    Id = a.Id,
-                    Name = a.FirstName + " " + a.MiddleName + " " + a.LastName,
-                    Company = a.Company.Description,
-                    Department = a.Department.Description,
-                    Branch = a.Branch.Description,
-                    Position = a.Position.Description
-                }).ToList();
+            int currentpage;
+            if (page == null)
+                currentpage = 1;
+            else
+                currentpage = (int)page;
+
+            var maxcount = currentpage < 5 ? 5 : currentpage + 2;
+            var mincount = currentpage < 5 ? 1 : currentpage - 2;
+
+            var maxpage = (_Services.GetAllAccounts().Count() / 10) + 1;
+
+            maxcount = currentpage <= maxpage ? maxcount : maxpage;
+            var result = _Services.Employees(currentpage);
+
             var aes = _Services.ActiveSeason();
             var season = new EvaluationSeasonItem();
             if (aes != null)
@@ -49,7 +53,16 @@ namespace Excellency.Controllers
                 IsWithActiveSeason = _Services.IsWithActiveSeason(),
                 ActiveSeason = season,
             };
+            ViewBag.MaxCount = maxcount;
+            ViewBag.MinCount = mincount;
+            ViewBag.CurrentPage = currentpage;
+            ViewBag.MaxPage = maxpage;
             return View(model);
+        }
+        public IActionResult Search(string keyword)
+        {
+            var items = _Services.Search(keyword);
+            return Json(new { result = items });
         }
         public IActionResult Assign(int id)
         {

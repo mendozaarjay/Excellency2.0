@@ -95,5 +95,53 @@ namespace Excellency.Services
         {
             return _dbContext.EvaluationSeasons.Any(a => a.IsActive == true);
         }
+
+        public IEnumerable<PeerAssignmentIndexItem> Employees(int page)
+        {
+            string sql = string.Format(@"EXEC [dbo].[spPeerAssignmentIndex]	@Page = {0}, @QueryType = 0", page.ToString());
+            List<PeerAssignmentIndexItem> items = new List<PeerAssignmentIndexItem>();
+            DataTable dt = SCObjects.LoadDataTable(sql, UserConnectionString);
+            if(dt != null)
+            {
+                foreach(DataRow dr in dt.Rows)
+                {
+                    var item = new PeerAssignmentIndexItem
+                    {
+                        Id = int.Parse(dr["Id"].ToString()),
+                        Branch = dr["Branch"].ToString(),
+                        Company = dr["Company"].ToString(),
+                        Department = dr["Department"].ToString(),
+                        Name = dr["Name"].ToString(),
+                        Position = dr["Position"].ToString(),
+                    };
+                    items.Add(item);
+                }
+            }
+            return items;
+        }
+
+        public IEnumerable<PeerAssignmentIndexItem> Search(string keyword)
+        {
+            string sql = string.Format(@"EXEC [dbo].[spPeerAssignmentIndex]	@Keyword = '{0}', @QueryType = 1", keyword);
+            List<PeerAssignmentIndexItem> items = new List<PeerAssignmentIndexItem>();
+            DataTable dt = SCObjects.LoadDataTable(sql, UserConnectionString);
+            if (dt != null)
+            {
+                foreach (DataRow dr in dt.Rows)
+                {
+                    var item = new PeerAssignmentIndexItem
+                    {
+                        Id = int.Parse(dr["Id"].ToString()),
+                        Branch = dr["Branch"].ToString(),
+                        Company = dr["Company"].ToString(),
+                        Department = dr["Department"].ToString(),
+                        Name = dr["Name"].ToString(),
+                        Position = dr["Position"].ToString(),
+                    };
+                    items.Add(item);
+                }
+            }
+            return items;
+        }
     }
 }

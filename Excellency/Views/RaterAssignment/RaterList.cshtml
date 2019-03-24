@@ -7,11 +7,15 @@
         <h3 class="panel-title">List of Raters</h3>
     </div>
     <div class="panel-body">
+        <div class="input-group col-md-4">
+            <input type="text" id="searchkey" class="form-control" placeholder="Search...">
+            <span class="input-group-btn"><button type="button" id="search" class="btn btn-primary">Search</button></span>
+        </div>
+        <br />
         <div class="table-responsive">
-            <table class="table table-condensed">
+            <table class="table table-condensed" id="employeelist">
                 <thead>
                     <tr>
-                        <th hidden="hidden">Id</th>
                         <th>Name</th>
                         <th>Company</th>
                         <th>Branch</th>
@@ -20,22 +24,82 @@
                         <th></th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="emplist">
                     @foreach (var item in Model.Raters)
                     {
                         <tr>
-                            <td hidden="hidden">@item.Id</td>
                             <td>@item.Name</td>
                             <td>@item.Company</td>
                             <td>@item.Branch</td>
                             <td>@item.Position</td>
                             <td>@item.Department</td>
-                            <td><a  class="fa fa-clone" asp-controller="RaterAssignment" asp-action="EditRater" asp-route-id ="@item.Id"></a></td>
+                            <td><a class="fa fa-clone" asp-controller="RaterAssignment" asp-action="EditRater" asp-route-id="@item.Id"></a></td>
                         </tr>
                     }
                 </tbody>
             </table>
+            <ul class="pagination">
+                @{ var prev = ViewBag.CurrentPage - 1;}
+                @{ var next = ViewBag.CurrentPage + 1;}
+
+                @if (ViewBag.CurrentPage > 1)
+                {
+                    <li class="page-item"><a class="page-link lnr lnr-arrow-left" asp-controller="RaterAssignment" asp-action="RaterList" asp-route-page="@prev"></a></li>
+                }
+
+                @for (int i = ViewBag.MinCount; i <= ViewBag.MaxCount; i++)
+                {
+                    <li class="page-item"><a class="page-link" asp-controller="RaterAssignment" asp-action="RaterList" asp-route-page="@i">@i</a></li>
+                }
+                @if (ViewBag.CurrentPage <= ViewBag.MaxPage)
+                {
+                    <li class="page-item"><a class="page-link lnr lnr-arrow-right" asp-controller="RaterAssignment" asp-action="RaterList" asp-route-page="@next"></a></li>
+                }
+            </ul>
         </div>
     </div>
 </div>
 
+
+@section Scripts{
+
+    <script type="text/javascript">
+        $('#delete').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget)
+            var id = button.data('id')
+            var modal = $(this)
+            modal.find('.modal-body input').val(id)
+        })
+        $('#search').on('click', function () {
+            var keyword = $("#searchkey").val();
+            if (keyword.length > 0) {
+                $.ajax({
+                    url: 'Search',
+                    data: { 'keyword': keyword },
+                    type: 'GET',
+                    dataType: 'JSON',
+                    success: function (data) {
+                        $('#emplist').empty();
+                        var len = data.result.length
+                        var html = '';
+                        for (var i = 0; i < len; i++) {
+
+                            html += `<tr>
+                                <td>` + data.result[i]['name'] + `</td>
+                                <td>` + data.result[i]['company'] + `</td>
+                                <td>` + data.result[i]['branch'] + `</td>
+                                <td>` + data.result[i]['position'] + `</td>
+                                <td>` + data.result[i]['department'] + `</td>
+                                <td class="text-center"><a href="/RaterAssignment/EditRater/` + data.result[i]['id'] + `"><i class="fa fa-clone"></i></a></td>
+                                </tr>`
+                        }
+                        $('#employeelist tbody').append(html);
+                    },
+                    error: function (data) {
+                    }
+
+                });
+            }
+        });
+    </script>
+}

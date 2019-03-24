@@ -1,4 +1,5 @@
 ﻿using Excellency.Models;
+using Excellency.ViewModels;
 using System.Collections.Generic;
 
 namespace Excellency.Interfaces
@@ -14,5 +15,7 @@ namespace Excellency.Interfaces
         void RemoveById(int id);
         bool IsWithActiveSeason();
         EvaluationSeason ActiveSeason();
+        IEnumerable<PeerAssignmentIndexItem> Employees(int page);
+        IEnumerable<PeerAssignmentIndexItem> Search(string keyword);
     }
 }

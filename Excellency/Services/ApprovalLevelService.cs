@@ -1,9 +1,11 @@
 ﻿using Excellency.Interfaces;
 using Excellency.Models;
 using Excellency.Persistence;
+using Excellency.ViewModels;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
@@ -121,6 +123,32 @@ namespace Excellency.Services
                 .Include(a => a.Employee)
                 .Where(a => a.IsDeleted == false)
                 .Any(a => a.Employee.Id == id);
+        }
+
+        public IEnumerable<ApprovalLevelAccountItem> ApprovalLevelItems(int page)
+        {
+            string sql = string.Format(@"EXEC [dbo].[spApprovalLevelIndex] @Page = {0}", page.ToString());
+            DataTable dt = SCObjects.LoadDataTable(sql, UserConnectionString);
+            List<ApprovalLevelAccountItem> items = new List<ApprovalLevelAccountItem>();
+            if(dt != null)
+            {
+                foreach(DataRow dr in dt.Rows)
+                {
+                    var item = new ApprovalLevelAccountItem
+                    {
+                        Id = int.Parse(dr["Id"].ToString()),
+                        Name = dr["Name"].ToString(),
+                        Company = dr["Company"].ToString(),
+                        Branch = dr["Branch"].ToString(),
+                        Department = dr["Department"].ToString(),
+                        Position = dr["Position"].ToString(),
+                        IsSet = dr["IsSet"].ToString().Equals("1") ? true : false,
+                    };
+                    items.Add(item);
+                }
+            }
+
+            return items;
         }
     }
 }

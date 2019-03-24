@@ -1,6 +1,7 @@
 ﻿using Excellency.Interfaces;
 using Excellency.Models;
 using Excellency.Persistence;
+using Excellency.ViewModels;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -130,18 +131,7 @@ namespace Excellency.Services
         {
             List<Account> items = new List<Account>();
 
-            string sql = string.Format(@"SELECT *
-                                        FROM [dbo].[Accounts] [a]
-                                        WHERE [a].[Id] NOT IN (
-                                                                  SELECT [rl].[EmployeeId]
-                                                                  FROM [dbo].[RaterHeader] [rh]
-                                                                      INNER JOIN [dbo].[RaterLine] [rl]
-                                                                          ON [rh].[Id] = [rl].[EmployeeRaterId]
-                                                                  WHERE [rh].[RaterId] = {0}
-                                                                        AND [rh].[IsDeleted] = 0
-                                                                        AND [rl].[IsDeleted] = 0
-                                                              )
-                                              AND [a].[Id] <> {0}", RaterId.ToString());
+            string sql = string.Format(@"EXEC [dbo].[spEmployeesForRaterAssignment] @Id = {0}", RaterId.ToString());
             DataTable dt = SCObjects.LoadDataTable(sql, UserConnectionString);
             if(dt != null)
             {
@@ -234,9 +224,12 @@ namespace Excellency.Services
             return _dbContext.Accounts.FromSql(@"SELECT *
                     FROM [dbo].[Accounts] [a]
                     WHERE [a].[Id] IN (
-                                          SELECT [ara].[AccountId]
-                                          FROM [dbo].[AccountRoleAssignments] [ara]
-                                          WHERE [ara].[RoleId] = 3
+                                          SELECT [uat].[AccountId]
+                                          FROM [dbo].[UserAccessTypes] [uat]
+                                              INNER JOIN [dbo].[UserTypes] ut
+                                                  ON [uat].[UserTypeId] = ut.[Id]
+                                          WHERE [uat].[IsDeleted] = 0
+                                                AND [ut].[Description] LIKE '%rater%'
                                       )")
                    .Include(a => a.Company)
                    .Include(a => a.Branch)
@@ -250,6 +243,53 @@ namespace Excellency.Services
             item.IsDeleted = true;
             _dbContext.Entry(item).State = EntityState.Modified;
             _dbContext.SaveChanges();
+        }
+
+        public IEnumerable<RaterViewModel> RaterList(int page)
+        {
+            List<RaterViewModel> items = new List<RaterViewModel>();
+            DataTable dt = SCObjects.LoadDataTable(string.Format("EXEC [dbo].[spRaterAssignmentIndex] @Page = {0}, @QueryType = 0", page.ToString()), UserConnectionString);
+            if(dt != null)
+            {
+                foreach(DataRow dr in dt.Rows)
+                {
+                    var item = new RaterViewModel
+                    {
+                        Id = int.Parse(dr["Id"].ToString()),
+                        Company = dr["Company"].ToString(),
+                        Branch = dr["Branch"].ToString(),
+                        Name = dr["Name"].ToString(),
+                        Department = dr["Department"].ToString(),
+                        Position = dr["Position"].ToString(),
+                    };
+                    items.Add(item);
+                }
+            }
+            return items;
+        }
+
+
+        public IEnumerable<RaterViewModel> SearchRater(string keyword)
+        {
+            List<RaterViewModel> items = new List<RaterViewModel>();
+            DataTable dt = SCObjects.LoadDataTable(string.Format("EXEC [dbo].[spRaterAssignmentIndex] @Keyword = '{0}', @QueryType = 1", keyword), UserConnectionString);
+            if (dt != null)
+            {
+                foreach (DataRow dr in dt.Rows)
+                {
+                    var item = new RaterViewModel
+                    {
+                        Id = int.Parse(dr["Id"].ToString()),
+                        Company = dr["Company"].ToString(),
+                        Branch = dr["Branch"].ToString(),
+                        Name = dr["Name"].ToString(),
+                        Department = dr["Department"].ToString(),
+                        Position = dr["Position"].ToString(),
+                    };
+                    items.Add(item);
+                }
+            }
+            return items;
         }
     }
 }
