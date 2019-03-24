@@ -38,6 +38,10 @@ namespace Excellency.ViewModels
         public IEnumerable<EvaluationLineItem> BehavioralLineItems { get; set; }
         public IEnumerable<EvaluationLineItem> KRALineItems { get; set; }
 
+        public bool IsAdmin { get; set; }
+        public bool IsRater { get; set; }
+        public bool IsApprover { get; set; }
+        public bool IsEmployee { get; set; }
 
     }
 }

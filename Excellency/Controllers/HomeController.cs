@@ -96,6 +96,11 @@ namespace Excellency.Controllers
             model.BehavioralLineItems = bitems;
             model.KRALineItems = kitems;
 
+            var id = int.Parse(HttpContext.Session.GetString("UserId"));
+            model.IsAdmin = _Services._IsAdmin(id);
+            model.IsRater = _Services._IsRater(id);
+            model.IsApprover = _Services._IsApprover(id);
+            model.IsEmployee = _Services._IsEmployee(id);
             return View(model);
         }
 
@@ -114,6 +119,11 @@ namespace Excellency.Controllers
                 Name = name,
                 UserAccess = _Services.UserAccess(int.Parse(user)),
             };
+            var id = int.Parse(HttpContext.Session.GetString("UserId"));
+            model.IsAdmin = _Services._IsAdmin(id);
+            model.IsRater = _Services._IsRater(id);
+            model.IsApprover = _Services._IsApprover(id);
+            model.IsEmployee = _Services._IsEmployee(id);
             return PartialView("_SideBar", model);
         }
         public IActionResult _Header()
@@ -124,6 +134,7 @@ namespace Excellency.Controllers
             {
                 Name = name,
                 UserAccess = _Services.UserAccess(int.Parse(user)),
+                Notifications = _Services.Notifications(int.Parse(user)),
             };
             return PartialView("_Header", model);
         }

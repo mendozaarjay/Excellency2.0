@@ -258,7 +258,8 @@ namespace Excellency.Controllers
                     };
                     items.Add(factoritem);
                 }
-                _Evaluation.SaveBehavioralEvaluation(header, items);
+                var id = int.Parse(HttpContext.Session.GetString("UserId"));
+                _Evaluation.SaveBehavioralEvaluation(header, items,id,model.EmployeeId);
                 return RedirectToAction("EmployeeEvaluation", new { id = model.EmployeeId });
             }
             else
@@ -330,7 +331,8 @@ namespace Excellency.Controllers
                     };
                     items.Add(rating);
                 }
-                _Evaluation.SaveKeyResultAreaEvaluation(header, items);
+                var id = int.Parse(HttpContext.Session.GetString("UserId"));
+                _Evaluation.SaveKeyResultAreaEvaluation(header, items,id,model.EmployeeId);
                 return RedirectToAction("EmployeeEvaluation", new { id = model.EmployeeId });
             }
             else

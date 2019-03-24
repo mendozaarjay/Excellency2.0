@@ -121,7 +121,8 @@
                         for (var i = 0; i < len; i++) {
 
                             var span = '';
-                            if (data.result[i]['isSet'] == 'true') {
+                            console.log(data.result[i]['isSet'])
+                            if (data.result[i]['isSet'] === true) {
                                 span = '<td><span><label class="label label-success">SET</label></span></td>';
                             }
                             else {

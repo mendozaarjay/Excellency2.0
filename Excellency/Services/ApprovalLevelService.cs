@@ -42,9 +42,12 @@ namespace Excellency.Services
                 .FromSql(@"SELECT *
                     FROM [dbo].[Accounts] [a]
                     WHERE [a].[Id] IN (
-                                          SELECT [ara].[AccountId]
-                                          FROM [dbo].[AccountRoleAssignments] [ara]
-                                          WHERE [ara].[RoleId] = 2
+                                          SELECT [uat].[AccountId]
+                                            FROM [dbo].[UserAccessTypes] [uat]
+                                                INNER JOIN [dbo].[UserTypes] [ut]
+                                                    ON [ut].[Id] = [uat].[UserTypeId]
+                                            WHERE [uat].[IsDeleted] = 0
+                                                  AND [ut].[Description] LIKE '%approver%'
                                       )")
                 .Where(a => a.Id != id);
         }

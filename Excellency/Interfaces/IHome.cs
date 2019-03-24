@@ -67,5 +67,10 @@ namespace Excellency.Interfaces
         List<EvaluationLineItem> GetKRAEvaluationLineItems(int headerid);
 
 
+        bool _IsAdmin(int userid);
+        bool _IsRater(int userid);
+        bool _IsApprover(int userid);
+        bool _IsEmployee(int userid);
+        IEnumerable<NotificationItem> Notifications(int id);
     }
 }

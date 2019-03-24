@@ -44,8 +44,8 @@ namespace Excellency.Interfaces
         bool IsKeyResultExists(int kraid, int employeeid);
 
         void SaveRating(RatingHeader header, IEnumerable<RatingBehavioralFactor> ratings, IEnumerable<RatingKeySuccessArea> areas);
-        void SaveBehavioralEvaluation(RatingHeader header, IEnumerable<RatingBehavioralFactor> ratings);
-        void SaveKeyResultAreaEvaluation(RatingHeader header, IEnumerable<RatingKeySuccessArea> ratings);
+        void SaveBehavioralEvaluation(RatingHeader header, IEnumerable<RatingBehavioralFactor> ratings, int userid, int employeeid);
+        void SaveKeyResultAreaEvaluation(RatingHeader header, IEnumerable<RatingKeySuccessArea> ratings, int userid, int employeeid);
 
         void UpdateRatingBehavioral(int HeaderId, int UserId, IEnumerable<RatingBehavioralFactor> ratings);
         void UpdateRatingKeyResultArea(int HeaderId, int UserId, IEnumerable<RatingKeySuccessArea> ratings);

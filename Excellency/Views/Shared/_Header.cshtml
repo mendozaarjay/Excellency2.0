@@ -17,6 +17,24 @@
         <div id="navbar-menu">
             <ul class="nav navbar-nav navbar-right">
                 <li class="dropdown">
+                    <a href="#" class="dropdown-toggle icon-menu" data-toggle="dropdown">
+                        <i class="lnr lnr-alarm"></i>
+                        @if (Model.Notifications.Count() > 0)
+                        {
+                            <span class="badge bg-danger">@Model.Notifications.Count()</span>
+                        }
+                    </a>
+                    @if (Model.Notifications.Count() > 0)
+                    {
+                        <ul class="dropdown-menu notifications">
+                            @foreach (var item in Model.Notifications)
+                            {
+                                <li><a href="#" class="notification-item"><span class="dot bg-success"></span>@item.Message</a></li>
+                            }
+                        </ul>
+                    }
+                </li>
+                <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span>@Model.Name</span> <i class="icon-submenu lnr lnr-chevron-down"></i></a>
                     <ul class="dropdown-menu">
                         <li><a asp-controller="UserAccount" asp-action="Profile"><i class="lnr lnr-user"></i> <span>Account</span></a></li>

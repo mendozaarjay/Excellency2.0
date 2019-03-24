@@ -229,26 +229,36 @@ namespace Excellency.Services
         }
         public int RaterCount()
         {
-            var item = _dbContext.AccountRoleAssignments
-               .Include(a => a.Role)
-               .Where(a => a.Role.Id == 3 && a.IsDeleted == false)
-               .Select(a => a.Account.Id)
-               .Distinct().Count();
-            return item;
+            string sql = @"SELECT COUNT([uat].[AccountId])
+                        FROM [dbo].[UserAccessTypes] [uat]
+                            INNER JOIN [dbo].[UserTypes] [ut]
+                                ON [ut].[Id] = [uat].[UserTypeId]
+                        WHERE [uat].[IsDeleted] = 0
+                              AND [ut].[Description] LIKE '%rater%'";
+            string checkThis = SCObjects.ReturnText(sql, UserConnectionString);
+            return int.Parse(checkThis);
         }
         public int ApproverCount()
         {
-            var item = _dbContext.AccountRoleAssignments
-               .Include(a => a.Role)
-               .Where(a => a.Role.Id == 2 && a.IsDeleted == false)
-               .Select(a => a.Account.Id)
-               .Distinct().Count();
-            return item;
+            string sql = @"SELECT COUNT([uat].[AccountId])
+                        FROM [dbo].[UserAccessTypes] [uat]
+                            INNER JOIN [dbo].[UserTypes] [ut]
+                                ON [ut].[Id] = [uat].[UserTypeId]
+                        WHERE [uat].[IsDeleted] = 0
+                              AND [ut].[Description] LIKE '%approver%'";
+            string checkThis = SCObjects.ReturnText(sql, UserConnectionString);
+            return int.Parse(checkThis);
         }
         public int EmployeeCount()
         {
-            var item = _dbContext.Accounts.Where(a => a.IsDeleted == false).Count();
-            return item;
+            string sql = @"SELECT COUNT([uat].[AccountId])
+                        FROM [dbo].[UserAccessTypes] [uat]
+                            INNER JOIN [dbo].[UserTypes] [ut]
+                                ON [ut].[Id] = [uat].[UserTypeId]
+                        WHERE [uat].[IsDeleted] = 0
+                              AND [ut].[Description] LIKE '%employee%'";
+            string checkThis = SCObjects.ReturnText(sql, UserConnectionString);
+            return int.Parse(checkThis);
         }
         public string AccountPeriod()
         {
@@ -702,7 +712,59 @@ namespace Excellency.Services
             }
             return items;
         }
+
+
         #endregion
         #endregion
+        public bool _IsAdmin(int userid)
+        {
+            string sql = string.Format("SELECT [dbo].[fnIsAdmin]({0})", userid.ToString());
+            var checkThis = SCObjects.ReturnText(sql, UserConnectionString);
+            return checkThis.Equals("1");
+        }
+
+        public bool _IsRater(int userid)
+        {
+            string sql = string.Format("SELECT [dbo].[fnIsRater]({0})", userid.ToString());
+            var checkThis = SCObjects.ReturnText(sql, UserConnectionString);
+            return checkThis.Equals("1");
+        }
+
+        public bool _IsApprover(int userid)
+        {
+            string sql = string.Format("SELECT [dbo].[fnIsApprover]({0})", userid.ToString());
+            var checkThis = SCObjects.ReturnText(sql, UserConnectionString);
+            return checkThis.Equals("1");
+        }
+
+        public bool _IsEmployee(int userid)
+        {
+            string sql = string.Format("SELECT [dbo].[fnIsEmployee]({0})", userid.ToString());
+            var checkThis = SCObjects.ReturnText(sql, UserConnectionString);
+            return checkThis.Equals("1");
+        }
+
+        public IEnumerable<NotificationItem> Notifications(int id)
+        {
+            List<NotificationItem> items = new List<NotificationItem>();
+            string sql = string.Format(@"EXEC [dbo].[spNotifications] @To = {0}, @QueryType = 2", id.ToString());
+            DataTable dt = SCObjects.LoadDataTable(sql, UserConnectionString);
+            if(dt != null)
+            {
+                foreach(DataRow dr in dt.Rows)
+                {
+                    var item = new NotificationItem
+                    {
+                        Id = int.Parse(dr["Id"].ToString()),
+                        From = dr["From"].ToString(),
+                        To = dr["To"].ToString(),
+                        Message = dr["Message"].ToString(),
+                        Date = DateTime.Parse(dr["Date"].ToString()),
+                    };
+                    items.Add(item);
+                }
+            }
+            return items;
+        }
     }
 }

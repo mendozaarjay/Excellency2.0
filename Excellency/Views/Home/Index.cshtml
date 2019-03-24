@@ -7,7 +7,7 @@
 
 
 
-@if (Model.DashboardAccess.IsAdministrator)
+@if (Model.IsAdmin)
 {
 
     <div class="panel panel-headline">
@@ -88,7 +88,7 @@
     </div>
 }
 
-@if (Model.DashboardAccess.IsRater)
+@if (Model.IsRater)
 {
     <div class="panel panel-headline">
         <div class="panel-heading">
@@ -177,7 +177,7 @@
     </div>
 }
 
-@if (Model.DashboardAccess.IsApprover)
+@if (Model.IsApprover)
 {
     <div class="panel panel-headline">
         <div class="panel-heading">

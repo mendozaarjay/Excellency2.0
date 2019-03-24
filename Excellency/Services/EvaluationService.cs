@@ -4,6 +4,7 @@ using Excellency.Persistence;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -13,9 +14,12 @@ namespace Excellency.Services
     {
         private EASDbContext _dbContext;
 
+        public string UserConnectionString { get; }
+
         public EvaluationService(EASDbContext dbContext)
         {
             _dbContext = dbContext;
+            UserConnectionString = dbContext.Database.GetDbConnection().ConnectionString;
         }
 
         public void Approve(EvaluationHeader header, Account account)
@@ -312,6 +316,13 @@ namespace Excellency.Services
             header.PostedDate = DateTime.Now;
             _dbContext.Entry(header).State = EntityState.Modified;
             _dbContext.SaveChanges();
+            var id = item.RatingHeader.Id;
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandText = "[dbo].[spEvaluationPostingNotification]";
+            cmd.Parameters.Clear();
+            cmd.Parameters.AddWithValue("@Id", id);
+            cmd.Parameters.AddWithValue("@QueryType", 1);
+            var result = SCObjects.ExecuteNonQuery(cmd, UserConnectionString);
         }
 
         public void PostKeyResultArea(int kraid, int employeeid)
@@ -328,6 +339,13 @@ namespace Excellency.Services
             header.PostedDate = DateTime.Now;
             _dbContext.Entry(header).State = EntityState.Modified;
             _dbContext.SaveChanges();
+            var id = item.RatingHeader.Id;
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandText = "[dbo].[spEvaluationPostingNotification]";
+            cmd.Parameters.Clear();
+            cmd.Parameters.AddWithValue("@Id", id);
+            cmd.Parameters.AddWithValue("@QueryType", 2);
+            var result = SCObjects.ExecuteNonQuery(cmd, UserConnectionString);
         }
 
         public RatingTableItem RatingTableItem(int id)
@@ -365,10 +383,19 @@ namespace Excellency.Services
             _dbContext.SaveChanges();
         }
 
-        public void SaveBehavioralEvaluation(RatingHeader header, IEnumerable<RatingBehavioralFactor> ratings)
+        public void SaveBehavioralEvaluation(RatingHeader header, IEnumerable<RatingBehavioralFactor> ratings, int userid, int employeeid)
         {
             if (header.Id == 0)
             {
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandText = "[dbo].[spNotifications]";
+                cmd.Parameters.Clear();
+                cmd.Parameters.AddWithValue("@From", userid);
+                cmd.Parameters.AddWithValue("@To", employeeid);
+                cmd.Parameters.AddWithValue("@Message", "Behavioral evaluation was created.");
+                cmd.Parameters.AddWithValue("@QueryType", 1);
+                var result = SCObjects.ExecuteNonQuery(cmd, UserConnectionString);
+
                 header.EvaluationSeason = ActiveSeason();
                 _dbContext.Add(header);
             }
@@ -376,6 +403,8 @@ namespace Excellency.Services
             {
                 header.EvaluationSeason = ActiveSeason();
                 _dbContext.Entry(header).State = EntityState.Modified;
+               
+
             }
             foreach (var item in ratings)
             {
@@ -390,12 +419,22 @@ namespace Excellency.Services
                 }
             }
             _dbContext.SaveChanges();
+
         }
 
-        public void SaveKeyResultAreaEvaluation(RatingHeader header, IEnumerable<RatingKeySuccessArea> ratings)
+        public void SaveKeyResultAreaEvaluation(RatingHeader header, IEnumerable<RatingKeySuccessArea> ratings,int userid, int employeeid)
         {
             if (header.Id == 0)
             {
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandText = "[dbo].[spNotifications]";
+                cmd.Parameters.Clear();
+                cmd.Parameters.AddWithValue("@From", userid);
+                cmd.Parameters.AddWithValue("@To", employeeid);
+                cmd.Parameters.AddWithValue("@Message", "KRA evaluation was created.");
+                cmd.Parameters.AddWithValue("@QueryType", 1);
+                var result = SCObjects.ExecuteNonQuery(cmd, UserConnectionString);
+
                 header.EvaluationSeason = ActiveSeason();
                 _dbContext.Add(header);
             }
