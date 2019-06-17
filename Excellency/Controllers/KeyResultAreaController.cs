@@ -10,17 +10,17 @@ namespace Excellency.Controllers
 {
     public class KeyResultAreaController : Controller
     {
-        private IKeyResultArea _KeyResultArea;
+        private IKeyResultArea _Services;
 
         public KeyResultAreaController(IKeyResultArea keyResultArea)
         {
-            _KeyResultArea = keyResultArea;
+            _Services = keyResultArea;
         }
         #region Key Result Area
         [SessionAuthorized]
         public IActionResult Index()
         {
-            var result = _KeyResultArea.GetAllKeyResultArea().Select(
+            var result = _Services.GetAllKeyResultArea().Select(
                 a => new KeyResultAreaViewModel
                 {
                     Id = a.Id,
@@ -29,7 +29,7 @@ namespace Excellency.Controllers
                     Weight = a.Weight
                 }
                 ).ToList();
-            var aes = _KeyResultArea.ActiveSeason();
+            var aes = _Services.ActiveSeason();
             var season = new EvaluationSeasonItem();
             if(aes != null)
             {
@@ -42,11 +42,26 @@ namespace Excellency.Controllers
             var model = new KeyResultAreaIndexViewModel
             {
                 KeyResultAreas = result,
-                IsWithActiveSeason = _KeyResultArea.IsWithActiveSeason(),
+                IsWithActiveSeason = _Services.IsWithActiveSeason(),
                 ActiveSeason = season,
                 
             };
             return View(model);
+        }
+        public IActionResult Search(string keyword)
+        {
+            var term = keyword.ToLower();
+            var items = _Services.GetAllKeyResultArea().Where(a => a.Title.ToLower().Contains(term) || a.Description.ToLower().Contains(term))
+                .Select(
+                a => new KeyResultAreaViewModel
+                {
+                    Id = a.Id,
+                    Title = a.Title,
+                    Description = a.Description,
+                    Weight = a.Weight
+                }
+                ).ToList();
+            return Json(new { result = items });
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -66,13 +81,13 @@ namespace Excellency.Controllers
                 {
                     item.CreatedBy = UserId;
                     item.CreationDate = DateTime.Now;
-                    _KeyResultArea.Add(item);
+                    _Services.Add(item);
                 }
                 else
                 {
                     item.ModifiedBy = UserId;
                     item.ModifiedDate = DateTime.Now;
-                    _KeyResultArea.Update(item);
+                    _Services.Update(item);
                 }
                 return RedirectToAction("Index");
             }
@@ -83,7 +98,7 @@ namespace Excellency.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Delete(int id)
         {
-            _KeyResultArea.RemoveById(id);
+            _Services.RemoveById(id);
             return RedirectToAction("Index");
         }
         #endregion
@@ -91,8 +106,8 @@ namespace Excellency.Controllers
         [SessionAuthorized]
         public IActionResult Content(int id)
         {
-            var kra = _KeyResultArea.GetKeyResultAreaById(id);
-            var result = _KeyResultArea.SuccessIndicatorPerKRA(id).Select
+            var kra = _Services.GetKeyResultAreaById(id);
+            var result = _Services.SuccessIndicatorPerKRA(id).Select
                 (
                 a => new KeySuccessIndicatorViewModel
                 {
@@ -103,7 +118,7 @@ namespace Excellency.Controllers
                 }
                 ).ToList();
 
-            var RatingTables = _KeyResultArea.GetRatingTables().Select(a => new RatingTableViewModel
+            var RatingTables = _Services.GetRatingTables().Select(a => new RatingTableViewModel
             {
                 Id = a.Id,
                 Description = a.Description
@@ -130,10 +145,10 @@ namespace Excellency.Controllers
                     Id = model.KSIId,
                     Title = model.KSITitle,
                     Description = model.KSIDescription,
-                    KeyResultArea = _KeyResultArea.GetKeyResultAreaById(model.KRAId),
+                    KeyResultArea = _Services.GetKeyResultAreaById(model.KRAId),
                     Weight = model.KSIWeight
                 };
-                _KeyResultArea.SaveKeySuccessIndicator(item,UserId);
+                _Services.SaveKeySuccessIndicator(item,UserId);
                 return RedirectToAction("Content", new { id = model.KRAId });
             }
             else
@@ -145,7 +160,7 @@ namespace Excellency.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult RemoveSuccessIndicator(KeyResultAreaContentViewModel model)
         {
-            _KeyResultArea.RemoveSuccessIndicatorById(model.KSIId);
+            _Services.RemoveSuccessIndicatorById(model.KSIId);
             return RedirectToAction("Content", new { id = model.KRAId });
         }
         #endregion
@@ -154,14 +169,14 @@ namespace Excellency.Controllers
         [SessionAuthorized]
         public IActionResult Category(int id)
         {
-            var result = _KeyResultArea.CategoriesPerKSIId(id).
+            var result = _Services.CategoriesPerKSIId(id).
                 Select(a => new CategoryViewModel
                 {
                     Id = a.Id,
                     Description = a.Description,
                     Weight = a.Weight
                 }).ToList();
-            var ksi = _KeyResultArea.GetKeySuccessIndicatorById(id);
+            var ksi = _Services.GetKeySuccessIndicatorById(id);
             var model = new CategoryIndexViewModel
             {
                 Categories = result,
@@ -182,9 +197,9 @@ namespace Excellency.Controllers
                     Id = model.Id,
                     Description = model.Description,
                     Weight = model.Weight,
-                    SuccessIndicator = _KeyResultArea.GetKeySuccessIndicatorById(model.KSIId)
+                    SuccessIndicator = _Services.GetKeySuccessIndicatorById(model.KSIId)
                 };
-                _KeyResultArea.SaveCategory(category,UserId);
+                _Services.SaveCategory(category,UserId);
                 return RedirectToAction("Category", new { id = model.KSIId });
             }
             else
@@ -196,7 +211,7 @@ namespace Excellency.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult RemoveCategoryById(CategoryIndexViewModel model)
         {
-            _KeyResultArea.RemoveCategoryPerId(model.Id);
+            _Services.RemoveCategoryPerId(model.Id);
             return RedirectToAction("Category", new { id = model.KSIId });
         }
         #endregion

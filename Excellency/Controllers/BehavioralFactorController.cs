@@ -50,6 +50,21 @@ namespace Excellency.Controllers
             };
             return View(model);
         }
+        public IActionResult Search(string keyword)
+        {
+            var term = keyword.ToLower();
+            var items = _BehavioralFactor.GetBehavioralFactors()
+                .Where(a => a.Title.ToLower().Contains(term) || a.Title.ToLower().Contains(term))
+                .Select(a => new BehavioralFactorViewModel
+                {
+                    Id = a.Id,
+                    Title = a.Title,
+                    Description = a.Description,
+                    Weight = a.Weight,
+                    Category = a.Category.Id
+                }).ToList();
+            return Json(new { result = items });
+        }
         public IEnumerable<SelectListItem> Categories()
         {
             var categories = _BehavioralFactor.EmployeeCategories()

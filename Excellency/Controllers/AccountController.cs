@@ -165,6 +165,7 @@ namespace Excellency.Controllers
         [SessionAuthorized]
         public IActionResult Register()
         {
+
             var model = new AccountRegisterViewModel
             {
                 EmployeeNo = _Services.NextEmployeeNo(),

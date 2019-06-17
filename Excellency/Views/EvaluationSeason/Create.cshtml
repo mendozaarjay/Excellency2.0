@@ -9,12 +9,9 @@
     </div>
     <div class="panel-body">
         <div class="col-md-6">
-            @using (Html.BeginForm("Create", "EvaluationSeason"))
+            @using (Html.BeginForm("Create", "EvaluationSeason",FormMethod.Post,new { @id="form1"}))
             {
                 @Html.AntiForgeryToken()
-                <div class="form-group">
-                    @Html.ValidationSummary()
-                </div>
                 <div class="form-group">
                     <label for="title">Title</label>
                     @Html.TextBoxFor(m => m.Title, new { @class = "form-control" })
@@ -31,7 +28,7 @@
                     <label for="enddate">End</label>
                     @Html.TextBoxFor(m => m.EndDate, new { @class = "form-control" })
                 </div>
-                <button type="submit" class="btn btn-primary">Save</button>
+                <button type="submit" class="btn btn-primary" onclick="return validateSave();">Save</button>
                 <br />
                 <br />
                 <br />
@@ -39,11 +36,52 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="validationmodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Validation Message</h4>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="id" id="id" />
+                    <div id="message" class="text-danger"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+
+</div>
 @section Scripts{
     <script type="text/javascript">
 
         $('#StartDate').datepicker().datepicker("setDate", new Date());;
         $('#EndDate').datepicker().datepicker("setDate", new Date());;
+
+        function validateSave() {
+            var validation = '';
+            var title = $('#Title').val();
+            var startdate = $('#StartDate').val();
+            var enddate = $('#EndDate').val();
+
+            if (title.length <= 0) {
+                validation += "Title is required.</br>";
+            }
+            if (enddate <= startdate) {
+                validation += "End date should be greater than start date.</br>";
+            }
+            if (validation.length > 0) {
+                document.getElementById("message").innerHTML = validation;
+                $('#validationmodal').modal('show');
+                return false;
+            }
+
+            else {
+                form1.submit();
+            }
+        }
     </script>
 
 

@@ -15,11 +15,17 @@
         <h3 class="panel-title">Behavioral Factors</h3>
         <div class="right">
             <button data-toggle="modal" data-target="#addnew"><i class="fa fa-plus"></i></button>
+            <a class="fa fa-cogs text-muted" asp-controller="EvaluationSettings" asp-action="Index"></a>
         </div>
     </div>
     <div class="panel-body">
+        <div class="input-group col-md-4">
+            <input type="text" id="searchkey" class="form-control" placeholder="Search...">
+            <span class="input-group-btn"><button type="button" id="search" class="btn btn-primary">Search</button></span>
+        </div>
+        <br />
         <div class="table-responsive">
-            <table class="table table-condensed">
+            <table class="table table-condensed" id="resultitem">
                 <thead>
                     <tr>
                         <th>Id</th>
@@ -31,7 +37,7 @@
                         <th scope="col" class="col-md-1"></th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="resultitemlist">
                     @foreach (var item in Model.BehavioralFactors)
                     {
                         <tr>
@@ -49,8 +55,6 @@
         </div>
     </div>
 </div>
-
-
 <div class="modal fade" id="addnew" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     @using (Html.BeginForm("SaveBehavioralFactor", "BehavioralFactor"))
     {
@@ -160,6 +164,39 @@
             $(".modal-body #description").val(description)
             modal.find('.modal-body select').val(category)
         })
+        $('#search').on('click', function () {
+            var keyword = $("#searchkey").val();
+            if (keyword.length > 0) {
+                $.ajax({
+                    url: 'Search',
+                    data: { 'keyword': keyword },
+                    type: 'GET',
+                    dataType: 'JSON',
+                    success: function (data) {
+                        $('#resultitemlist').empty();
+                        console.log(data.result)
+                        var len = data.result.length
+                        var html = '';
+                        for (var i = 0; i < len; i++) {
+                            var url = 'BehavioralFactorItems/' + data.result[i]['id']
+                            html += `<tr>
+                                <td >` + data.result[i]['id'] + `</td>
+                                <td>` + data.result[i]['title'] + `</td>
+                                <td>` + data.result[i]['description'] + `</td>
+                                <td>` + data.result[i]['weight'] + `</td>
+                                <td class="text-center"><a data-toogle="modal" data-target="#edit" data-id="` + data.result[i]['id'] + `" data-title="` + data.result[i]['title'] + `" data-description="` + data.result[i]['description'] + `" data-weight="` + data.result[i]['weight'] + `" ><i class="fa fa-pencil text-success"></i></a></td>
+                                <td class="text-center"><a data-toggle="modal" data-target="#delete" data-id="`+ data.result[i]['id'] + `"><i class="fa fa-trash text-danger"></i></a></td>
+                                <td class="text-center"><a href="`+ url + `"><i class="fa fa-clone text-primary"></i></a></td>
+                                </tr>`
+                        }
+                        $('#resultitem tbody').append(html);
+                    },
+                    error: function (data) {
+                    }
+
+                });
+            }
+        });
     </script>
 
     <script type="text/javascript">

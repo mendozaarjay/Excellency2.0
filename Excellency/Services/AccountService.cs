@@ -157,7 +157,7 @@ namespace Excellency.Services
                 };
                 _dbContext.Add(usertype);
             }
-            if (account.Id == 0)
+            if (account.Id <= 0)
             {
 
                 account.CreatedBy = UserId;
